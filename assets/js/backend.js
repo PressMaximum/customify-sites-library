@@ -48,6 +48,7 @@ jQuery( document ).ready( function( $ ){
             }
             $( 'body' ).addClass('loading-content');
             $( '#customify-sites-listing-wrapper' ).hide();
+            that.filter_data['_t'] = new Date().getTime();
             that.xhr = $.ajax( {
                 url: Customify_Sites.api_url,
                 data: that.filter_data,
@@ -157,11 +158,23 @@ jQuery( document ).ready( function( $ ){
 
         },
 
+
+
+        view_details: function(){
+            // Test
+            $( 'body' ).addClass( 'customify-sites-show-modal' );
+            $( document ).on( 'click', '#customify-sites-listing .theme', function( e ){
+                e.preventDefault();
+
+            } );
+        },
+
         init: function(){
             var that = this;
             that.filter_data = {};
             that.load_sites();
             that.filter();
+            that.view_details();
         }
     };
 

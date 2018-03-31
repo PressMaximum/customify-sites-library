@@ -18,10 +18,6 @@ if ( ! class_exists( 'WP_Importer' ) ) {
 define( 'CUSTOMIFY_SITES_URL', untrailingslashit( plugins_url(  '', __FILE__ ) ) );
 define( 'CUSTOMIFY_SITES_PATH',dirname( __FILE__ ) );
 
-
-// Server API
-require dirname( __FILE__ ) . '/server/sites-api.php';
-
 require dirname( __FILE__ ) . '/classess/class-sites.php';
 
 

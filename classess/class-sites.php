@@ -12,6 +12,7 @@ Class Customify_Sites {
     function admin_scripts( $id ){
         if( $id == 'appearance_page_customify-sites' ){
             wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
+            wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css' );
             wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery' ), false, true );
         }
     }
@@ -27,7 +28,7 @@ Class Customify_Sites {
     }
 
     static function get_api_url(){
-        return apply_filters( 'customify_sites/api_url', 'https://beacon.dev/wp-json/wp/v2/sites' );
+        return apply_filters( 'customify_sites/api_url', 'https://customifysites.com/wp-json/wp/v2/sites/' );
     }
 
     function add_menu() {
@@ -38,6 +39,7 @@ Class Customify_Sites {
         echo '<div class="wrap">';
         echo '<h1 class="wp-heading-inline">'.__( 'Customify Sites', 'customify-sites' ).'</h1>';
         require_once CUSTOMIFY_SITES_PATH.'/templates/dashboard.php';
+        require_once CUSTOMIFY_SITES_PATH.'/templates/modal.php';
         echo '</div>';
     }
 

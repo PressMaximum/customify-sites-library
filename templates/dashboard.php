@@ -30,5 +30,5 @@
     <div id="customify-sites-listing" class="themes wp-clearfix">
     </div>
 </div>
-<p  id="customify-sites-no-demos"  class="no-themes"><?php _e( 'No demos found. Try a different search.', 'customify-sites' ); ?></p>
+<p  id="customify-sites-no-demos"  class="no-themes"><?php _e( 'No sites found. Try a different search.', 'customify-sites' ); ?></p>
 <span class="spinner"></span>
