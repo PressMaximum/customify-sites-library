@@ -12,7 +12,12 @@ Class Customify_Sites {
     function admin_scripts( $id ){
         if( $id == 'appearance_page_customify-sites' ){
             wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
+            wp_enqueue_style('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/css/owl.carousel.css' );
+            wp_enqueue_style('owl.theme.default', CUSTOMIFY_SITES_URL.'/assets/css/owl.theme.default.css' );
             wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css' );
+
+
+            wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), false, true );
             wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery' ), false, true );
         }
     }
@@ -43,10 +48,40 @@ Class Customify_Sites {
         echo '</div>';
     }
 
+    function get_activated_plugins(){
+        $activated_plugins = array();
+        foreach( ( array ) get_option('active_plugins') as $plugin_file ) {
+            $plugin_file = dirname( $plugin_file );
+            $activated_plugins[ $plugin_file ] = $plugin_file;
+        }
+        return $activated_plugins;
+    }
+
+    function get_support_plugins(){
+        $plugins = array(
+            'customify-pro' => _x( 'Customify Pro', 'plugin-name', 'customify-sites' ),
+
+            'elementor' => _x( 'Elementor', 'plugin-name', 'customify-sites' ),
+            'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', 'customify-sites' ),
+            'beaver-builder-lite-version' => _x( 'Beaver Build', 'plugin-name', 'customify-sites' ),
+            'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', 'customify-sites' ),
+
+            'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', 'customify-sites' ),
+            'jetpack' => _x( 'JetPack', 'plugin-name', 'customify-sites' ),
+            'easymega' => _x( 'Mega menu', 'plugin-name', 'customify-sites' ),
+            'polylang' => _x( 'Polylang', 'plugin-name', 'customify-sites' ),
+            'woocommerce' => _x( 'WooCommerce', 'plugin-name', 'customify-sites' ),
+        );
+
+        return $plugins;
+    }
+
     function get_localize_script(){
         $args = array(
             'api_url' => self::get_api_url(),
             'is_admin' => is_admin(),
+            'activated_plugins' => $this->get_activated_plugins(),
+            'support_plugins' => $this->get_support_plugins(),
         );
         return $args;
     }

@@ -5,6 +5,10 @@
   padding-top: 100%;
 }
 
+.cs-clear {
+  clear: both;
+}
+
 .wp-filter {
   display: inline-block;
   position: relative;
@@ -173,11 +177,23 @@
   float: right;
 }
 
+.cs-50 {
+  width: 50%;
+}
+
+.spinner {
+  display: none;
+}
+
 .customify-sites-modal-wrapper {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 100px;
   width: 99%;
+  display: none;
+}
+.customify-sites-modal-wrapper.cs-show {
+  display: block;
+  z-index: 999;
 }
 .customify-sites-modal-wrapper img {
   max-width: 100%;
@@ -252,6 +268,12 @@
   margin-bottom: 0px;
   font-weight: 600;
   line-height: 1;
+  color: #cccccc;
+  cursor: default;
+}
+.customify-sites-modal-wrapper .cs-modal .cs-breadcrumb li.cs-clickable {
+  cursor: pointer;
+  color: #444444;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-actions {
   bottom: 0px;
@@ -271,16 +293,10 @@
   overflow: hidden;
   position: relative;
 }
-.customify-sites-modal-wrapper .cs-modal .cs-step {
-  transition: all .5s ease-in-out;
+.customify-sites-modal-wrapper .cs-modal .cs-step:after {
+  clear: both;
+  content: "";
   display: block;
-  width: 0px;
-  overflow: hidden;
-  transform: translateX(100%);
-}
-.customify-sites-modal-wrapper .cs-modal .cs-step.current {
-  width: auto;
-  transform: translateX(0);
 }
 
 /*# sourceMappingURL=customify-sites.css.map */

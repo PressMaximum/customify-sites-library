@@ -14,6 +14,10 @@
     }
 }
 
+.cs-clear{
+    clear: both;
+}
+
 .wp-filter {
     display: inline-block;
     position: relative;
@@ -184,6 +188,13 @@
 .cs-right {
     float: right;
 }
+.cs-50 {
+    width: 50%;
+}
+
+.spinner {
+    display: none;
+}
 
 $cs-box-gutter: 15px;
 $cs-box-border: 1px solid #ddd;
@@ -191,9 +202,14 @@ $cs-box-bg: #fff;
 
 .customify-sites-modal-wrapper {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 100px;
+    //transform: translateY(-50%);
     width: 99%;
+    display: none;
+    &.cs-show {
+        display: block;
+        z-index: 999;
+    }
     img {
         max-width: 100%;
     }
@@ -262,6 +278,12 @@ $cs-box-bg: #fff;
                 margin-bottom: 0px;
                 font-weight: 600;
                 line-height: 1;
+                color: #cccccc;
+                cursor: default;
+                &.cs-clickable {
+                    cursor: pointer;
+                    color: #444444;
+                }
             }
 
         }
@@ -281,15 +303,7 @@ $cs-box-bg: #fff;
             position: relative;
         }
         .cs-step {
-            transition: all .5s ease-in-out;
-            display: block;
-            width: 0px;
-            overflow: hidden;
-            transform: translateX(100%);
-            &.current {
-                width: auto;
-                transform: translateX(0);
-            }
+            @include clearfix();
         }
 
     }

@@ -1,3 +1,6 @@
+<?php
+var_dump( $this->get_activated_plugins() );
+?>
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">
         <span id="customify-sites-filter-count" class="count theme-count">&#45;</span>
@@ -19,7 +22,7 @@
         <div class="theme-id-container">
             <h2 class="theme-name" id="{{ data.slug }}-name">{{ data.title }}</h2>
             <div class="theme-actions">
-                <a class="button button-primary load-customize hide-if-no-customize" href="#"><?php _e( 'Details', 'customify-sites' ); ?></a>
+                <a class="cs-open-modal button button-primary  hide-if-no-customize" href="#"><?php _e( 'Details', 'customify-sites' ); ?></a>
             </div>
         </div>
     </div>
