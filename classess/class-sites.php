@@ -7,12 +7,6 @@ Class Customify_Sites {
         wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
         wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/frontend.js' );
         wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/frontend.css' );
-
-
-    }
-
-    function ajax(){
-        die( 'a' );
     }
 
     function admin_scripts( $id ){
@@ -31,10 +25,6 @@ Class Customify_Sites {
     static function get_instance() {
         if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
-            //
-           // add_action( 'wp_ajax_cs_install_plugin', array( self::$_instance, 'ajax' ) );
-           // add_action( 'wp_ajax_cs_active_plugin', array( self::$_instance, 'ajax' ) );
-
             add_action( 'wp_enqueue_scripts', array( self::$_instance, 'scripts' ) );
             add_action('admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );

@@ -11,7 +11,7 @@
 		updateDelta: function (type, delta) {
 			this.complete[ type ] += delta;
 
-			var self = this;
+			var self = this;h
 			requestAnimationFrame(function () {
 				self.render();
 			});

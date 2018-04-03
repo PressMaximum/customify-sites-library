@@ -47,6 +47,8 @@ jQuery( document ).ready( function( $ ){
             breadcrumb: null,
             getTemplate: getTemplate,
             data: {},
+            buttons: {},
+            last_step: 4,
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -129,10 +131,47 @@ jQuery( document ).ready( function( $ ){
                 }
 
             },
+            disable_button: function( button ){
+                if ( !_.isUndefined( this.buttons[ button ] ) ) {
+                    this.buttons[ button ].addClass( 'disabled' );
+                }
+            },
+            loading_button: function( button ){
+                if ( !_.isUndefined( this.buttons[ button ] ) ) {
+                    this.buttons[ button ].addClass( 'loading' );
+                }
+            },
+            completed_button: function( button ){
+                if ( !_.isUndefined( this.buttons[ button ] ) ) {
+                    this.buttons[ button ].addClass( 'completed' );
+                }
+            },
+            active_button: function( button ){
+                if ( !_.isUndefined( this.buttons[ button ] ) ) {
+                    this.buttons[ button ].removeClass( 'disabled' );
+                }
+            },
             init: function(){
                 var that = this;
 
+
+
+                that.buttons.skip = $( '.cs-skip', that.modal );
+                that.buttons.start = $( '.cs-do-start-import', that.modal );
+                that.buttons.install_plugins = $( '.cs-do-install-plugins', that.modal );
+                that.buttons.import_content = $( '.cs-do-import-content', that.modal );
+                that.buttons.import_options = $( '.cs-do-import-options', that.modal );
+                that.buttons.view_site = $( '.cs-do-view-site', that.modal );
+
+                if ( _.isEmpty( that.data.plugins ) && _.isEmpty( that.data.manual_plugins )  ) {
+                    that.last_step = 3;
+                    $( '.cs-breadcrumb li[data-step="install_plugins"]', that.modal ).remove();
+                    $( '.cs-step-install_plugins', that.modal ).remove();
+                    that.buttons.install_plugins.remove();
+                }
+
                 that.breadcrumb = $( '.cs-breadcrumb li', that.modal );
+
                 /**
                  * @see https://owlcarousel2.github.io/OwlCarousel2/docs/api-events.html
                  * @type {jQuery}
@@ -163,6 +202,7 @@ jQuery( document ).ready( function( $ ){
                 that.modal.on( 'click', '.cs-skip, .cs-do-start-import', function( e  ) {
                     e.preventDefault();
                     that.skip();
+
                 } );
 
 
@@ -177,7 +217,13 @@ jQuery( document ).ready( function( $ ){
                 that._install_plugins_notice();
                 that._setup_plugins();
                 that._installing_plugins();
+                that._importing_content();
+                that._importing_options();
                 that._open();
+            },
+
+            next_step: function(){
+                this.owl.trigger('next.owl.carousel');
             },
 
             /**
@@ -189,19 +235,29 @@ jQuery( document ).ready( function( $ ){
 
             _make_steps_clickable: function(){
                 var that = this;
+
                 that.breadcrumb.removeClass( 'cs-clickable' );
                 for( var i = 0; i <= this.current_step; i++ ) {
                     that.breadcrumb.eq( i ).addClass( 'cs-clickable' );
                 }
 
-                if ( this.current_step!==0 ) {
-                    $( '.cs-skip', that.modal ).removeClass( 'cs-hide' );
+                if ( that.current_step === that.last_step ) {
+                    that.buttons.skip.addClass( 'cs-hide' );
+                    $('.cs-breadcrumb', that.modal ).addClass( 'cs-hide' );
                 } else {
-                    $( '.cs-skip', that.modal ).addClass( 'cs-hide' );
+                    that.buttons.skip.removeClass( 'cs-hide' );
+                    $('.cs-breadcrumb', that.modal ).removeClass( 'cs-hide' );
+                }
+
+                if ( that.current_step !== 0 && that.current_step !== that.last_step ) {
+                    that.buttons.skip.removeClass( 'cs-hide' );
+                } else {
+                    that.buttons.skip.addClass( 'cs-hide' );
                 }
 
                 $( '.cs-action-buttons a', that.modal ).removeClass( 'current' );
-                $( '.cs-action-buttons a[data-step="'+this.current_step+'"]', that.modal ).addClass( 'current' );
+                $( '.cs-action-buttons a', that.modal ).eq(that.current_step).addClass( 'current' );
+
             },
 
             _breadcrumb_actions: function(){
@@ -254,6 +310,15 @@ jQuery( document ).ready( function( $ ){
                 return _.isUndefined( Customify_Sites.installed_plugins[ $plugin_slug ] ) ? false : true;
             },
 
+            step_completed: function( step ){
+                var that = this;
+                $( '.cs-step.cs-step-'+step, this.modal ).addClass('completed');
+                this.completed_button( step );
+                setTimeout( function(){
+                    that.next_step();
+                }, 2000 );
+            },
+
             _installing_plugins: function() {
                 var that = this;
                 var n = this.data.plugins.length || 0;
@@ -268,6 +333,8 @@ jQuery( document ).ready( function( $ ){
                         n_plugin_installed++;
                         if( n_plugin_installed < n ) {
                             ajax_install_plugin();
+                        } else {
+                            that.step_completed( 'install_plugins' );
                         }
                     } else if( that.is_installed( plugin_data ) ) {
                         ajax_active_plugin();
@@ -301,22 +368,67 @@ jQuery( document ).ready( function( $ ){
                             $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('circle-loading').addClass( 'load-complete' );
                             if( n_plugin_installed < n ) {
                                 ajax_install_plugin();
+                            } else {
+                                that.step_completed( 'install_plugins' );
                             }
                         }
                     });
                 };
 
-
-
-
                 $( '.cs-do-install-plugins', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
-                    console.log( 'start_install_plugin' );
+                    that.disable_button('install_plugins');
                     ajax_install_plugin();
                 } );
 
+            },
+
+            _importing_content: function(){
+                var that = this;
+
+                $( '.cs-do-import-content', that.modal ).on( 'click', function( e ){
+                    e.preventDefault();
+                    that.disable_button('import_content');
+                    that.loading_button('import_content');
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        data: {
+                            action: 'cs_import_content',
+                            plugin: 'test'
+                        },
+                        success: function (res) {
+                            console.log( 'Imported' );
+                            that.step_completed( 'import_content' );
+                        }
+                    });
+                } );
+
+            },
+
+            _importing_options: function(){
+                var that = this;
+
+                $( '.cs-do-import-options', that.modal ).on( 'click', function( e ){
+                    e.preventDefault();
+                    that.disable_button('import_options');
+                    that.loading_button('import_options');
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        data: {
+                            action: 'cs_import_options',
+                            plugin: 'test'
+                        },
+                        success: function (res) {
+                            console.log( 'import_options' );
+                            that.step_completed( 'import_options' );
+                        }
+                    });
+                } );
 
             }
+
+
+
 
         };
 

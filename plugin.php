@@ -21,6 +21,7 @@ define( 'CUSTOMIFY_SITES_PATH',dirname( __FILE__ ) );
 require dirname( __FILE__ ) . '/classess/class-tgm.php';
 require dirname( __FILE__ ) . '/classess/class-plugin.php';
 require dirname( __FILE__ ) . '/classess/class-sites.php';
+require dirname( __FILE__ ) . '/classess/class-ajax.php';
 
 
 require dirname( __FILE__ ) . '/importer/class-logger.php';

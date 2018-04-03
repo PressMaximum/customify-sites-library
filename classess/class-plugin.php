@@ -13,10 +13,6 @@ class Customify_Sites_Plugin extends TGM_Plugin_Activation{
     public static function get_instance() {
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) {
             self::$instance = new self();
-
-            //
-            add_action( 'wp_ajax_cs_install_plugin', array( self::$instance, 'ajax' ) );
-            add_action( 'wp_ajax_cs_active_plugin', array( self::$instance, 'ajax' ) );
         }
 
         return self::$instance;
@@ -94,5 +90,3 @@ class Customify_Sites_Plugin extends TGM_Plugin_Activation{
     }
 
 }
-
-Customify_Sites_Plugin::get_instance();

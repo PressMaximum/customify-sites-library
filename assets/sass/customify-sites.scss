@@ -1,13 +1,5 @@
 @import "check";
 
-
-#customify-sites-listing {
-    .theme .theme-screenshot:after {
-        padding-top: 100%;
-    }
-    color: #fff;
-}
-
 @mixin clearfix{
     &:after {
         clear: both;
@@ -310,7 +302,30 @@ $cs-box-bg: #fff;
         .cs-step {
             .cs-step-img {
                 width: 50%;
+                max-width: 250px;
+                margin: 12px auto;
+            }
+            .cs-installing-plugins {
+                max-width: 280px;
                 margin: 0 auto;
+            }
+            .cs-plugin-name {
+                line-height: 2;
+                margin-left: 5px;
+            }
+            .icon {
+                display: none;
+            }
+            &.completed {
+                .icon {
+                    display: block;
+                }
+                .cs-step-img {
+                    img {
+                        visibility: hidden;
+                        opacity: 0;
+                    }
+                }
             }
             @include clearfix();
         }
@@ -326,4 +341,7 @@ $cs-box-bg: #fff;
         }
 
     }
+}
+.cs-text-center {
+    text-align: center;
 }
