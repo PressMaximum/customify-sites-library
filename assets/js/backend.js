@@ -87,7 +87,7 @@ jQuery( document ).ready( function( $ ){
                     if ( !_.isUndefined( Customify_Sites.support_plugins[ plugin_file ] ) ) {
                         plugin_name = Customify_Sites.support_plugins[ plugin_file ];
                     }
-                    if ( ! _.isUndefined( Customify_Sites.activated_plugins[ plugin_file ] ) ) {
+                    if ( ! _.isUndefined( Customify_Sites.installed_plugins[ plugin_file ] ) ) {
                         installed_plugins += '<li>'+plugin_name+'</li>';
                     } else {
                         install_plugins += '<li>'+plugin_name+'</li>';
@@ -99,8 +99,10 @@ jQuery( document ).ready( function( $ ){
                     if ( !_.isUndefined( Customify_Sites.support_plugins[ plugin_file ] ) ) {
                         plugin_name = Customify_Sites.support_plugins[ plugin_file ];
                     }
-                    if ( _.isUndefined( Customify_Sites.activated_plugins[ plugin_file ] ) ) {
+                    if ( _.isUndefined( Customify_Sites.installed_plugins[ plugin_file ] ) ) {
                         manual_plugins += '<li>'+plugin_name+'</li>';
+                    } else {
+                        installed_plugins += '<li>'+plugin_name+'</li>';
                     }
                 } );
 
@@ -121,15 +123,10 @@ jQuery( document ).ready( function( $ ){
 
                 if ( manual_plugins !==  '' ) {
                     $( '.cs-install-manual-plugins', that.modal ).show();
-                    $( '.cs-install-manual-plugins ul', that.modal ).html( installed_plugins );
+                    $( '.cs-install-manual-plugins ul', that.modal ).html( manual_plugins );
                 } else {
                     $( '.cs-install-manual-plugins', that.modal ).hide();
                 }
-
-
-
-
-
 
             },
             init: function(){
@@ -153,17 +150,33 @@ jQuery( document ).ready( function( $ ){
 
                 that._make_steps_clickable();
 
+                that.owl.on( 'initialize.owl.carousel', function( e, a  ) {
+                    that._make_steps_clickable();
+                });
+
                 that.owl.on( 'changed.owl.carousel', function( e, a  ) {
                     that.current_step = e.page.index;
                     that._make_steps_clickable();
                 });
 
-                that.modal.on( 'click', '.button-secondary', function( e  ) {
+                // Skip or start import
+                that.modal.on( 'click', '.cs-skip, .cs-do-start-import', function( e  ) {
                     e.preventDefault();
                     that.skip();
                 } );
+
+
+                // back to list
+                that.modal.on( 'click', '.cs-back-to-list', function( e  ) {
+                    e.preventDefault();
+                    $( 'body' ).removeClass( 'customify-sites-show-modal' );
+                    that.modal.removeClass( 'cs-show' );
+                } );
+
                 that._breadcrumb_actions();
                 that._install_plugins_notice();
+                that._setup_plugins();
+                that._installing_plugins();
                 that._open();
             },
 
@@ -181,6 +194,14 @@ jQuery( document ).ready( function( $ ){
                     that.breadcrumb.eq( i ).addClass( 'cs-clickable' );
                 }
 
+                if ( this.current_step!==0 ) {
+                    $( '.cs-skip', that.modal ).removeClass( 'cs-hide' );
+                } else {
+                    $( '.cs-skip', that.modal ).addClass( 'cs-hide' );
+                }
+
+                $( '.cs-action-buttons a', that.modal ).removeClass( 'current' );
+                $( '.cs-action-buttons a[data-step="'+this.current_step+'"]', that.modal ).addClass( 'current' );
             },
 
             _breadcrumb_actions: function(){
@@ -189,11 +210,112 @@ jQuery( document ).ready( function( $ ){
                     e.preventDefault();
                     var index = $( this ).index();
                     if ( $( this ).hasClass( 'cs-clickable' ) && index !== that.current_step ) {
-
                         that.current_step = index;
                         that.owl.trigger( 'to.owl.carousel', [ index ] );
                     }
                 } );
+            },
+
+            _setup_plugins: function(){
+                var that = this;
+                if ( _.isEmpty( that.data.plugins ) ) {
+                    that.data.plugins = {};
+                }
+
+                if ( _.isEmpty( that.data.manual_plugins ) ) {
+                    that.data.manual_plugins = {};
+                }
+
+                _.each( that.data.plugins, function( slug ){
+                    var html = '';
+                    var name = slug;
+                    if ( !_.isUndefined( Customify_Sites.support_plugins[ slug ] ) ) {
+                        name = Customify_Sites.support_plugins[ slug ];
+                    }
+                    if ( ! _.isUndefined( Customify_Sites.activated_plugins[ slug ] ) ) {
+                        html = '<li data-slug="'+slug+'" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
+                    } else if (  _.isUndefined( Customify_Sites.installed_plugins[ slug ] ) ) { // plugin not installed
+                        html = '<li data-slug="'+slug+'" class="do-install-n-activate"><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
+                    } else { // Plugin install but not active
+                        html = '<li data-slug="'+slug+'" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
+                    }
+
+                    $( '.cs-installing-plugins', that.modal ).append( html );
+                } );
+
+
+            },
+
+            is_activated: function( $plugin_slug ){
+                return _.isUndefined( Customify_Sites.activated_plugins[ $plugin_slug ] ) ? false : true;
+            },
+
+            is_installed: function( $plugin_slug ){
+                return _.isUndefined( Customify_Sites.installed_plugins[ $plugin_slug ] ) ? false : true;
+            },
+
+            _installing_plugins: function() {
+                var that = this;
+                var n = this.data.plugins.length || 0;
+                var n_plugin_installed = 0;
+                if( n <= 0 ) {
+                    return;
+                }
+
+                var ajax_install_plugin = function () {
+                    var plugin_data = that.data.plugins[n_plugin_installed];
+                    if ( that.is_activated( plugin_data ) ){ // this plugin already installed
+                        n_plugin_installed++;
+                        if( n_plugin_installed < n ) {
+                            ajax_install_plugin();
+                        }
+                    } else if( that.is_installed( plugin_data ) ) {
+                        ajax_active_plugin();
+                    } else {
+                        $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
+                        $.ajax({
+                            url: Customify_Sites.ajax_url,
+                            data: {
+                                action: 'cs_install_plugin',
+                                plugin: plugin_data
+                            },
+                            success: function (res) {
+                                ajax_active_plugin();
+                            }
+                        });
+                    }
+
+                };
+
+                var ajax_active_plugin = function () {
+                    var plugin_data = that.data.plugins[n_plugin_installed];
+                    $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        data: {
+                            action: 'cs_active_plugin',
+                            plugin: plugin_data
+                        },
+                        success: function (res) {
+                            n_plugin_installed++;
+                            $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('circle-loading').addClass( 'load-complete' );
+                            if( n_plugin_installed < n ) {
+                                ajax_install_plugin();
+                            }
+                        }
+                    });
+                };
+
+
+
+
+                $( '.cs-do-install-plugins', that.modal ).on( 'click', function( e ){
+                    e.preventDefault();
+                    console.log( 'start_install_plugin' );
+                    ajax_install_plugin();
+                } );
+
+
             }
 
         };

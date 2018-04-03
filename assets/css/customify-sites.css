@@ -1,8 +1,96 @@
+.circle-loader {
+  margin: 0px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+}
+.circle-loader.circle-loading {
+  animation-name: loader-spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  border-left-color: #5cb85c;
+}
+
+.circle-loader,
+.circle-loader:after {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+}
+
+.load-complete {
+  -webkit-animation: none;
+  animation: none;
+  border-color: #5cb85c;
+  transition: border 500ms ease-out;
+}
+.load-complete .checkmark {
+  display: block;
+}
+
+.checkmark {
+  display: none;
+}
+.checkmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+}
+.checkmark:after {
+  opacity: 1;
+  height: 50%;
+  width: 25%;
+  transform-origin: left top;
+  border-right: 2px solid #5cb85c;
+  border-top: 2px solid #5cb85c;
+  content: '';
+  left: 50%;
+  top: 50%;
+  position: absolute;
+}
+
+@keyframes loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 0.5em;
+    opacity: 1;
+  }
+  40% {
+    height: 1em;
+    width: 0.5em;
+    opacity: 1;
+  }
+  100% {
+    height: 1em;
+    width: 0.5em;
+    opacity: 1;
+  }
+}
 #customify-sites-listing {
   color: #fff;
 }
 #customify-sites-listing .theme .theme-screenshot:after {
   padding-top: 100%;
+}
+
+.cs-hide {
+  visibility: hidden;
 }
 
 .cs-clear {
@@ -293,10 +381,20 @@
   overflow: hidden;
   position: relative;
 }
+.customify-sites-modal-wrapper .cs-modal .cs-step .cs-step-img {
+  width: 50%;
+  margin: 0 auto;
+}
 .customify-sites-modal-wrapper .cs-modal .cs-step:after {
   clear: both;
   content: "";
   display: block;
+}
+.customify-sites-modal-wrapper .cs-action-buttons a {
+  display: none;
+}
+.customify-sites-modal-wrapper .cs-action-buttons a.current {
+  display: inline-block;
 }
 
 /*# sourceMappingURL=customify-sites.css.map */

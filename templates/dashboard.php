@@ -1,5 +1,5 @@
 <?php
-var_dump( $this->get_activated_plugins() );
+//var_dump( $this->get_activated_plugins() );
 ?>
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">

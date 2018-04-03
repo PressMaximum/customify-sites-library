@@ -1,3 +1,5 @@
+@import "check";
+
 
 #customify-sites-listing {
     .theme .theme-screenshot:after {
@@ -14,6 +16,9 @@
     }
 }
 
+.cs-hide {
+    visibility: hidden;
+}
 .cs-clear{
     clear: both;
 }
@@ -303,7 +308,21 @@ $cs-box-bg: #fff;
             position: relative;
         }
         .cs-step {
+            .cs-step-img {
+                width: 50%;
+                margin: 0 auto;
+            }
             @include clearfix();
+        }
+
+    }
+
+    .cs-action-buttons {
+        a {
+            display: none;
+            &.current {
+                display: inline-block;
+            }
         }
 
     }

@@ -7,6 +7,12 @@ Class Customify_Sites {
         wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
         wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/frontend.js' );
         wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/frontend.css' );
+
+
+    }
+
+    function ajax(){
+        die( 'a' );
     }
 
     function admin_scripts( $id ){
@@ -18,13 +24,17 @@ Class Customify_Sites {
 
 
             wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), false, true );
-            wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery' ), false, true );
+            wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), false, true );
         }
     }
 
     static function get_instance() {
         if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
+            //
+           // add_action( 'wp_ajax_cs_install_plugin', array( self::$_instance, 'ajax' ) );
+           // add_action( 'wp_ajax_cs_active_plugin', array( self::$_instance, 'ajax' ) );
+
             add_action( 'wp_enqueue_scripts', array( self::$_instance, 'scripts' ) );
             add_action('admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );
@@ -48,6 +58,26 @@ Class Customify_Sites {
         echo '</div>';
     }
 
+    function get_installed_plugins(){
+        // Check if get_plugins() function exists. This is required on the front end of the
+        // site, since it is in a file that is normally only loaded in the admin.
+        if ( ! function_exists( 'get_plugins' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        $all_plugins = get_plugins();
+        if ( ! is_array( $all_plugins ) ) {
+            $all_plugins = array();
+        }
+
+        $plugins = array();
+        foreach ( $all_plugins as $file => $info ) {
+            $slug = dirname( $file );
+            $plugins[ $slug ] = $info['Name'];
+        }
+
+        return $plugins;
+    }
+
     function get_activated_plugins(){
         $activated_plugins = array();
         foreach( ( array ) get_option('active_plugins') as $plugin_file ) {
@@ -63,7 +93,7 @@ Class Customify_Sites {
 
             'elementor' => _x( 'Elementor', 'plugin-name', 'customify-sites' ),
             'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', 'customify-sites' ),
-            'beaver-builder-lite-version' => _x( 'Beaver Build', 'plugin-name', 'customify-sites' ),
+            'beaver-builder-lite-version' => _x( 'Beaver Builder', 'plugin-name', 'customify-sites' ),
             'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', 'customify-sites' ),
 
             'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', 'customify-sites' ),
@@ -79,8 +109,10 @@ Class Customify_Sites {
     function get_localize_script(){
         $args = array(
             'api_url' => self::get_api_url(),
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
             'activated_plugins' => $this->get_activated_plugins(),
+            'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),
         );
         return $args;

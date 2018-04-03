@@ -1,7 +1,7 @@
 <script type="text/html" id="tpl-cs-item-modal">
     <div id="cs-modal-site--{{ data.slug }}" class="cs-modal-site customify-sites-modal-wrapper">
         <div class="cs-modal-outer">
-            <a href="#"><?php _e( 'Back to site library' ); ?></a>
+            <a href="#" class="cs-back-to-list button-secondary"><?php _e( 'Back to site library' ); ?></a>
             <div class="cs-modal">
                 <div class="cs-info">
                     <div class="cs-thumbnail">
@@ -36,59 +36,51 @@
                                 <p>Customize Options</p>
                             </div>
 
-                            <h3 class="cs-clear">Recommended Plugins</h3>
-                            <div class="cs-install-plugins">
-                                <p>The following plugins can be installed and activated automatically.</p>
-                                <ul>
-                                    <li>Plugin name</li>
-                                </ul>
-                            </div>
-
+                            <# if ( ! _.isEmpty( data.plugins ) || ! _.isEmpty( data.manual_plugins ) ){  #>
+                            <h3 class="cs-clear"><?php _e( 'Recommended Plugins', 'customify-sites' ); ?></h3>
                             <div class="cs-installed-plugins">
-                                <p>The following plugins are already installed.</p>
-                                <ul class="">
-                                    <li>Plugin name</li>
-                                </ul>
+                                <p><?php _e( 'The following plugins are already installed.', 'customify-sites' ); ?></p>
+                                <ul></ul>
                             </div>
-
+                            <div class="cs-install-plugins">
+                                <p><?php _e( 'The following plugins can be installed and activated automatically.', 'customify-sites' ); ?></p>
+                                <ul></ul>
+                            </div>
                             <div class="cs-install-manual-plugins">
-                                <p>The following plugins need to be installed and activated manually.</p>
-                                <ul class="">
-                                    <li>Plugin name</li>
-                                </ul>
+                                <p><?php _e( 'The following plugins need to be installed and activated manually.', 'customify-sites' ); ?></p>
+                                <ul></ul>
                             </div>
-
+                            <# } #>
 
                         </div>
                         <div class="cs-step cs-step-install-plugins">
-                            plugins The following plugins can be installed and activated automatically.
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
-                            <p>overview The following plugins can be installed and activated automatically.</p>
+                            <div class="cs-step-img">
+                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/plugins.svg">
+                            </div>
+                            <ul class="cs-installing-plugins"></ul>
                         </div>
                         <div class="cs-step cs-step-import-content">
+                            <div class="cs-step-img">
+                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/content.svg">
+                            </div>
                             content The following plugins can be installed and activated automatically.
                         </div>
                         <div class="cs-step cs-step-import-options">
+                            <div class="cs-step-img">
+                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/done.svg">
+                            </div>
                             options The following plugins can be installed and activated automatically.
                         </div>
                     </div>
 
                     <div class="cs-actions">
-                        <a href="#" class="button-secondary"><?php _e( 'Skip' ); ?></a>
-                        <a href="#" class="cs-right button-primary"><?php _e( 'Import' ); ?></a>
+                        <a href="#" class="cs-skip cs-hide  button-secondary"><?php _e( 'Skip' ); ?></a>
+                        <span class="cs-action-buttons">
+                            <a href="#" data-step="0" class="cs-right cs-do-start-import current button-primary"><?php _e( 'Start Import' ); ?></a>
+                            <a href="#" data-step="1" class="cs-right cs-do-install-plugins button-primary"><?php _e( 'Install Plugins' ); ?></a>
+                            <a href="#" data-step="2" class="cs-right cs-do-import-content button-primary"><?php _e( 'Import Content' ); ?></a>
+                            <a href="#" data-step="3" class="cs-right cs-do-import-options button-primary"><?php _e( 'Import Options' ); ?></a>
+                        </span>
                     </div>
 
                 </div>
