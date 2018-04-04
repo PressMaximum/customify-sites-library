@@ -17,7 +17,7 @@
  * See https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
  * for the full interface specification.
  */
-class WP_Importer_Logger {
+class Customify_Sites_Importer_Logger {
 	/**
 	 * System is unusable.
 	 *

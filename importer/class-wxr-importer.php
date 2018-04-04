@@ -1,6 +1,6 @@
 <?php
 
-class WXR_Importer extends WP_Importer {
+class Customify_Sites_WXR_Importer extends WP_Importer {
 	/**
 	 * Maximum supported WXR version
 	 */
@@ -59,7 +59,7 @@ class WXR_Importer extends WP_Importer {
 	/**
 	 * Logger instance.
 	 *
-	 * @var WP_Importer_Logger
+	 * @var Customify_Sites_Importer_Logger
 	 */
 	protected $logger;
 
@@ -149,7 +149,7 @@ class WXR_Importer extends WP_Importer {
 		$this->version = '1.0';
 
 		// Start parsing!
-		$data = new WXR_Import_Info();
+		$data = new Customify_Sites_WXR_Import_Info();
 		while ( $reader->read() ) {
 			// Only deal with element opens
 			if ( $reader->nodeType !== XMLReader::ELEMENT ) {
@@ -474,7 +474,12 @@ class WXR_Importer extends WP_Importer {
 		if ( $this->options['aggressive_url_search'] ) {
 			$this->replace_attachment_urls_in_content();
 		}
-		// $this->remap_featured_images();
+
+        $this->remap_featured_images();
+
+		var_dump( $this->featured_images );
+		var_dump( $this->processed_posts );
+		die();
 
 		$this->import_end();
 	}
@@ -859,8 +864,12 @@ class WXR_Importer extends WP_Importer {
 			}
 			$remote_url = ! empty( $data['attachment_url'] ) ? $data['attachment_url'] : $data['guid'];
 			$post_id = $this->process_attachment( $postdata, $meta, $remote_url );
-		} else {
+            // Fix error wrong maping media
+			$this->processed_posts[ $original_id ] = $post_id;
+ 		} else {
 			$post_id = wp_insert_post( $postdata, true );
+            $this->processed_posts[ $original_id ] = $post_id;
+            // Fix error wrong maping media
 			do_action( 'wp_import_insert_post', $post_id, $original_id, $postdata, $data );
 		}
 

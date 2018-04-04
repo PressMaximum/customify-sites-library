@@ -1,5 +1,8 @@
 <?php
 //var_dump( $this->get_activated_plugins() );
+
+//Customify_Sites_Ajax::download_file('https://raw.githubusercontent.com/FameThemes/famethemes-xml-demos/master/boston/config.json');
+
 ?>
 
 <a href="#" class="cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text">Text here</span></a>

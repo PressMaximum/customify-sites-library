@@ -49,6 +49,8 @@ jQuery( document ).ready( function( $ ){
             data: {},
             buttons: {},
             last_step: 4,
+            xml_id: 0,
+            json_id: 0,
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -201,13 +203,6 @@ jQuery( document ).ready( function( $ ){
                     that._make_steps_clickable();
                 });
 
-                // Skip or start import
-                that.modal.on( 'click', '.cs-skip, .cs-do-start', function( e  ) {
-                    e.preventDefault();
-                    that.loading_button('start');
-                    that.step_completed('start');
-                } );
-
                 // back to list
                 that.modal.on( 'click', '.cs-back-to-list', function( e  ) {
                     e.preventDefault();
@@ -215,9 +210,15 @@ jQuery( document ).ready( function( $ ){
                     that.modal.removeClass( 'cs-show' );
                 } );
 
+                that.modal.on( 'click', '.cs-skip', function( e  ) {
+                    e.preventDefault();
+                    this.skip();
+                } );
+
                 that._breadcrumb_actions();
                 that._install_plugins_notice();
                 that._setup_plugins();
+                that._do_start_import();
                 that._installing_plugins();
                 that._importing_content();
                 that._importing_options();
@@ -259,8 +260,6 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-action-buttons a', that.modal ).removeClass( 'current' );
                 $( '.cs-action-buttons a', that.modal ).eq(that.current_step).addClass( 'current' );
-
-
 
             },
 
@@ -321,6 +320,39 @@ jQuery( document ).ready( function( $ ){
                 setTimeout( function(){
                     that.next_step();
                 }, 2000 );
+            },
+
+            _do_start_import: function(){
+                var that = this;
+
+                // Skip or start import
+                that.buttons.start.on( 'click', function( e  ) {
+                    e.preventDefault();
+                    that.loading_button('start');
+                    //that.step_completed('start');
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        data: {
+                            action: 'cs_download_files',
+                            xml_url: data.xml_url,
+                            json_url: data.json_url,
+                            site_slug: data.slug
+                        },
+                        success: function (res) {
+                            that.xml_id = res.xml_id;
+                            that.json_id = res.json_id;
+                            if ( that.xml_id <=0 ) {
+                                that._reset();
+                                $( '.cs-error-download-files', that.modal ).removeClass( 'cs-hide' );
+                                that.buttons.start.find( '.cs-btn-circle-text' ).text( Customify_Sites.try_again );
+                            } else {
+                                that.step_completed('start');
+                            }
+
+                        }
+                    });
+                } );
+
             },
 
             _installing_plugins: function() {

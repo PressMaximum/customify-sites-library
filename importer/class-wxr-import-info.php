@@ -1,6 +1,6 @@
 <?php
 
-class WXR_Import_Info {
+class Customify_Sites_WXR_Import_Info {
 	public $home;
 	public $siteurl;
 

@@ -16,7 +16,6 @@ Class Customify_Sites {
             wp_enqueue_style('owl.theme.default', CUSTOMIFY_SITES_URL.'/assets/css/owl.theme.default.css' );
             wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css' );
 
-
             wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), false, true );
             wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), false, true );
         }
@@ -28,6 +27,7 @@ Class Customify_Sites {
             add_action( 'wp_enqueue_scripts', array( self::$_instance, 'scripts' ) );
             add_action('admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );
+            new Customify_Sites_Ajax();
         }
         return self::$_instance;
     }
@@ -101,6 +101,7 @@ Class Customify_Sites {
             'api_url' => self::get_api_url(),
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
+            'try_again' => __( 'Try Again', 'customify-site' ),
             'activated_plugins' => $this->get_activated_plugins(),
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),
@@ -109,5 +110,3 @@ Class Customify_Sites {
     }
 
 }
-
-Customify_Sites::get_instance();

@@ -31,6 +31,9 @@
                             <div class="cs-text-center">
                                <h3><?php _e( 'Hi! Welcome back' ) ?></h3>
                                 <p><?php _e( 'You may have already run this theme setup wizard. If you would like to proceed anyway, click on the "Start" button below.' ); ?></p>
+                                <p class="cs-error cs-hide cs-error-download-files">
+                                    <?php _e( 'Oops! Could not download demo content xml and config files.' ); ?>
+                                </p>
                             </div>
 
                         </div>

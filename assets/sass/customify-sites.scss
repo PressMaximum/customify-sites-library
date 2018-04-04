@@ -345,3 +345,11 @@ $cs-box-bg: #fff;
 .cs-text-center {
     text-align: center;
 }
+.cs-error {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #faf2cc;;
+    border-radius: .25rem;
+}
