@@ -57,7 +57,10 @@ jQuery( document ).ready( function( $ ){
                 that.modal = $( html );
                 $( '#wpbody-content' ).append( that.modal );
                 that.init();
-
+            },
+            _reset: function(){
+                $( '.cs-breadcrumb', this.modal ).removeClass('cs-hide');
+                $( '.cs-action-buttons a, .cs-step', this.modal ).removeClass('loading circle-loading completed cs-hide');
             },
             _open: function(){
                 var that = this;
@@ -65,13 +68,15 @@ jQuery( document ).ready( function( $ ){
                     e.preventDefault();
                     $( 'body' ).addClass( 'customify-sites-show-modal' );
                     that.modal.addClass( 'cs-show' );
+                    if ( that.owl ) {
+                        that.owl.trigger( 'to.owl.carousel', [ 0 ] );
+                    }
+                    that._reset();
                 } );
             },
             _install_plugins_notice: function (){
                 //.cs-install-plugins
                 var that = this;
-                console.log( 'that.data.plugins', that.data.plugins );
-
                 var installed_plugins   = '';
                 var install_plugins     = '';
                 var manual_plugins      = '';
@@ -102,7 +107,7 @@ jQuery( document ).ready( function( $ ){
                         plugin_name = Customify_Sites.support_plugins[ plugin_file ];
                     }
                     if ( _.isUndefined( Customify_Sites.installed_plugins[ plugin_file ] ) ) {
-                        manual_plugins += '<li>'+plugin_name+'</li>';
+                        manual_plugins += '<li><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+plugin_name+'</span></li>';
                     } else {
                         installed_plugins += '<li>'+plugin_name+'</li>';
                     }
@@ -138,7 +143,7 @@ jQuery( document ).ready( function( $ ){
             },
             loading_button: function( button ){
                 if ( !_.isUndefined( this.buttons[ button ] ) ) {
-                    this.buttons[ button ].addClass( 'loading' );
+                    this.buttons[ button ].addClass( 'loading circle-loading' );
                 }
             },
             completed_button: function( button ){
@@ -154,10 +159,8 @@ jQuery( document ).ready( function( $ ){
             init: function(){
                 var that = this;
 
-
-
                 that.buttons.skip = $( '.cs-skip', that.modal );
-                that.buttons.start = $( '.cs-do-start-import', that.modal );
+                that.buttons.start = $( '.cs-do-start', that.modal );
                 that.buttons.install_plugins = $( '.cs-do-install-plugins', that.modal );
                 that.buttons.import_content = $( '.cs-do-import-content', that.modal );
                 that.buttons.import_options = $( '.cs-do-import-options', that.modal );
@@ -199,12 +202,11 @@ jQuery( document ).ready( function( $ ){
                 });
 
                 // Skip or start import
-                that.modal.on( 'click', '.cs-skip, .cs-do-start-import', function( e  ) {
+                that.modal.on( 'click', '.cs-skip, .cs-do-start', function( e  ) {
                     e.preventDefault();
-                    that.skip();
-
+                    that.loading_button('start');
+                    that.step_completed('start');
                 } );
-
 
                 // back to list
                 that.modal.on( 'click', '.cs-back-to-list', function( e  ) {
@@ -235,7 +237,7 @@ jQuery( document ).ready( function( $ ){
 
             _make_steps_clickable: function(){
                 var that = this;
-
+                that._reset();
                 that.breadcrumb.removeClass( 'cs-clickable' );
                 for( var i = 0; i <= this.current_step; i++ ) {
                     that.breadcrumb.eq( i ).addClass( 'cs-clickable' );
@@ -257,6 +259,8 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-action-buttons a', that.modal ).removeClass( 'current' );
                 $( '.cs-action-buttons a', that.modal ).eq(that.current_step).addClass( 'current' );
+
+
 
             },
 
@@ -377,7 +381,7 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-do-install-plugins', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
-                    that.disable_button('install_plugins');
+                    that.loading_button('install_plugins');
                     ajax_install_plugin();
                 } );
 

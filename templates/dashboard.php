@@ -1,6 +1,8 @@
 <?php
 //var_dump( $this->get_activated_plugins() );
 ?>
+
+<a href="#" class="cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text">Text here</span></a>
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">
         <span id="customify-sites-filter-count" class="count theme-count">&#45;</span>
@@ -13,6 +15,8 @@
     </form>
     <ul id="customify-sites-filter-tag"  class="filter-links float-right" style="float: right;"></ul>
 </div>
+
+
 
 <script id="customify-site-item-html" type="text/html">
     <div class="theme" title="{{ data.title }}" tabindex="0" aria-describedby="" data-slug="{{ data.slug }}">

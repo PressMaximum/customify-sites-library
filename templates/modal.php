@@ -20,37 +20,18 @@
                     </ul>
 
                     <div class="cs-steps owl-carousel">
-                        <div class="cs-step cs-step-overview">
-                            <div class="cs-content-summary cs-50 cs-left">
-                                <h3>Content Summary</h3>
-                                <p><span class="dashicons dashicons-admin-post"></span> 114 posts (including CPTs)</p>
-                                <p><span class="dashicons dashicons-admin-media"></span> 74 media items</p>
-                                <p><span class="dashicons dashicons-admin-users"></span> 1 User</p>
-                                <p><span class="dashicons dashicons-admin-comments"></span> 123 comments</p>
-                                <p><span class="dashicons dashicons-category"></span> 36 Terms</p>
-                            </div>
-                            <div class="cs-option-summary cs-50 cs-right">
-                                <h3>Options Summary</h3>
-                                <p>Widgets</p>
-                                <p>Menus</p>
-                                <p>Customize Options</p>
+                        <div class="cs-step cs-step-start">
+                            <div class="cs-step-img">
+                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/welcome.svg">
+                                <svg class="icon icon--checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                    <circle class="icon--checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle><path class="icon--checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
+                                </svg>
                             </div>
 
-                            <# if ( ! _.isEmpty( data.plugins ) || ! _.isEmpty( data.manual_plugins ) ){  #>
-                            <h3 class="cs-clear"><?php _e( 'Recommended Plugins', 'customify-sites' ); ?></h3>
-                            <div class="cs-installed-plugins">
-                                <p><?php _e( 'The following plugins are already installed.', 'customify-sites' ); ?></p>
-                                <ul></ul>
+                            <div class="cs-text-center">
+                               <h3><?php _e( 'Hi! Welcome back' ) ?></h3>
+                                <p><?php _e( 'You may have already run this theme setup wizard. If you would like to proceed anyway, click on the "Start" button below.' ); ?></p>
                             </div>
-                            <div class="cs-install-plugins">
-                                <p><?php _e( 'The following plugins can be installed and activated automatically.', 'customify-sites' ); ?></p>
-                                <ul></ul>
-                            </div>
-                            <div class="cs-install-manual-plugins">
-                                <p><?php _e( 'The following plugins need to be installed and activated manually.', 'customify-sites' ); ?></p>
-                                <ul></ul>
-                            </div>
-                            <# } #>
 
                         </div>
                         <div class="cs-step cs-step-install_plugins">
@@ -63,7 +44,13 @@
                             <p class="cs-text-center">
                                <?php _e( 'Let\'s install some essential WordPress plugins to get your site up to speed.', 'customify-sites' ); ?>
                             </p>
-                            <ul class="cs-installing-plugins"></ul>
+                            <ul class="cs-installing-plugins cs-list-plugins"></ul>
+                            <# if ( ! _.isEmpty( data.plugins ) || ! _.isEmpty( data.manual_plugins ) ){  #>
+                                <div class="cs-install-manual-plugins">
+                                    <p class="cs-text-center"><?php _e( 'The following plugins need to be installed and activated manually.', 'customify-sites' ); ?></p>
+                                    <ul class="cs-list-plugins"></ul>
+                                </div>
+                            <# } #>
                         </div>
                         <div class="cs-step cs-step-import_content">
                             <div class="cs-step-img">
@@ -151,7 +138,7 @@
                         </div>
                         <div class="cs-step cs-step-import_options">
                             <div class="cs-step-img">
-                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/done.svg">
+                                <img src="<?php echo CUSTOMIFY_SITES_URL; ?>/assets/images/options.svg">
                                 <svg class="icon icon--checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                                     <circle class="icon--checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle><path class="icon--checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
                                 </svg>
@@ -186,12 +173,12 @@
                     </div>
 
                     <div class="cs-actions">
-                        <a href="#" class="cs-skip cs-hide  button-secondary"><?php _e( 'Skip' ); ?></a>
+                        <a href="#" class="cs-skip cs-hide button-secondary"><?php _e( 'Skip' ); ?></a>
                         <span class="cs-action-buttons">
-                            <a href="#" data-step="0" class="cs-right cs-do-start-import current button-primary"><?php _e( 'Start Import' ); ?></a>
-                            <a href="#" data-step="1" class="cs-right cs-do-install-plugins button-primary"><?php _e( 'Install Plugins' ); ?></a>
-                            <a href="#" data-step="2" class="cs-right cs-do-import-content button-primary"><?php _e( 'Import Content' ); ?></a>
-                            <a href="#" data-step="3" class="cs-right cs-do-import-options button-primary"><?php _e( 'Import Options' ); ?></a>
+                            <a href="#" data-step="0" class="cs-right cs-do-start current cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text"><?php _e( 'Start Import' ); ?></span></a>
+                            <a href="#" data-step="1" class="cs-right cs-do-install-plugins cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text"><?php _e( 'Install Plugins' ); ?></span></a>
+                            <a href="#" data-step="2" class="cs-right cs-do-import-content cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text"><?php _e( 'Import Content' ); ?></span></a>
+                            <a href="#" data-step="3" class="cs-right cs-do-import-options cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text"><?php _e( 'Import Options' ); ?></span></a>
                             <a href="<?php echo home_url('/'); ?>" data-step="4" target="_blank" class="cs-right cs-do-view-site button-primary"><?php _e( 'View Your Website' ); ?></a>
                         </span>
                     </div>
