@@ -430,10 +430,10 @@ jQuery( document ).ready( function( $ ){
                         url: Customify_Sites.ajax_url,
                         data: {
                             action: 'cs_import_content',
-                            plugin: 'test'
+                            id: that.xml_id
                         },
                         success: function (res) {
-                            console.log( 'Imported' );
+                            console.log( 'Imported', res );
                             that.step_completed( 'import_content' );
                         }
                     });

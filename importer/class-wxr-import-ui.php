@@ -40,20 +40,6 @@ class Customify_Sites_WXR_Import_UI {
 	}
 
 	/**
-	 * Get the URL for the importer.
-	 *
-	 * @param int $step Go to step rather than start.
-	 */
-	protected function get_url( $step = 0 ) {
-		$path = 'admin.php?import=wordpress';
-		if ( $step ) {
-			$path = add_query_arg( 'step', (int) $step, $path );
-		}
-		return admin_url( $path );
-	}
-
-
-	/**
 	 * Get preliminary data for an import file.
 	 *
 	 * This is a quick pre-parse to verify the file and grab authors from it.
