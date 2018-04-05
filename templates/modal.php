@@ -8,6 +8,7 @@
                         <img src="{{ data.thumbnail_url }}" alt="">
                     </div>
                     <div class="cs-name">{{ data.title }}</div>
+                    <a href="#" data-slug="{{ data.slug }}" class="cs-open-preview button-secondary"><?php _e( 'Preview', 'customify-sites' ); ?></a>
                     <div class="cs-desc">{{{ data.desc }}}</div>
                 </div>
 

@@ -67,7 +67,7 @@ jQuery( document ).ready( function( $ ){
             },
             _open: function(){
                 var that = this;
-                that.item.on( 'click', '.cs-open-modal', function ( e ) {
+                that.item.on( 'click', '.cs-open-modal, .theme-screenshot', function ( e ) {
                     e.preventDefault();
                     $( 'body' ).addClass( 'customify-sites-show-modal' );
                     that.modal.addClass( 'cs-show' );
@@ -689,6 +689,94 @@ jQuery( document ).ready( function( $ ){
     };
 
 
+    var Customify_Site_Preview = function(){
+        var preview = {
+            el: $( '#customify-site-preview' ),
+            previewing: '',
+            init: function(){
+                var that = this;
+                // open view
+                $( document ).on( 'click', '.cs-open-preview', function( e ) {
+                    e.preventDefault();
+                    var slug = $( this ).attr( 'data-slug' ) || '';
+                    console.log( 'Preview', slug );
+                    if( ! _.isUndefined( Customify_Site.data.posts[ slug ] )  ) {
+                        var data = Customify_Site.data.posts[ slug ];
+                        that.previewing = data.slug;
+                        that.el.find( '.cs-iframe iframe' ).attr( 'src', data.demo_url );
+                        $( '.cs-iframe', that.el ).attr( 'data-device', '' );
+                        $( '.cs-demo-name', that.el ).text( data.title );
+                        that.el.removeClass( 'cs-hide' );
+                    }
+                } );
+
+
+                // Device view
+                $( document ).on( 'click', '.cs-device-view', function( e ) {
+                    e.preventDefault();
+                    $( '.cs-device-view' ).removeClass( 'current' );
+                    $( this ).addClass( 'current' );
+                    var device = $( this ).attr( 'data-device' ) || 'desktop';
+                    $( '.cs-iframe', that.el ).attr( 'data-device', device );
+                } );
+
+
+                // Close
+                var close = function(){
+                    that.el.addClass( 'cs-hide' );
+                    $( '.cs-iframe', that.el ).attr( 'data-device', '' );
+                    that.el.find( '.cs-iframe iframe' ).attr( 'src', '' );
+                };
+
+                $( document ).on( 'click', '.cs-preview-close', function( e ) {
+                    e.preventDefault();
+                    close();
+                } );
+
+                $( document ).on( 'keydown', function( e ) {
+                    if ( e.keyCode === 27 ){ // esc button
+                        close();
+                    }
+                } );
+
+                $( document ).on( 'click', '.cs-preview-nav', function( e ) {
+                    e.preventDefault();
+                    var action = $( this ).attr( 'data-action' ) || 'next';
+
+                    var current_demo = $( '#customify-sites-listing .theme[data-slug="'+that.previewing+'"]' );
+                    var $item;
+                    if ( action === 'next' ) {
+                        $item = current_demo.next();
+                    } else {
+                        $item = current_demo.prev();
+                    }
+
+                    if ( $item.length > 0 ) {
+                        $( '.cs-open-preview', $item ).click();
+                    }
+                } );
+
+                // Click import button
+                $( document ).on( 'click', '.cs-preview-import', function( e ) {
+                    e.preventDefault();
+                    close();
+                    var current_demo = $( '#customify-sites-listing .theme[data-slug="'+that.previewing+'"]' );
+                    $('.cs-open-modal', current_demo ).click();
+                } );
+
+
+
+
+            }
+        };
+
+        return preview;
+    };
+
+
     Customify_Site.init();
+    Customify_Site_Preview().init();
+
+
 
 } );

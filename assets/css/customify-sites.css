@@ -6,14 +6,10 @@
   vertical-align: top;
 }
 .circle-loader.circle-loading {
-  -webkit-animation-name: loader-spin;
-          animation-name: loader-spin;
-  -webkit-animation-duration: 1s;
-          animation-duration: 1s;
-  -webkit-animation-iteration-count: infinite;
-          animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-          animation-timing-function: linear;
+  animation-name: loader-spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
   border-left-color: #5cb85c;
 }
 
@@ -28,7 +24,6 @@
   -webkit-animation: none;
   animation: none;
   border-color: #5cb85c;
-  -webkit-transition: border 500ms ease-out;
   transition: border 500ms ease-out;
 }
 .load-complete .checkmark {
@@ -39,23 +34,16 @@
   display: none;
 }
 .checkmark.draw:after {
-  -webkit-animation-duration: 800ms;
-          animation-duration: 800ms;
-  -webkit-animation-timing-function: ease;
-          animation-timing-function: ease;
-  -webkit-animation-name: checkmark;
-          animation-name: checkmark;
-  -webkit-transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
-      -ms-transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
-          transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
 }
 .checkmark:after {
   opacity: 1;
   height: 50%;
   width: 25%;
-  -webkit-transform-origin: left top;
-      -ms-transform-origin: left top;
-          transform-origin: left top;
+  transform-origin: left top;
   border-right: 2px solid #5cb85c;
   border-top: 2px solid #5cb85c;
   content: '';
@@ -64,47 +52,12 @@
   position: absolute;
 }
 
-@-webkit-keyframes loader-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
-}
-
 @keyframes loader-spin {
   0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes checkmark {
-  0% {
-    height: 0;
-    width: 0;
-    opacity: 1;
-  }
-  20% {
-    height: 0;
-    width: 0.5em;
-    opacity: 1;
-  }
-  40% {
-    height: 1em;
-    width: 0.5em;
-    opacity: 1;
-  }
-  100% {
-    height: 1em;
-    width: 0.5em;
-    opacity: 1;
+    transform: rotate(360deg);
   }
 }
 @keyframes checkmark {
@@ -163,11 +116,13 @@
 }
 @-webkit-keyframes fill {
   100% {
+    -webkit-box-shadow: inset 0 0 0 100px #46b450;
     box-shadow: inset 0 0 0 100px #46b450;
   }
 }
 @keyframes fill {
   100% {
+    -webkit-box-shadow: inset 0 0 0 100px #46b450;
     box-shadow: inset 0 0 0 100px #46b450;
   }
 }
@@ -175,6 +130,7 @@
   -webkit-animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
   animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
   border-radius: 50%;
+  -webkit-box-shadow: inset 0 0 0 #46b450;
   box-shadow: inset 0 0 0 #46b450;
   display: block;
   height: 110px;
@@ -312,6 +268,9 @@
 }
 .cs-hide {
   visibility: hidden;
+  height: 0px;
+  overflow: hidden;
+  display: block;
 }
 
 .cs-clear {
@@ -400,7 +359,6 @@
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
-  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
 }
 .theme-browser .theme .theme-screenshot:after {
@@ -428,13 +386,11 @@
   position: absolute;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-      transform: translateY(-50%);
+  transform: translateY(-50%);
   right: 0;
   padding: 10px 15px;
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
   opacity: 0;
-  -webkit-transition: opacity .1s ease-in-out;
   transition: opacity .1s ease-in-out;
   height: auto;
   background: rgba(244, 244, 244, 0.7);
@@ -526,8 +482,6 @@
 }
 .customify-sites-modal-wrapper .cs-modal {
   background: #fff;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   margin-top: 30px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
@@ -542,15 +496,15 @@
 .customify-sites-modal-wrapper .cs-modal .cs-info {
   width: 40%;
   padding: 15px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #e5e5e5;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail {
   display: block;
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
-  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
+  border: 1px solid #e5e5e5;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail img {
   height: auto;
@@ -558,7 +512,6 @@
   left: 0;
   top: 0;
   width: 100%;
-  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail:after {
@@ -569,7 +522,15 @@
 .customify-sites-modal-wrapper .cs-modal .cs-name {
   font-size: 18px;
   font-weight: 600;
-  padding: 10px 0;
+  padding: 20px 0 10px;
+  display: inline-block;
+}
+.customify-sites-modal-wrapper .cs-modal .cs-desc {
+  clear: both;
+}
+.customify-sites-modal-wrapper .cs-modal .cs-open-preview {
+  float: right;
+  margin-top: 16px;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-main {
   width: 60%;
@@ -585,14 +546,11 @@
   background: #fff;
   margin: 0px;
   list-style: none;
-  border-bottom: 1px solid #ddd;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  border-bottom: 1px solid #e5e5e5;
   display: flex;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-breadcrumb li {
-  -ms-flex-preferred-size: 25%;
-      flex-basis: 25%;
+  flex-basis: 25%;
   margin-bottom: 0px;
   font-weight: 600;
   line-height: 1;
@@ -609,7 +567,7 @@
   width: 100%;
   position: absolute;
   padding: 15px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #e5e5e5;
   background: #fff;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-actions:after {
@@ -668,3 +626,96 @@
   border: 1px solid #faf2cc;
   border-radius: .25rem;
 }
+
+#customify-site-preview {
+  position: fixed;
+  z-index: 99999;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  display: block;
+  background: #fff;
+}
+#customify-site-preview.cs-hide {
+  display: none;
+}
+#customify-site-preview * {
+  box-sizing: border-box;
+}
+#customify-site-preview .cs-iframe-outer {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  bottom: 50px;
+  display: block;
+  background: #333333;
+}
+#customify-site-preview .cs-iframe-outer .cs-iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+  max-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  transition: width .4s linear;
+}
+#customify-site-preview .cs-iframe-outer .cs-iframe[data-device="tablet"] {
+  width: 720px;
+}
+#customify-site-preview .cs-iframe-outer .cs-iframe[data-device="phone"] {
+  width: 520px;
+}
+#customify-site-preview .cs-iframe-outer iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+}
+#customify-site-preview .cs-preview-bar {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  display: block;
+  border-top: 1px solid #e5e5e5;
+  padding: 15px;
+  height: 50px;
+  font-size: 24px;
+}
+#customify-site-preview .cs-preview-bar:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+#customify-site-preview .cs-preview-bar a {
+  text-decoration: none;
+  box-shadow: none !important;
+}
+#customify-site-preview .cs-preview-bar .dashicons {
+  width: 30px;
+  text-align: center;
+  display: inline-block;
+}
+#customify-site-preview .cs-preview-bar .dashicons:before {
+  display: inline-block;
+  text-align: center;
+}
+#customify-site-preview .cs-preview-bar .cs-preview-import {
+  font-size: 14px;
+  margin: 0px 0px 0px 10px;
+  padding: 3px 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  float: left;
+}
+#customify-site-preview .cs-demo-name {
+  float: left;
+  font-weight: 600;
+}
+#customify-site-preview .cs-view-ports, #customify-site-preview .cs-preview-close {
+  float: right;
+}
+
+/*# sourceMappingURL=customify-sites.css.map */
