@@ -47,7 +47,7 @@ class Customify_Sites_WXR_Import_UI {
 	 * @param int $id Media item ID.
 	 * @return Customify_Sites_WXR_Import_Info|WP_Error Import info instance on success, error otherwise.
 	 */
-	protected function get_data_for_attachment( $id ) {
+	public function get_data_for_attachment( $id ) {
 		$existing = get_post_meta( $id, '_wxr_import_info' );
 		if ( ! empty( $existing ) ) {
 			$data = $existing[0];
@@ -107,10 +107,17 @@ class Customify_Sites_WXR_Import_UI {
 
 		$file = get_attached_file( $this->id );
 		$err = $importer->import( $file );
+		update_post_meta( $this->id, '_wxr_importer_mapping', $importer->mapping );
+		ob_start();
+		ob_end_clean();
+		ob_end_flush();
+		ob_start();
 		wp_send_json( $this->counts );
-
-		exit;
 	}
+
+	function re_mapping_thumbnails(){
+
+    }
 
 	/**
 	 * Get the importer instance.

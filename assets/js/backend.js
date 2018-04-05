@@ -51,6 +51,7 @@ jQuery( document ).ready( function( $ ){
             last_step: 4,
             xml_id: 0,
             json_id: 0,
+            doing: false,
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -61,6 +62,7 @@ jQuery( document ).ready( function( $ ){
                 that.init();
             },
             _reset: function(){
+                this.doing = false;
                 $( '.cs-breadcrumb', this.modal ).removeClass('cs-hide');
                 $( '.cs-action-buttons a, .cs-step', this.modal ).removeClass('loading circle-loading completed cs-hide');
             },
@@ -201,6 +203,7 @@ jQuery( document ).ready( function( $ ){
                 that.owl.on( 'changed.owl.carousel', function( e, a  ) {
                     that.current_step = e.page.index;
                     that._make_steps_clickable();
+                    that.doing = false;
                 });
 
                 // back to list
@@ -212,7 +215,9 @@ jQuery( document ).ready( function( $ ){
 
                 that.modal.on( 'click', '.cs-skip', function( e  ) {
                     e.preventDefault();
-                    this.skip();
+                    if ( ! that.doing ) {
+                        that.next_step();
+                    }
                 } );
 
                 that._breadcrumb_actions();
@@ -267,10 +272,12 @@ jQuery( document ).ready( function( $ ){
                 var that = this;
                 that.breadcrumb.on( 'click', function( e ){
                     e.preventDefault();
-                    var index = $( this ).index();
-                    if ( $( this ).hasClass( 'cs-clickable' ) && index !== that.current_step ) {
-                        that.current_step = index;
-                        that.owl.trigger( 'to.owl.carousel', [ index ] );
+                    if ( ! that.doing ) {
+                        var index = $(this).index();
+                        if ($(this).hasClass('cs-clickable') && index !== that.current_step) {
+                            that.current_step = index;
+                            that.owl.trigger('to.owl.carousel', [index]);
+                        }
                     }
                 } );
             },
@@ -324,35 +331,40 @@ jQuery( document ).ready( function( $ ){
 
             _do_start_import: function(){
                 var that = this;
-
                 // Skip or start import
                 that.buttons.start.on( 'click', function( e  ) {
                     e.preventDefault();
-                    that.loading_button('start');
-                    //that.step_completed('start');
-                    $.ajax({
-                        url: Customify_Sites.ajax_url,
-                        data: {
-                            action: 'cs_download_files',
-                            xml_url: data.xml_url,
-                            json_url: data.json_url,
-                            site_slug: data.slug
-                        },
-                        success: function (res) {
-                            that.xml_id = res.xml_id;
-                            that.json_id = res.json_id;
-                            if ( that.xml_id <=0 ) {
-                                that._reset();
-                                $( '.cs-error-download-files', that.modal ).removeClass( 'cs-hide' );
-                                that.buttons.start.find( '.cs-btn-circle-text' ).text( Customify_Sites.try_again );
-                            } else {
-                                that.step_completed('start');
+                    if ( ! that.doing ) {
+                        that.loading_button('start');
+                        that.doing = true;
+                        $.ajax({
+                            url: Customify_Sites.ajax_url,
+                            dataType: 'json',
+                            data: {
+                                action: 'cs_download_files',
+                                xml_url: data.xml_url,
+                                json_url: data.json_url,
+                                site_slug: data.slug
+                            },
+                            success: function (res) {
+                                that.xml_id = res.xml_id;
+                                that.json_id = res.json_id;
+                                if (that.xml_id <= 0) {
+                                    that._reset();
+                                    $('.cs-error-download-files', that.modal).removeClass('cs-hide');
+                                    that.doing = false;
+                                    that.buttons.start.find('.cs-btn-circle-text').text(Customify_Sites.try_again);
+                                } else {
+                                    _.each(res.texts, function (t, k) {
+                                        $('.cs-' + k, that.modal).html(t);
+                                    });
+                                    that.step_completed('start');
+                                }
+
                             }
-
-                        }
-                    });
+                        });
+                    } // end if doing
                 } );
-
             },
 
             _installing_plugins: function() {
@@ -364,6 +376,7 @@ jQuery( document ).ready( function( $ ){
                 }
 
                 var ajax_install_plugin = function () {
+                    that.doing = true;
                     var plugin_data = that.data.plugins[n_plugin_installed];
                     if ( that.is_activated( plugin_data ) ){ // this plugin already installed
                         n_plugin_installed++;
@@ -391,6 +404,7 @@ jQuery( document ).ready( function( $ ){
                 };
 
                 var ajax_active_plugin = function () {
+                    that.doing = true;
                     var plugin_data = that.data.plugins[n_plugin_installed];
                     $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
                     $.ajax({
@@ -413,8 +427,11 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-do-install-plugins', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
-                    that.loading_button('install_plugins');
-                    ajax_install_plugin();
+                    if ( ! that.doing ) {
+                        that.doing = true;
+                        that.loading_button('install_plugins');
+                        ajax_install_plugin();
+                    }
                 } );
 
             },
@@ -424,21 +441,30 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-do-import-content', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
-                    that.disable_button('import_content');
-                    that.loading_button('import_content');
-                    $.ajax({
-                        url: Customify_Sites.ajax_url,
-                        data: {
-                            action: 'cs_import_content',
-                            id: that.xml_id
-                        },
-                        success: function (res) {
-                            console.log( 'Imported', res );
-                            that.step_completed( 'import_content' );
-                        }
-                    });
+                    if ( ! that.doing ) {
+                        that.doing = true;
+                        that.disable_button('import_content');
+                        that.loading_button('import_content');
+                        $('.cs-import-content-status .circle-loader', that.modal).addClass('circle-loading');
+                        $.ajax({
+                            url: Customify_Sites.ajax_url,
+                            data: {
+                                action: 'cs_import_content',
+                                id: that.xml_id
+                            },
+                            success: function (res) {
+                                console.log('Imported', res);
+                                $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                that.step_completed('import_content');
+                            },
+                            error: function (res) {
+                                console.log('Imported Error', res);
+                                $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                that.step_completed('import_content');
+                            }
+                        });
+                    } // end if doing
                 } );
-
             },
 
             _importing_options: function(){
@@ -446,19 +472,23 @@ jQuery( document ).ready( function( $ ){
 
                 $( '.cs-do-import-options', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
-                    that.disable_button('import_options');
-                    that.loading_button('import_options');
-                    $.ajax({
-                        url: Customify_Sites.ajax_url,
-                        data: {
-                            action: 'cs_import_options',
-                            plugin: 'test'
-                        },
-                        success: function (res) {
-                            console.log( 'import_options' );
-                            that.step_completed( 'import_options' );
-                        }
-                    });
+                    if ( ! that.doing ) {
+                        that.doing = true;
+                        that.disable_button('import_options');
+                        that.loading_button('import_options');
+                        $.ajax({
+                            url: Customify_Sites.ajax_url,
+                            data: {
+                                action: 'cs_import_options',
+                                id: that.json_id,
+                                xml_id: that.xml_id
+                            },
+                            success: function (res) {
+                                console.log('import_options', res);
+                                that.step_completed('import_options');
+                            }
+                        });
+                    }
                 } );
 
             }

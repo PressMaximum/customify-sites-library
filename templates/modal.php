@@ -44,6 +44,7 @@
                                     <circle class="icon--checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle><path class="icon--checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
                                 </svg>
                             </div>
+                            <h3 class="cs-text-center"><?php _e( 'Install Plugins' ); ?></h3>
                             <p class="cs-text-center">
                                <?php _e( 'Let\'s install some essential WordPress plugins to get your site up to speed.', 'customify-sites' ); ?>
                             </p>
@@ -62,82 +63,17 @@
                                     <circle class="icon--checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle><path class="icon--checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
                                 </svg>
                             </div>
-                            <div>
-                                <table class="import-status">
-                                    <thead>
-                                    <tr>
-                                        <th>Import Summary</th>
-                                        <th>Completed</th>
-                                        <th>Progress</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <span class="dashicons dashicons-admin-post"></span>
-                                            114 posts (including CPTs)					</td>
-                                        <td>
-                                            <span id="completed-posts" class="completed">27/114</span>
-                                        </td>
-                                        <td>
-                                            <progress id="progressbar-posts" max="100" value="23.6842"></progress>
-                                            <span id="progress-posts" class="progress">24%</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="dashicons dashicons-admin-media"></span>
-                                            74 media items					</td>
-                                        <td>
-                                            <span id="completed-media" class="completed">74/74</span>
-                                        </td>
-                                        <td>
-                                            <progress id="progressbar-media" max="100" value="100"></progress>
-                                            <span id="progress-media" class="progress">100%</span>
-                                        </td>
-                                    </tr>
 
-                                    <tr>
-                                        <td>
-                                            <span class="dashicons dashicons-admin-users"></span>
-                                            1 user					</td>
-                                        <td>
-                                            <span id="completed-users" class="completed">1/1</span>
-                                        </td>
-                                        <td>
-                                            <progress id="progressbar-users" max="100" value="100"></progress>
-                                            <span id="progress-users" class="progress">100%</span>
-                                        </td>
-                                    </tr>
+                            <h3 class="cs-text-center"><?php _e( 'Import Content' ); ?></h3>
+                            <p class="cs-text-center"><?php _e( 'Let\'s import content to your website, to help you get familiar with the theme.' ); ?></p>
+                            <ul class="cs-import-content-status cs-list-plugins">
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-post_count"></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-media_count"></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-comment_count"></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-user_count"></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-term_count"></span></li>
+                            </ul>
 
-                                    <tr>
-                                        <td>
-                                            <span class="dashicons dashicons-admin-comments"></span>
-                                            136 comments					</td>
-                                        <td>
-                                            <span id="completed-comments" class="completed">16/136</span>
-                                        </td>
-                                        <td>
-                                            <progress id="progressbar-comments" max="100" value="11.7647"></progress>
-                                            <span id="progress-comments" class="progress">12%</span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <span class="dashicons dashicons-category"></span>
-                                            39 terms					</td>
-                                        <td>
-                                            <span id="completed-terms" class="completed">39/39</span>
-                                        </td>
-                                        <td>
-                                            <progress id="progressbar-terms" max="100" value="100"></progress>
-                                            <span id="progress-terms" class="progress">100%</span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                         <div class="cs-step cs-step-import_options">
                             <div class="cs-step-img">
@@ -146,6 +82,7 @@
                                     <circle class="icon--checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle><path class="icon--checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
                                 </svg>
                             </div>
+                            <h3 class="cs-text-center"><?php _e( 'Import Options' ); ?></h3>
                             <p class="cs-text-center">
                                 <?php _e( 'This step will import the theme options, menus and widgets' ); ?>
                             </p>

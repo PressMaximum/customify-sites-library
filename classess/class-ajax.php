@@ -1,5 +1,6 @@
 <?php
 class Customify_Sites_Ajax {
+    protected $mapping = array();
     function __construct()
     {
         // Install Plugin
@@ -14,11 +15,19 @@ class Customify_Sites_Ajax {
         // Download files
         add_action( 'wp_ajax_cs_download_files', array( $this, 'ajax_download_files' ) );
 
-        // Download files
-        add_action( 'wp_ajax_css_import_content', array( $this, 'ajax_import_content' ) );
-
         add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
 
+    }
+
+    function install_theme(){
+        /**
+         * @see app/public/wp-admin/update.php L215
+         *
+         * https://beacon.dev/wp-admin/admin-ajax.ph
+         slug: switty
+        action: install-theme
+        _ajax_nonce: 647d5a7e33
+         */
     }
 
     /**
@@ -51,12 +60,7 @@ class Customify_Sites_Ajax {
 
     }
 
-    function ajax_import_options(){
-        $this->user_can();
 
-
-        die( 'ajax_import_options' );
-    }
 
     function is_url( $url ){
         $result = ( false !== filter_var( $url, FILTER_VALIDATE_URL ) );
@@ -75,7 +79,9 @@ class Customify_Sites_Ajax {
 
         $return = array(
             'xml_id' => 0,
-            'json_id' => 0
+            'json_id' => 0,
+            'summary' => array(),
+            'texts' => array()
         );
 
         if ( ! $slug ) {
@@ -99,6 +105,32 @@ class Customify_Sites_Ajax {
             $return['json_id'] = Customify_Sites_Ajax::download_file( $json_url, $json_file_name.'.json' );
         }
 
+        $import_ui = new Customify_Sites_WXR_Import_UI();
+        $return['summary'] = $import_ui->get_data_for_attachment( $return['xml_id'] );
+
+        $return['summary'] = ( array ) $return['summary'];
+        if ( ! is_array( $return['summary'] ) ) {
+            $return['summary'] = array();
+        }
+
+        $return['summary']  = wp_parse_args( $return['summary'], array(
+            'post_count' => 0,
+            'media_count' => 0,
+            'user_count' => 0,
+            'term_count' => 0,
+            'comment_count' => 0,
+            'users' => 0,
+        ) );
+
+        if ( isset( $return['summary']['users'] ) ) {
+            $return['summary']['user_count'] = count( $return['summary']['users'] );
+        }
+
+        $return['texts']['post_count'] = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], 'customify-sites' ), $return['summary']['post_count'] );
+        $return['texts']['media_count'] = sprintf( _n( '%d media item', '%d media item', $return['summary']['media_count'], 'customify-sites' ), $return['summary']['media_count'] );
+        $return['texts']['user_count'] = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], 'customify-sites' ), $return['summary']['user_count'] );
+        $return['texts']['term_count'] = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], 'customify-sites' ), $return['summary']['term_count'] );
+        $return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], 'customify-sites' ), $return['summary']['comment_count'] );
         wp_send_json( $return );
     }
 
@@ -160,6 +192,212 @@ class Customify_Sites_Ajax {
             return $file;
         }
     }
+
+    function ajax_import_options(){
+        $this->user_can();
+        $id = wp_unslash( (int) $_REQUEST['id'] );
+        $xml_id = wp_unslash( (int) $_REQUEST['xml_id'] );
+        $file = get_attached_file( $id );
+
+        if ( $file ) {
+
+            $this->mapping = get_post_meta( $xml_id, '_wxr_importer_mapping', true );
+            if ( ! is_array( $this->mapping ) ) {
+                $this->mapping = array();
+            }
+            global $wp_filesystem;
+            WP_Filesystem();
+
+            if (file_exists($file)) {
+                $file_contents = $wp_filesystem->get_contents($file);
+                $customize_data = json_decode($file_contents, true);
+                if (null === $customize_data) {
+                    $customize_data = maybe_unserialize($file_contents);
+                }
+            } else {
+                $customize_data = array();
+            }
+
+            if ( isset( $customize_data['options'] ) ) {
+                $this->_import_options( $customize_data['options'] );
+            }
+
+            if ( isset( $customize_data['pages'] ) ) {
+                $this->_import_options( $customize_data['pages'] );
+            }
+
+            if ( isset( $customize_data['theme_mods'] ) ) {
+                $this->_import_theme_mod( $customize_data['theme_mods'] );
+            }
+        }
+
+        die( 'ajax_import_options' );
+    }
+
+    function _import_options( $options ){
+        if ( empty( $options ) ) {
+            return ;
+        }
+        foreach ( $options as $option_name => $ops ) {
+            update_option( $option_name, $ops );
+        }
+    }
+
+    /**
+     * Import widgets
+     */
+    function _import_widgets( $data, $widgets_config = array() ) {
+        global $wp_filesystem, $wp_registered_widget_controls, $wp_registered_sidebars;
+
+        //add_filter( 'sidebars_widgets', array( $this, '_unset_sidebar_widget' ) );
+        if ( empty( $data ) || ! is_array( $data ) ) {
+            return ;
+        }
+        if ( ! is_array( $widgets_config ) ) {
+            $widgets_config = array();
+        }
+
+        $valid_sidebar = false;
+        $widget_instances = array();
+        $imported_terms = isset( $this->mapping['term_id'] ) ? $this->mapping['term_id'] : array();
+        if ( ! is_array( $imported_terms ) ) {
+            $imported_terms = array();
+        }
+
+        foreach ( $wp_registered_widget_controls as $widget_id => $widget ) {
+            $base_id = isset($widget['id_base']) ? $widget['id_base'] : null;
+            if (!empty($base_id) && !isset($widget_instances[$base_id])) {
+                $widget_instances[$base_id] = get_option('widget_' . $base_id);
+            }
+        }
+
+        // Delete old widgets
+        update_option('sidebars_widgets', array() );
+
+        foreach ( $data as $sidebar_id => $widgets ) {
+            if ('wp_inactive_widgets' === $sidebar_id) {
+                continue;
+            }
+            if (isset($wp_registered_sidebars[$sidebar_id])) {
+                $valid_sidebar = true;
+                $_sidebar_id = $sidebar_id;
+            } else {
+                $_sidebar_id = 'wp_inactive_widgets';
+            }
+            foreach ($widgets as $widget_instance_id => $widget) {
+                if (false !== strpos($widget_instance_id, 'nav_menu') && !empty($widget['nav_menu'])) {
+                    $widget['nav_menu'] = isset($imported_terms[$widget['nav_menu']]) ? $imported_terms[$widget['nav_menu']] : 0;
+                }
+                $base_id = preg_replace('/-[0-9]+$/', '', $widget_instance_id);
+                if (isset($widget_instances[$base_id])) {
+                    $single_widget_instances = get_option('widget_' . $base_id);
+                    $single_widget_instances = !empty($single_widget_instances) ? $single_widget_instances : array('_multiwidget' => 1);
+
+                    $single_widget_instances[] = apply_filters( 'customify_sites_import_widget_data', $widget, $widget_instances[$base_id], $base_id );
+                    end($single_widget_instances);
+                    $new_instance_id_number = key($single_widget_instances);
+                    if ('0' === strval($new_instance_id_number)) {
+                        $new_instance_id_number = 1;
+                        $single_widget_instances[$new_instance_id_number] = $single_widget_instances[0];
+                        unset($single_widget_instances[0]);
+                    }
+                    if (isset($single_widget_instances['_multiwidget'])) {
+                        $multiwidget = $single_widget_instances['_multiwidget'];
+                        unset($single_widget_instances['_multiwidget']);
+                        $single_widget_instances['_multiwidget'] = $multiwidget;
+                    }
+                    $updated = update_option('widget_' . $base_id, $single_widget_instances);
+                    $sidebars_widgets = get_option('sidebars_widgets');
+                    $sidebars_widgets[$_sidebar_id][] = $base_id . '-' . $new_instance_id_number;
+                    update_option('sidebars_widgets', $sidebars_widgets);
+                }
+            }
+        }
+
+    }
+
+
+    function down_load_image($file)
+    {
+        $data = new \stdClass();
+
+        if ( !function_exists('media_handle_sideload') ) {
+            require ABSPATH . 'wp-admin/includes/media.php';
+            require ABSPATH . 'wp-admin/includes/file.php';
+            require ABSPATH . 'wp-admin/includes/image.php';
+        }
+
+        if ( !empty($file) ) {
+            preg_match('/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches);
+            $file_array = array();
+            $file_array['name'] = basename($matches[0]);
+            $file_array['tmp_name'] = download_url($file);
+            if ( is_wp_error($file_array['tmp_name']) ) {
+                return $file_array['tmp_name'];
+            }
+            $id = media_handle_sideload($file_array, 0);
+            if ( is_wp_error($id) ) {
+                unlink($file_array['tmp_name']);
+                return $id;
+            }
+            $meta                = wp_get_attachment_metadata($id);
+            $data->attachment_id = $id;
+            $data->url           = wp_get_attachment_url($id);
+            $data->thumbnail_url = wp_get_attachment_thumb_url($id);
+            $data->height        = $meta['height'];
+            $data->width         = $meta['width'];
+        }
+
+        return $data;
+    }
+
+    function _import_theme_mod( $customize_data = array() ) {
+        global $wp_customize;
+
+
+        if (!empty($customize_data)) {
+
+            $imported_terms = isset( $this->mapping['term_id'] ) ? $this->mapping['term_id'] : array();
+            $processed_posts = isset( $this->mapping['post'] ) ? $this->mapping['post'] : array();
+
+            foreach ($customize_data as $mod_key => $mod_value) {
+                if ( ! is_numeric( $mod_key ) ) {
+
+                    if (is_string($mod_value) && preg_match('/\.(jpg|jpeg|png|gif)/i', $mod_value)) {
+                        $attachment = $this->down_load_image($mod_value);
+                        if (!is_wp_error($attachment)) {
+                            $mod_value = $attachment->url;
+                            $index_key = $mod_key . '_data';
+                            if (isset($customize_data['mods'][$index_key])) {
+                                $customize_data['mods'][$index_key] = $attachment;
+                                update_post_meta($attachment->attachment_id, '_wp_attachment_is_custom_header', get_option('stylesheet'));
+                            }
+                        }
+                    }
+
+                    if ('nav_menu_locations' === $mod_key) {
+
+                        if (!is_array($imported_terms)) {
+                            $imported_terms = array();
+                        }
+                        foreach ($mod_value as $menu_location => $menu_term_id) {
+                            $mod_value[$menu_location] = isset($imported_terms[$menu_term_id]) ? $imported_terms[$menu_term_id] : $menu_term_id;
+                        }
+                    }
+                    if ('custom_logo' == $mod_key) {
+                        if (!is_array($processed_posts)) {
+                            $processed_posts = array();
+                        }
+                        $mod_value = isset($processed_posts[$mod_value]) ? $processed_posts[$mod_value] : $mod_value;
+                    }
+
+                    set_theme_mod($mod_key, $mod_value);
+                }
+            }
+        }
+
+    }
+
 
     /**
      * Download image form url

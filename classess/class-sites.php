@@ -25,7 +25,7 @@ Class Customify_Sites {
         if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
             add_action( 'wp_enqueue_scripts', array( self::$_instance, 'scripts' ) );
-            add_action('admin_menu', array( self::$_instance, 'add_menu' ), 50 );
+            add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );
             new Customify_Sites_Ajax();
         }

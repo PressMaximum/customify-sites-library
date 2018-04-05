@@ -48,7 +48,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	protected $missing_menu_items = array();
 
 	// NEW STYLE
-	protected $mapping = array();
+	public $mapping = array();
 	protected $requires_remapping = array();
 	protected $exists = array();
 	protected $user_slug_override = array();
@@ -476,11 +476,6 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		}
 
         $this->remap_featured_images();
-
-		var_dump( $this->featured_images );
-		var_dump( $this->processed_posts );
-		die();
-
 		$this->import_end();
 	}
 
@@ -548,6 +543,9 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
+
+
+
 
 		/**
 		 * Complete the import.
@@ -865,10 +863,10 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$remote_url = ! empty( $data['attachment_url'] ) ? $data['attachment_url'] : $data['guid'];
 			$post_id = $this->process_attachment( $postdata, $meta, $remote_url );
             // Fix error wrong maping media
-			$this->processed_posts[ $original_id ] = $post_id;
+			//$this->processed_posts[ $original_id ] = $post_id;
  		} else {
 			$post_id = wp_insert_post( $postdata, true );
-            $this->processed_posts[ $original_id ] = $post_id;
+            //$this->processed_posts[ $original_id ] = $post_id;
             // Fix error wrong maping media
 			do_action( 'wp_import_insert_post', $post_id, $original_id, $postdata, $data );
 		}
@@ -2067,8 +2065,8 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	function remap_featured_images() {
 		// cycle through posts that have a featured image
 		foreach ( $this->featured_images as $post_id => $value ) {
-			if ( isset( $this->processed_posts[ $value ] ) ) {
-				$new_id = $this->processed_posts[ $value ];
+			if ( isset( $this->mapping['post'][ $value ] ) ) {
+				$new_id = $this->mapping['post'][ $value ];
 
 				// only update if there's a difference
 				if ( $new_id !== $value ) {

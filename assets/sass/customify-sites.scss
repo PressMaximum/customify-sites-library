@@ -174,9 +174,11 @@
 }
 
 .customify-sites-show-modal {
-    #customify-sites-filter, #customify-sites-listing-wrapper {
+    #customify-sites-filter, #customify-sites-listing-wrapper, .wrap {
         opacity: 0;
+        height: 0px;
         visibility: hidden;
+        display: none;
     }
 }
 .cs-left {
@@ -198,21 +200,27 @@ $cs-box-border: 1px solid #ddd;
 $cs-box-bg: #fff;
 
 .customify-sites-modal-wrapper {
-    position: absolute;
-    top: 100px;
+    position: relative;
+    //top: 100px;
+    height: 0px;
+    overflow: hidden;
+    visibility: visible;
     //transform: translateY(-50%);
     width: 99%;
-    display: none;
+    display: block;
     &.cs-show {
         display: block;
         z-index: 999;
+        height: auto;
+        visibility: visible;
+        overflow: initial;
     }
     img {
         max-width: 100%;
     }
     .cs-modal-outer {
         max-width: 960px;
-        margin: 0 auto;
+        margin: 6em auto 3em;
         * {
             box-sizing: border-box;
         }
@@ -222,7 +230,10 @@ $cs-box-bg: #fff;
         @include clearfix();
         display: flex;
         margin-top: ( $cs-box-gutter*2 );
-        border: $cs-box-border;
+        //border: $cs-box-border;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+        border-radius: 5px;
+        overflow: hidden;
         .cs-info {
             width: 40%;
             padding: $cs-box-gutter;
