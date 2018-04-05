@@ -129,7 +129,7 @@ module.exports = function( grunt ) {
         compress: {
             main: {
                 options: {
-                    archive: 'customify-pro-' + pkgInfo.version + '.zip',
+                    archive: 'customify-sites-' + pkgInfo.version + '.zip',
                     mode: 'zip'
                 },
                 files: [
@@ -223,11 +223,23 @@ module.exports = function( grunt ) {
         //'cssmin'
     ]);
 
-    grunt.registerTask('release', [
-        'css',
-        'postcss',
-        'cssmin',
-        'uglify'
-    ]);
+    // To release new version just runt 2 commands below
+    // Re create everything: grunt release --ver=<version_number>
+    // Zip file installable: grunt zipfile
 
+    grunt.registerTask('zipfile', ['clean:zip', 'copy:main', 'compress:main', 'clean:main']);
+    grunt.registerTask('release', function (ver) {
+        var newVersion = grunt.option('ver');
+        if (newVersion) {
+            // Replace new version
+            newVersion = newVersion ? newVersion : 'patch';
+            grunt.task.run('bumpup:' + newVersion);
+            grunt.task.run('replace');
+
+            // i18n
+            grunt.task.run(['addtextdomain', 'makepot']);
+            // re create css file and min
+            grunt.task.run([ 'css', 'postcss' ]);
+        }
+    });
 };
