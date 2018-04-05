@@ -5,8 +5,8 @@
 
 ?>
 
-<a class="page-title-action" href="<?php echo esc_url( admin_url( 'export.php?content=all&download=true' ) ); ?>"><?php _e( 'Export XML' ); ?></a>
-<a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=cs_export' ) ); ?>"><?php _e( 'Export Config' ); ?></a>
+<a class="page-title-action" href="<?php echo esc_url( admin_url( 'export.php?content=all&download=true' ) ); ?>"><?php _e( 'Export XML', 'customify-sites' ); ?></a>
+<a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=cs_export' ) ); ?>"><?php _e( 'Export Config', 'customify-sites' ); ?></a>
 
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">

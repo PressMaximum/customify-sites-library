@@ -68,7 +68,7 @@ class Customify_Sites_WXR_Import_UI {
 		if ( ! update_post_meta( $id, '_wxr_import_info', $data ) ) {
 			return new WP_Error(
 				'wxr_importer.upload.failed_save_meta',
-				__( 'Could not cache information on the import.', 'wordpress-importer' ),
+				__( 'Could not cache information on the import.', 'wordpress-importer', 'customify-sites' ),
 				compact( 'id' )
 			);
 		}

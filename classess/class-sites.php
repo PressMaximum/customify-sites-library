@@ -130,7 +130,7 @@ Class Customify_Sites {
             'api_url' => self::get_api_url(),
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
-            'try_again' => __( 'Try Again', 'customify-site' ),
+            'try_again' => __( 'Try Again', 'customify-site', 'customify-sites' ),
             'activated_plugins' => $this->get_activated_plugins(),
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),
