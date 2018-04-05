@@ -144,7 +144,7 @@ module.exports = function( grunt ) {
         },
 
         clean: {
-            main: ["customify-sites"],
+           // main: ["customify-sites"],
             zip: ["*.zip"]
 
         },
@@ -236,7 +236,7 @@ module.exports = function( grunt ) {
     // Re create everything: grunt release --ver=<version_number>
     // Zip file installable: grunt zipfile
 
-    grunt.registerTask('zipfile', ['clean:zip', 'copy:main', 'compress:main', 'clean:main']);
+    grunt.registerTask('zipfile', ['clean:zip', 'copy:main', 'compress:main' ]);
     grunt.registerTask('release', function (ver) {
         var newVersion = grunt.option('ver');
         if (newVersion) {
