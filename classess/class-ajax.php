@@ -9,7 +9,7 @@ class Customify_Sites_Ajax {
         add_action( 'wp_ajax_cs_active_plugin', array( Customify_Sites_Plugin::get_instance(), 'ajax' ) );
 
         // Import Content
-        add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_export' ) );
+        add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_import_content' ) );
         add_action( 'wp_ajax_cs_import_options', array( $this, 'ajax_import_options' ) );
 
         // Download files
