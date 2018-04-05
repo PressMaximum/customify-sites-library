@@ -3,11 +3,13 @@
 
 //Customify_Sites_Ajax::download_file('https://raw.githubusercontent.com/FameThemes/famethemes-xml-demos/master/boston/config.json');
 
+if( isset( $_REQUEST['dev'] ) ){
 ?>
-
-<a class="page-title-action" href="<?php echo esc_url( admin_url( 'export.php?content=all&download=true' ) ); ?>"><?php _e( 'Export XML', 'customify-sites' ); ?></a>
-<a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=cs_export' ) ); ?>"><?php _e( 'Export Config', 'customify-sites' ); ?></a>
-
+<a class="page-title-action" href="<?php echo esc_url(admin_url('export.php?content=all&download=true')); ?>"><?php _e('Export XML', 'customify-sites'); ?></a>
+<a class="page-title-action" href="<?php echo esc_url(admin_url('admin-ajax.php?action=cs_export')); ?>"><?php _e('Export Config', 'customify-sites'); ?></a>
+<?php
+}
+?>
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">
         <span id="customify-sites-filter-count" class="count theme-count">&#45;</span>

@@ -114,6 +114,7 @@ Class Customify_Sites {
             'easymega' => _x( 'Mega menu', 'plugin-name', 'customify-sites' ),
             'polylang' => _x( 'Polylang', 'plugin-name', 'customify-sites' ),
             'woocommerce' => _x( 'WooCommerce', 'plugin-name', 'customify-sites' ),
+            'give' => _x( 'Give – Donation Plugin and Fundraising Platform', 'plugin-name', 'customify-sites' ),
         );
 
         return $plugins;
@@ -129,6 +130,10 @@ Class Customify_Sites {
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),
         );
+
+        $args['elementor_clear_cache_nonce'] = wp_create_nonce( 'elementor_clear_cache' );
+        $args['elementor_reset_library_nonce'] = wp_create_nonce( 'elementor_reset_library' );
+
         return $args;
     }
 

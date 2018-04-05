@@ -1,4 +1,3 @@
-console.log( 'loaded' );
 
 jQuery( document ).ready( function( $ ){
 
@@ -76,6 +75,7 @@ jQuery( document ).ready( function( $ ){
                         that.owl.trigger( 'to.owl.carousel', [ 0 ] );
                     }
                     that._reset();
+                    $( window ).resize();
                 } );
             },
             _install_plugins_notice: function (){
@@ -469,6 +469,30 @@ jQuery( document ).ready( function( $ ){
 
             _importing_options: function(){
                 var that = this;
+                var option_completed = function(){
+                    that.step_completed('import_options');
+                    $('.cs-import-options-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+
+                    // Clear cache and reset library
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        type: 'POST',
+                        data: {
+                            action: 'elementor_clear_cache',
+                            _nonce: Customify_Sites.elementor_clear_cache_nonce
+                        }
+                    });
+
+                    $.ajax({
+                        url: Customify_Sites.ajax_url,
+                        type: 'POST',
+                        data: {
+                            action: 'elementor_reset_library',
+                            _nonce: Customify_Sites.elementor_reset_library_nonce
+                        }
+                    });
+
+                };
 
                 $( '.cs-do-import-options', that.modal ).on( 'click', function( e ){
                     e.preventDefault();
@@ -486,13 +510,11 @@ jQuery( document ).ready( function( $ ){
                             },
                             success: function (res) {
                                 console.log('import_options', res);
-                                that.step_completed('import_options');
-                                $('.cs-import-options-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                option_completed();
                             },
                             error: function (res) {
                                 console.log('import_options Error', res);
-                                $('.cs-import-options-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
-                                that.step_completed('import_options');
+                                option_completed();
                             }
                         });
                     }

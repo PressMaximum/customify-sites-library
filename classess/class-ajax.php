@@ -19,6 +19,26 @@ class Customify_Sites_Ajax {
 
         add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
 
+        add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
+
+    }
+
+    function export_remove_rss_title( ) {
+        if ( isset( $_GET['download'], $_GET['download'] ) ) {
+            remove_filter( 'the_title_rss','strip_tags' );
+            remove_filter( 'the_title_rss','ent2ncr', 8 );
+            remove_filter( 'the_title_rss','esc_html' );
+
+           // apply_filters( 'the_title_rss', $post->post_title );
+            add_filter( 'the_title_rss', array( $this, 'the_title_rss' ) );
+        }
+    }
+
+    function the_title_rss( $title ){
+        if ( function_exists( 'wxr_cdata' ) ) {
+            return wxr_cdata( $title );
+        }
+        return $title;
     }
 
     /**
@@ -123,6 +143,17 @@ class Customify_Sites_Ajax {
 
     }
 
+    function _get_elementor_settings(){
+         global $wpdb;
+         $rows = $wpdb->get_results( "SELECT * FROM `{$wpdb->options}` WHERE `option_name` LIKE 'elementor_scheme_%'", ARRAY_A );
+         $data = array();
+         foreach( ( array ) $rows as $row ) {
+             $data[ $row['option_name'] ] = get_option( $row['option_name'] );
+        }
+
+        return $data;
+    }
+
     function ajax_export(){
 
         ob_start();
@@ -142,6 +173,9 @@ class Customify_Sites_Ajax {
 
         $nav_menu_locations = get_theme_mod( 'nav_menu_locations' );
 
+        $options = $this->_get_elementor_settings();
+        $options['show_on_front'] = get_option( 'show_on_front' );
+
         $config = array(
             'home_url' => home_url('/'),
             'menus' => $nav_menu_locations,
@@ -149,9 +183,7 @@ class Customify_Sites_Ajax {
                 'page_on_front'  => get_option( 'page_on_front' ),
                 'page_for_posts' => get_option( 'page_for_posts' ),
             ),
-            'options' => array(
-                'show_on_front' => get_option( 'show_on_front' )
-            ),
+            'options' => $options,
             'theme_mods' => get_theme_mods(),
             'widgets'  => $this->_get_widgets_export_data(),
         );
@@ -364,24 +396,39 @@ class Customify_Sites_Ajax {
             }
 
             if ( isset( $customize_data['pages'] ) ) {
-                $this->_import_options( $customize_data['pages'] );
+                $this->_import_options( $customize_data['pages'], true );
             }
 
             if ( isset( $customize_data['theme_mods'] ) ) {
                 $this->_import_theme_mod( $customize_data['theme_mods'] );
+            }
+
+            if ( isset( $customize_data['widgets'] ) ) {
+                $this->_import_widgets( $customize_data['widgets'] );
             }
         }
 
         die( 'ajax_import_options' );
     }
 
-    function _import_options( $options ){
+    function _import_options( $options, $re_mapping_posts = false ){
         if ( empty( $options ) ) {
             return ;
         }
-        foreach ( $options as $option_name => $ops ) {
-            update_option( $option_name, $ops );
+        $processed_posts = isset( $this->mapping['post'] ) ? $this->mapping['post'] : array();
+        if ( $re_mapping_posts ) {
+            foreach ( $options as $option_name => $ops ) {
+                if ( isset( $processed_posts[ $ops ] ) ) {
+                    $ops = $processed_posts[ $ops ];
+                }
+                update_option( $option_name, $ops );
+            }
+        } else {
+            foreach ( $options as $option_name => $ops ) {
+                update_option( $option_name, $ops );
+            }
         }
+
     }
 
     /**
@@ -401,6 +448,8 @@ class Customify_Sites_Ajax {
         $valid_sidebar = false;
         $widget_instances = array();
         $imported_terms = isset( $this->mapping['term_id'] ) ? $this->mapping['term_id'] : array();
+        $imported_posts = isset( $this->mapping['post'] ) ? $this->mapping['post'] : array();
+
         if ( ! is_array( $imported_terms ) ) {
             $imported_terms = array();
         }
@@ -429,6 +478,16 @@ class Customify_Sites_Ajax {
                 if (false !== strpos($widget_instance_id, 'nav_menu') && !empty($widget['nav_menu'])) {
                     $widget['nav_menu'] = isset($imported_terms[$widget['nav_menu']]) ? $imported_terms[$widget['nav_menu']] : 0;
                 }
+
+
+                // Media gallery widget
+                if (false !== strpos($widget_instance_id, 'media_gallery') && !empty($widget['media_gallery'])) {
+                    foreach( ( array ) $widget['ids'] as $k => $v ) {
+                        $widget[ $k ] = isset( $imported_posts[ $v ] ) ? $imported_posts[ $v ] : 0;
+                    }
+                }
+
+
                 $base_id = preg_replace('/-[0-9]+$/', '', $widget_instance_id);
                 if (isset($widget_instances[$base_id])) {
                     $single_widget_instances = get_option('widget_' . $base_id);

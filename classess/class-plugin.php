@@ -20,7 +20,7 @@ class Customify_Sites_Plugin extends TGM_Plugin_Activation{
 
     protected function activate_single_plugin( $file_path, $slug, $automatic = false ) {
         if ( $this->can_plugin_activate( $slug ) ) {
-            $activate = activate_plugin( $file_path, '', false, true );
+            $activate = activate_plugin( $file_path, '', false,  false );
         }
 
         return true;
