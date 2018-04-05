@@ -86,10 +86,10 @@
                             <p class="cs-text-center">
                                 <?php _e( 'This step will import the theme options, menus and widgets' ); ?>
                             </p>
-                            <ul class="cs-text-center">
-                                <li><?php _e( 'Customize Options' ); ?></li>
-                                <li><?php _e( 'Widgets' ); ?></li>
-                                <li><?php _e( 'Options' ); ?></li>
+                            <ul class="cs-import-options-status cs-list-plugins">
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name"><?php _e( 'Customize Options' ); ?></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name"><?php _e( 'Widgets' ); ?></span></li>
+                                <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name"><?php _e( 'Options' ); ?></span></li>
                             </ul>
 
                         </div>

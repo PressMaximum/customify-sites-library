@@ -201,11 +201,9 @@ $cs-box-bg: #fff;
 
 .customify-sites-modal-wrapper {
     position: relative;
-    //top: 100px;
     height: 0px;
     overflow: hidden;
     visibility: visible;
-    //transform: translateY(-50%);
     width: 99%;
     display: block;
     &.cs-show {

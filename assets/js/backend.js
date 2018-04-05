@@ -476,6 +476,7 @@ jQuery( document ).ready( function( $ ){
                         that.doing = true;
                         that.disable_button('import_options');
                         that.loading_button('import_options');
+                        $('.cs-import-options-status .circle-loader', that.modal).addClass('circle-loading');
                         $.ajax({
                             url: Customify_Sites.ajax_url,
                             data: {
@@ -486,15 +487,18 @@ jQuery( document ).ready( function( $ ){
                             success: function (res) {
                                 console.log('import_options', res);
                                 that.step_completed('import_options');
+                                $('.cs-import-options-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                            },
+                            error: function (res) {
+                                console.log('import_options Error', res);
+                                $('.cs-import-options-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                that.step_completed('import_options');
                             }
                         });
                     }
                 } );
 
             }
-
-
-
 
         };
 
