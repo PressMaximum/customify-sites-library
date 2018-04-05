@@ -9,14 +9,155 @@ class Customify_Sites_Ajax {
         add_action( 'wp_ajax_cs_active_plugin', array( Customify_Sites_Plugin::get_instance(), 'ajax' ) );
 
         // Import Content
-        add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_import_content' ) );
+        add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_export' ) );
         add_action( 'wp_ajax_cs_import_options', array( $this, 'ajax_import_options' ) );
 
         // Download files
         add_action( 'wp_ajax_cs_download_files', array( $this, 'ajax_download_files' ) );
 
+        add_action( 'wp_ajax_cs_export', array( $this, 'ajax_export' ) );
+
         add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
 
+    }
+
+    /**
+     * Available widgets
+     *
+     * Gather site's widgets into array with ID base, name, etc.
+     * Used by export and import functions.
+     *
+     * @since 0.4
+     * @global array $wp_registered_widget_updates
+     * @return array Widget information
+     */
+     function _get_available_widgets() {
+
+        global $wp_registered_widget_controls;
+
+        $widget_controls = $wp_registered_widget_controls;
+
+        $available_widgets = array();
+
+        foreach ( $widget_controls as $widget ) {
+
+            if ( ! empty( $widget['id_base'] ) && ! isset( $available_widgets[$widget['id_base']] ) ) { // no dupes
+
+                $available_widgets[$widget['id_base']]['id_base'] = $widget['id_base'];
+                $available_widgets[$widget['id_base']]['name'] = $widget['name'];
+
+            }
+
+        }
+
+        return $available_widgets;
+
+    }
+
+    /**
+     * Generate Widgets export data
+     *
+     * @since 0.1
+     * @return string Export file contents
+     */
+     function _get_widgets_export_data() {
+
+        // Get all available widgets site supports
+        $available_widgets = $this->_get_available_widgets();
+
+        // Get all widget instances for each widget
+        $widget_instances = array();
+        foreach ( $available_widgets as $widget_data ) {
+
+            // Get all instances for this ID base
+            $instances = get_option( 'widget_' . $widget_data['id_base'] );
+
+            // Have instances
+            if ( ! empty( $instances ) ) {
+
+                // Loop instances
+                foreach ( $instances as $instance_id => $instance_data ) {
+
+                    // Key is ID (not _multiwidget)
+                    if ( is_numeric( $instance_id ) ) {
+                        $unique_instance_id = $widget_data['id_base'] . '-' . $instance_id;
+                        $widget_instances[$unique_instance_id] = $instance_data;
+                    }
+                }
+            }
+        }
+
+        // Gather sidebars with their widget instances
+        $sidebars_widgets = get_option( 'sidebars_widgets' ); // get sidebars and their unique widgets IDs
+        $sidebars_widget_instances = array();
+        foreach ( $sidebars_widgets as $sidebar_id => $widget_ids ) {
+
+            // Skip inactive widgets
+            if ( 'wp_inactive_widgets' == $sidebar_id ) {
+                continue;
+            }
+
+            // Skip if no data or not an array (array_version)
+            if ( ! is_array( $widget_ids ) || empty( $widget_ids ) ) {
+                continue;
+            }
+
+            // Loop widget IDs for this sidebar
+            foreach ( $widget_ids as $widget_id ) {
+
+                // Is there an instance for this widget ID?
+                if ( isset( $widget_instances[$widget_id] ) ) {
+                    // Add to array
+                    $sidebars_widget_instances[$sidebar_id][$widget_id] = $widget_instances[$widget_id];
+                }
+
+            }
+
+        }
+
+        // Filter pre-encoded data
+        $data = apply_filters( 'customify_sites_export_widgets_data', $sidebars_widget_instances );
+
+        // Encode the data for file contents
+        return $data;
+
+    }
+
+    function ajax_export(){
+
+        ob_start();
+        ob_end_clean();
+        ob_flush();
+
+        $sitename = sanitize_key( get_bloginfo( 'name' ) );
+        if ( ! empty( $sitename ) ) {
+            $sitename .= '.';
+        }
+        $date = date( 'Y-m-d' );
+        $filename = $sitename . 'wordpress.' . $date . '.json';
+
+        header( 'Content-Description: File Transfer' );
+        header( 'Content-Disposition: attachment; filename=' . $filename );
+        header( 'Content-Type: application/xml; charset=' . get_option( 'blog_charset' ), true );
+
+        $nav_menu_locations = get_theme_mod( 'nav_menu_locations' );
+
+        $config = array(
+            'home_url' => home_url('/'),
+            'menus' => $nav_menu_locations,
+            'pages' => array(
+                'page_on_front'  => get_option( 'page_on_front' ),
+                'page_for_posts' => get_option( 'page_for_posts' ),
+            ),
+            'options' => array(
+                'show_on_front' => get_option( 'show_on_front' )
+            ),
+            'theme_mods' => get_theme_mods(),
+            'widgets'  => $this->_get_widgets_export_data(),
+        );
+
+        echo wp_json_encode( $config );
+        die();
     }
 
     function install_theme(){

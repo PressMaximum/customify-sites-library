@@ -640,8 +640,6 @@ jQuery( document ).ready( function( $ ){
 
         },
 
-
-
         view_details: function(){
             // Test
             //$( 'body' ).addClass( 'customify-sites-show-modal' );

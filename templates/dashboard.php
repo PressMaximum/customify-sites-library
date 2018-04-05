@@ -5,7 +5,9 @@
 
 ?>
 
-<a href="#" class="cs-btn-circle-btn"><span class="cs-btn-circle"></span><span class="cs-btn-circle-text">Text here</span></a>
+<a class="page-title-action" href="<?php echo esc_url( admin_url( 'export.php?content=all&download=true' ) ); ?>"><?php _e( 'Export XML' ); ?></a>
+<a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=cs_export' ) ); ?>"><?php _e( 'Export Config' ); ?></a>
+
 <div id="customify-sites-filter" class="wp-filter hide-if-no-js">
     <div class="filter-count">
         <span id="customify-sites-filter-count" class="count theme-count">&#45;</span>
@@ -19,7 +21,7 @@
     <ul id="customify-sites-filter-tag"  class="filter-links float-right" style="float: right;"></ul>
 </div>
 
-
+<hr class="wp-header-end">
 
 <script id="customify-site-item-html" type="text/html">
     <div class="theme" title="{{ data.title }}" tabindex="0" aria-describedby="" data-slug="{{ data.slug }}">

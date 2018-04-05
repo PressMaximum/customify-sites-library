@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Customify Sites
-Plugin URI: http://wordpress.org/extend/plugins/wordpress-importer/
-Description: Import posts, pages, comments, custom fields, categories, tags and more from a WordPress export file.
-Author: wordpressdotorg, rmccue
-Author URI: http://wordpress.org/
-Version: 2.0
-Text Domain: wordpress-importer
+Plugin URI: https://wpcustomify.com
+Description: Import free sites build with Customify theme.
+Author: WPCustomify
+Author URI: https://wpcustomify.com
+Version: 0.0.1
+Text Domain: customify-sites
 License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
@@ -33,3 +33,27 @@ require dirname( __FILE__ ) . '/classess/class-ajax.php';
 Customify_Sites::get_instance();
 
 add_action( 'admin_init', array( 'Customify_Sites', 'get_instance' ) );
+
+
+/**
+ * Redirect to import page
+ *
+ * @param $plugin
+ * @param bool|false $network_wide
+ */
+function customify_sites_plugin_activate( $plugin, $network_wide = false ) {
+    if ( ! $network_wide &&  $plugin == plugin_basename( __FILE__ ) ) {
+
+        $url = add_query_arg(
+            array(
+                'page' => 'customify-sites'
+            ),
+            admin_url('themes.php')
+        );
+
+        wp_redirect($url);
+        die();
+
+    }
+}
+add_action( 'activated_plugin', 'customify_sites_plugin_activate', 90, 2 );

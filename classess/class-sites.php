@@ -2,6 +2,7 @@
 
 Class Customify_Sites {
     static $_instance = null;
+    const THEME_NAME = 'customify';
 
     function scripts(){
         wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
@@ -27,9 +28,37 @@ Class Customify_Sites {
             add_action( 'wp_enqueue_scripts', array( self::$_instance, 'scripts' ) );
             add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );
+            add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
             new Customify_Sites_Ajax();
         }
         return self::$_instance;
+    }
+
+    function admin_notice( $hook ) {
+        $screen = get_current_screen();
+        if( $screen->id != 'appearance_page_customify-sites' && $screen->id != 'themes' ) {
+            return '';
+        }
+
+        if( get_template() == self::THEME_NAME  ) {
+            return '';
+        }
+
+        $themes = wp_get_themes();
+        if ( isset( $themes[ self::THEME_NAME ] ) ) {
+            $url = esc_url( 'themes.php?theme='.self::THEME_NAME );
+        } else {
+            $url = esc_url( 'theme-install.php?search='.self::THEME_NAME );
+        }
+
+        $html = sprintf( 'Customify Theme needs to be active for you to use currently installed "Customify Sites" plugin. <a href="%1$s">Install &amp; Activate Now</a>', $url );
+        ?>
+        <div class="notice notice-warning is-dismissible">
+            <p>
+                <?php echo $html; ?>
+            </p>
+        </div>
+        <?php
     }
 
     static function get_api_url(){
