@@ -8,6 +8,12 @@
     }
 }
 
+@mixin for_mobile(){
+    @media screen and (max-width: 80em){
+        @content;
+    }
+}
+
 .cs-hide {
     visibility: hidden;
     height: 0px;
@@ -201,6 +207,7 @@
 $cs-box-gutter: 15px;
 $cs-box-border: 1px solid #e5e5e5;
 $cs-box-bg: #fff;
+$border: $cs-box-border;
 
 .customify-sites-modal-wrapper {
     position: relative;
@@ -376,16 +383,23 @@ $cs-box-bg: #fff;
 }
 
 // Preview
+body.cs-previewing-site{
+    overflow: hidden !important;
+}
 #customify-site-preview {
     position: fixed;
-    z-index: 99999;
-    width: 100%;
-    height: 100%;
-    top: 0px;
+    z-index: 99999999;
     left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
     display: block;
+    transition: width .4s linear;
     &.cs-hide {
         display: none;
+        z-index: -1;
+        height: 0px;
+
     }
     background: #fff;
     * {
@@ -397,23 +411,37 @@ $cs-box-bg: #fff;
         width: 100%;
         bottom: 50px;
         display: block;
-        background: #333333;
-
+        background: #e5e5e5;
         .cs-iframe {
-            width: 100%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
             height: 100%;
+
             display: block;
-            margin: 0 auto;
-            max-height: 100%;
-            max-width: 100%;
             overflow-x: hidden;
-            transition: width .4s linear;
+            transition-property: left,right,top,bottom,width,margin, background;
+            transition-duration: .2s;
+
             &[data-device="tablet"] {
+                margin: auto 0 auto -360px;
                 width: 720px;
-                //height: 1080px;
+                height: 1080px;
+                max-height: 100%;
+                max-width: 100%;
+                left: 50%;
+                right: auto;
             }
             &[data-device="phone"] {
-                width: 520px;
+                margin: auto 0 auto -207px;
+                width: 414px;
+                height: 736px;
+                max-height: 100%;
+                max-width: 100%;
+                left: 50%;
+                right: auto;
             }
         }
         iframe {
@@ -421,6 +449,9 @@ $cs-box-bg: #fff;
             height: 100%;
             display: block;
             margin: 0 auto;
+            border: 0px none;
+            box-shadow: none;
+            position: absolute;
         }
     }
     .cs-preview-bar {
@@ -429,11 +460,11 @@ $cs-box-bg: #fff;
         left: 0px;
         width: 100%;
         display: block;
-        border-top: $cs-box-border;
         @include clearfix();
-        padding: 15px;
-        height: 50px;
-        background: #eee;
+        padding: 20px;
+        height: 60px;
+        background: #fff;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
         a {
             text-decoration: none;
             box-shadow: none !important;
@@ -443,22 +474,33 @@ $cs-box-bg: #fff;
             width: 30px;
             text-align: center;
             display: inline-block;
-           &:before{
-               display: inline-block;
-               text-align: center;
-           }
+            &:before{
+                display: inline-block;
+                text-align: center;
+            }
         }
         .cs-preview-import {
-            font-size: 14px;
-            margin: 0px 0px 0px 10px;
-            padding: 3px 10px;
-            border: $cs-box-border;
-            border-radius: 5px;
-            float: left;
+            margin-left: 10px;
+            padding: 3px 8px;
+            position: relative;
+            top: 0px;
+            text-decoration: none;
+            border: none;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            background: #f7f7f7;
+            text-shadow: none;
+            font-weight: 600;
+            font-size: 13px;
+            line-height: normal;
+            color: #0073aa;
+            cursor: pointer;
+            outline: 0;
         }
         a {
+            color: #333;
             &.current {
-                color: #333;
+                color: #cccccc;
             }
         }
     }
@@ -466,9 +508,24 @@ $cs-box-bg: #fff;
     .cs-demo-name {
         float: left;
         font-weight: 600;
+        line-height: 1;
     }
     .cs-view-ports, .cs-preview-close {
         float: right;
     }
 
+    .cs-preview-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate( -50%, -50% );
+        z-index: 9999;
+    }
+
+    &.cs-iframe-loaded {
+        .cs-preview-loading {
+            z-index: -1;
+            display: none;
+        }
+    }
 }
