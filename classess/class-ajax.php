@@ -300,7 +300,7 @@ class Customify_Sites_Ajax {
         }
 
         $return['texts']['post_count'] = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], 'customify-sites' ), $return['summary']['post_count'] );
-        $return['texts']['media_count'] = sprintf( _n( '%d media item', '%d media item', $return['summary']['media_count'], 'customify-sites' ), $return['summary']['media_count'] );
+        $return['texts']['media_count'] = sprintf( _n( '%d media item', '%d media items', $return['summary']['media_count'], 'customify-sites' ), $return['summary']['media_count'] );
         $return['texts']['user_count'] = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], 'customify-sites' ), $return['summary']['user_count'] );
         $return['texts']['term_count'] = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], 'customify-sites' ), $return['summary']['term_count'] );
         $return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], 'customify-sites' ), $return['summary']['comment_count'] );

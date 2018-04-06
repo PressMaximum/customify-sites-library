@@ -16,8 +16,8 @@
 .circle-loader,
 .circle-loader:after {
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
+  width: 1.6em;
+  height: 1.6em;
 }
 
 .load-complete {
@@ -68,17 +68,17 @@
   }
   20% {
     height: 0;
-    width: 0.5em;
+    width: 0.4em;
     opacity: 1;
   }
   40% {
-    height: 1em;
-    width: 0.5em;
+    height: 0.8em;
+    width: 0.4em;
     opacity: 1;
   }
   100% {
-    height: 1em;
-    width: 0.5em;
+    height: 0.8em;
+    width: 0.4em;
     opacity: 1;
   }
 }
@@ -590,7 +590,7 @@
   margin: 0 auto;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-step .cs-plugin-name {
-  line-height: 2;
+  line-height: 1.6;
   margin-left: 5px;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-step .icon {
