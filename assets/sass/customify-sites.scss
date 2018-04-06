@@ -247,6 +247,7 @@ $cs-box-bg: #fff;
             -webkit-backface-visibility: hidden;
             transition: opacity .2s ease-in-out;
             border: $cs-box-border;
+            border-radius: 4px;
             img {
                 height: auto;
                 position: absolute;
@@ -432,6 +433,7 @@ $cs-box-bg: #fff;
         @include clearfix();
         padding: 15px;
         height: 50px;
+        background: #eee;
         a {
             text-decoration: none;
             box-shadow: none !important;
@@ -454,6 +456,11 @@ $cs-box-bg: #fff;
             border-radius: 5px;
             float: left;
         }
+        a {
+            &.current {
+                color: #333;
+            }
+        }
     }
 
     .cs-demo-name {
@@ -463,4 +470,5 @@ $cs-box-bg: #fff;
     .cs-view-ports, .cs-preview-close {
         float: right;
     }
+
 }

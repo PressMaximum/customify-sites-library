@@ -505,6 +505,7 @@
   -webkit-backface-visibility: hidden;
   transition: opacity .2s ease-in-out;
   border: 1px solid #e5e5e5;
+  border-radius: 4px;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail img {
   height: auto;
@@ -682,6 +683,7 @@
   border-top: 1px solid #e5e5e5;
   padding: 15px;
   height: 50px;
+  background: #eee;
   font-size: 24px;
 }
 #customify-site-preview .cs-preview-bar:after {
@@ -709,6 +711,9 @@
   border: 1px solid #e5e5e5;
   border-radius: 5px;
   float: left;
+}
+#customify-site-preview .cs-preview-bar a.current {
+  color: #333;
 }
 #customify-site-preview .cs-demo-name {
   float: left;
