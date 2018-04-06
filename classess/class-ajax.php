@@ -245,10 +245,41 @@ class Customify_Sites_Ajax {
 
         // try to get files exists
 
-        $slug = sanitize_text_field( wp_unslash( $_REQUEST['site_slug'] ) );
-        $xml_url = sanitize_text_field( wp_unslash(  $_REQUEST['xml_url'] ) );
-        $json_url = sanitize_text_field( wp_unslash( $_REQUEST['json_url'] ) );
+        $slug = isset( $_REQUEST['site_slug'] ) ?  sanitize_text_field( wp_unslash( $_REQUEST['site_slug'] ) ) : '';
+        $builder = isset( $_REQUEST['builder'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['builder'] ) ) : '';
 
+        $resources = isset( $_REQUEST['resources'] ) ? wp_unslash( $_REQUEST['resources'] ) : array();
+        $resources = wp_parse_args( $resources, array(
+            'xml_url' => '',
+            'json_url' => '',
+            'elementor_xml_url' => '',
+            'elementor_json_url' => '',
+            'beaver_builder_xm_url' => '',
+            'beaver_builder_json_url' => '',
+        ) );
+        $xml_url = false;
+        $json_url = false;
+        $suffix_name = '';
+        switch( $builder ) {
+            case 'beaver-builder':
+            case 'beaver-builder-lite-version':
+                $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
+                $json_url = sanitize_text_field( wp_unslash( $resources['elementor_json_url'] ) );
+                $suffix_name = 'beaver-builder';
+                break;
+            case 'elementor':
+                $suffix_name = 'elementor';
+                $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xm_url'] ) );
+                $json_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_json_url'] ) );
+                break;
+        }
+
+        if ( ! $xml_url ) {
+            $xml_url = sanitize_text_field( wp_unslash( $resources['xml_url'] ) );
+        }
+        if ( ! $json_url ) {
+            $json_url = sanitize_text_field( wp_unslash( $resources['json_url'] ) );
+        }
 
         $return = array(
             'xml_id' => 0,
@@ -261,8 +292,8 @@ class Customify_Sites_Ajax {
             return $return;
         }
 
-        $xml_file_name = $slug.'-demo-content';
-        $json_file_name = $slug.'-demo-config';
+        $xml_file_name = $slug.'-demo-content-'.$suffix_name;
+        $json_file_name = $slug.'-demo-config-'.$suffix_name;
 
         $xml_file_exists = get_page_by_path( $xml_file_name, OBJECT, 'attachment' );
         $json_file_exists = get_page_by_path( $json_file_name, OBJECT, 'attachment' );

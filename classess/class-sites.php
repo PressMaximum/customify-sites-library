@@ -23,7 +23,6 @@ Class Customify_Sites {
             add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 50 );
             add_action( 'admin_enqueue_scripts', array( self::$_instance, 'admin_scripts' ) );
             add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
-            new Customify_Sites_Ajax();
         }
         return self::$_instance;
     }

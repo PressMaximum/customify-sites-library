@@ -2,6 +2,7 @@
 jQuery( document ).ready( function( $ ){
 
     var modal_sites = {};
+    var current_page_builder = 'all';
 
     var getTemplate = _.memoize(function () {
 
@@ -51,6 +52,7 @@ jQuery( document ).ready( function( $ ){
             xml_id: 0,
             json_id: 0,
             doing: false,
+            current_builder: 'all',
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -85,12 +87,30 @@ jQuery( document ).ready( function( $ ){
                 var install_plugins     = '';
                 var manual_plugins      = '';
 
-                if ( _.isEmpty( that.data.plugins ) ) {
-                    that.data.plugins  = {};
+                if ( !_.isArray( that.data.plugins ) ) {
+                    that.data.plugins  = [];
                 }
 
-                if ( _.isEmpty( that.data.manual_plugins ) ) {
-                    that.data.manual_plugins  = {};
+                if ( _.isArray( that.data.manual_plugins ) ) {
+                    that.data.manual_plugins  = [];
+                }
+
+                var elementor = 'elementor';
+                var beaver_builder = 'beaver-builder-lite-version';
+
+                that.current_builder = 'all';
+
+                if ( current_page_builder === 'all' || current_page_builder === 'elementor' ) {
+                    // Elementor is recommend the remove beaver-builder
+                    if ( that.data.plugins.indexOf( elementor) > -1) {
+                        that.current_builder = elementor;
+                        that.data.plugins = _.reject( that.data.plugins, function(val, i){ return val === beaver_builder; });
+                    }
+                } else if ( current_page_builder == 'beaver-builder' || current_page_builder === beaver_builder ) {
+                    if ( that.data.plugins.indexOf( beaver_builder ) > -1) {
+                        that.current_builder = 'beaver-builder';
+                        that.data.plugins = _.reject( that.data.plugins, function(val, i){ return val === elementor; });
+                    }
                 }
 
                 _.each( that.data.plugins, function( plugin_file ){
@@ -340,11 +360,12 @@ jQuery( document ).ready( function( $ ){
                         $.ajax({
                             url: Customify_Sites.ajax_url,
                             dataType: 'json',
+                            type: 'post',
                             data: {
                                 action: 'cs_download_files',
-                                xml_url: data.xml_url,
-                                json_url: data.json_url,
-                                site_slug: data.slug
+                                resources: that.data.resources,
+                                builder: that.current_builder,
+                                site_slug: that.data.slug
                             },
                             success: function (res) {
                                 that.xml_id = res.xml_id;
@@ -545,6 +566,7 @@ jQuery( document ).ready( function( $ ){
             }
             $( 'body' ).addClass('loading-content');
             $( '#customify-sites-listing-wrapper' ).hide();
+            that.filter_data = that.get_filter_data();
             that.filter_data['_t'] = new Date().getTime();
             that.xhr = $.ajax( {
                 url: Customify_Sites.api_url,
@@ -617,7 +639,11 @@ jQuery( document ).ready( function( $ ){
             if ( cat === 'all' ) {
                 cat = '';
             }
-            return {
+            current_page_builder = _.clone( cat );
+            if ( ! current_page_builder ) {
+                current_page_builder = 'all';
+            }
+             return {
                 cat: cat,
                 tag: tag,
                 s: s

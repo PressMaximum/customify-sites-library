@@ -31,8 +31,7 @@ require dirname( __FILE__ ) . '/classess/class-ajax.php';
 
 
 Customify_Sites::get_instance();
-
-add_action( 'admin_init', array( 'Customify_Sites', 'get_instance' ) );
+new Customify_Sites_Ajax();
 
 
 /**
