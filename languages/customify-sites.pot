@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Customify Sites 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/customify-sites\n"
-"POT-Creation-Date: 2018-04-05 08:44:03+00:00\n"
+"POT-Creation-Date: 2018-04-07 01:51:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,31 +24,31 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n1.0.2\n"
 
-#: classess/class-ajax.php:282
+#: classess/class-ajax.php:333
 msgid "%d post (including CPT)"
 msgid_plural "%d posts (including CPTs)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-ajax.php:283
+#: classess/class-ajax.php:334
 msgid "%d media item"
-msgid_plural "%d media item"
+msgid_plural "%d media items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-ajax.php:284
+#: classess/class-ajax.php:335
 msgid "%d user"
 msgid_plural "%d users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-ajax.php:285
+#: classess/class-ajax.php:336
 msgid "%d term"
 msgid_plural "%d terms"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-ajax.php:286
+#: classess/class-ajax.php:337
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] ""
@@ -66,8 +66,8 @@ msgstr ""
 msgid "Install Required Plugins"
 msgstr ""
 
-#: classess/class-tgm.php:335 templates/modal.php:17 templates/modal.php:47
-#: templates/modal.php:119
+#: classess/class-tgm.php:335 templates/modal.php:18 templates/modal.php:48
+#: templates/modal.php:120
 msgid "Install Plugins"
 msgstr ""
 
@@ -579,11 +579,15 @@ msgstr ""
 msgid "Search demos..."
 msgstr ""
 
-#: templates/dashboard.php:36
+#: templates/dashboard.php:36 templates/modal.php:11
+msgid "Preview"
+msgstr ""
+
+#: templates/dashboard.php:37
 msgid "Details"
 msgstr ""
 
-#: templates/dashboard.php:47
+#: templates/dashboard.php:48
 msgid "No sites found. Try a different search."
 msgstr ""
 
@@ -591,92 +595,116 @@ msgstr ""
 msgid "Back to site library"
 msgstr ""
 
-#: templates/modal.php:16
+#: templates/modal.php:17
 msgid "Import Overview"
 msgstr ""
 
-#: templates/modal.php:18 templates/modal.php:67 templates/modal.php:120
+#: templates/modal.php:19 templates/modal.php:68 templates/modal.php:121
 msgid "Import Content"
 msgstr ""
 
-#: templates/modal.php:19 templates/modal.php:85 templates/modal.php:121
+#: templates/modal.php:20 templates/modal.php:86 templates/modal.php:122
 msgid "Import Options"
 msgstr ""
 
-#: templates/modal.php:32
+#: templates/modal.php:33
 msgid "Hi! Welcome back"
 msgstr ""
 
-#: templates/modal.php:33
+#: templates/modal.php:34
 msgid ""
 "You may have already run this theme setup wizard. If you would like to "
 "proceed anyway, click on the \"Start\" button below."
 msgstr ""
 
-#: templates/modal.php:35
+#: templates/modal.php:36
 msgid "Oops! Could not download demo content xml and config files."
 msgstr ""
 
-#: templates/modal.php:49
+#: templates/modal.php:50
 msgid "Let's install some essential WordPress plugins to get your site up to speed."
 msgstr ""
 
-#: templates/modal.php:54
+#: templates/modal.php:55
 msgid "The following plugins need to be installed and activated manually."
 msgstr ""
 
-#: templates/modal.php:68
+#: templates/modal.php:69
 msgid ""
 "Let's import content to your website, to help you get familiar with the "
 "theme."
 msgstr ""
 
-#: templates/modal.php:87
+#: templates/modal.php:88
 msgid "This step will import the theme options, menus and widgets"
 msgstr ""
 
-#: templates/modal.php:90
+#: templates/modal.php:91
 msgid "Customize Options"
 msgstr ""
 
-#: templates/modal.php:91
+#: templates/modal.php:92
 msgid "Widgets"
 msgstr ""
 
-#: templates/modal.php:92
+#: templates/modal.php:93
 msgid "Options"
 msgstr ""
 
-#: templates/modal.php:104
+#: templates/modal.php:105
 msgid "All done. Have fun!"
 msgstr ""
 
-#: templates/modal.php:105
+#: templates/modal.php:106
 msgid "Your theme has been all set up. Enjoy your new theme by the WordPress team."
 msgstr ""
 
-#: templates/modal.php:107
+#: templates/modal.php:108
 msgid "Explore WordPress"
 msgstr ""
 
-#: templates/modal.php:108
+#: templates/modal.php:109
 msgid "Get Theme Support"
 msgstr ""
 
-#: templates/modal.php:109
+#: templates/modal.php:110
 msgid "Start Customizing"
 msgstr ""
 
-#: templates/modal.php:116
+#: templates/modal.php:117
 msgid "Skip"
 msgstr ""
 
-#: templates/modal.php:118
+#: templates/modal.php:119
 msgid "Start Import"
 msgstr ""
 
-#: templates/modal.php:122
+#: templates/modal.php:123
 msgid "View Your Website"
+msgstr ""
+
+#: templates/preview.php:12
+msgid "Import"
+msgstr ""
+
+#: templates/preview.php:13
+msgid "Close preview"
+msgstr ""
+
+#: templates/preview.php:15
+msgid "Previous demo"
+msgstr ""
+
+#: templates/preview.php:17
+msgid "Desktop view"
+msgstr ""
+
+#: templates/preview.php:18
+msgid "Tablet view"
+msgstr ""
+
+#: templates/preview.php:19
+msgid "Phone view"
 msgstr ""
 
 #. Author URI of the plugin/theme
