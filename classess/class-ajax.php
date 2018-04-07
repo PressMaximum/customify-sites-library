@@ -259,16 +259,16 @@ class Customify_Sites_Ajax {
         ) );
         $xml_url = false;
         $json_url = false;
-        $suffix_name = '';
+        $suffix_name = '-no-builder';
         switch( $builder ) {
             case 'beaver-builder':
             case 'beaver-builder-lite-version':
                 $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
                 $json_url = sanitize_text_field( wp_unslash( $resources['elementor_json_url'] ) );
-                $suffix_name = 'beaver-builder';
+                $suffix_name = '-beaver-builder';
                 break;
             case 'elementor':
-                $suffix_name = 'elementor';
+                $suffix_name = '-elementor';
                 $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xm_url'] ) );
                 $json_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_json_url'] ) );
                 break;
@@ -292,8 +292,8 @@ class Customify_Sites_Ajax {
             return $return;
         }
 
-        $xml_file_name = $slug.'-demo-content-'.$suffix_name;
-        $json_file_name = $slug.'-demo-config-'.$suffix_name;
+        $xml_file_name = $slug.'-content'.$suffix_name;
+        $json_file_name = $slug.'-config'.$suffix_name;
 
         $xml_file_exists = get_page_by_path( $xml_file_name, OBJECT, 'attachment' );
         $json_file_exists = get_page_by_path( $json_file_name, OBJECT, 'attachment' );
