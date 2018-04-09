@@ -79,6 +79,17 @@ class Customify_Sites_WXR_Import_UI {
 		return $data;
 	}
 
+	function get_posts_by_title( $page_title, $post_type ){
+        global $wpdb;
+        $sql = $wpdb->prepare( "
+			SELECT ID
+			FROM $wpdb->posts
+			WHERE post_title = %s
+			AND post_type = %s
+		", $page_title, $post_type );
+        return $wpdb->get_col( $sql );
+    }
+
 
 	public function import() {
 
@@ -108,6 +119,23 @@ class Customify_Sites_WXR_Import_UI {
 		$file = get_attached_file( $this->id );
 		$err = $importer->import( $file );
 		update_post_meta( $this->id, '_wxr_importer_mapping', $importer->mapping );
+
+		// remove Hello World! post
+
+        $ids = $this->get_posts_by_title( 'Hello World!', 'post' );
+        if ( is_array( $ids ) ) {
+            foreach( $ids as $id ) {
+                wp_update_post( array( 'ID' => $id, 'post_status' => 'pending' ) );
+            }
+        }
+
+        $ids = $this->get_posts_by_title( 'Sample Page', 'page' );
+        if ( is_array( $ids ) ) {
+            foreach( $ids as $id ) {
+                wp_update_post( array( 'ID' => $id, 'post_status' => 'pending' ) );
+            }
+        }
+        
 		ob_start();
 		ob_end_clean();
 		ob_end_flush();
