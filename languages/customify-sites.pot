@@ -2,9 +2,9 @@
 # This file is distributed under the GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
 msgid ""
 msgstr ""
-"Project-Id-Version: Customify Sites 0.0.1\n"
+"Project-Id-Version: Customify Sites Library 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/customify-sites\n"
-"POT-Creation-Date: 2018-04-07 01:51:11+00:00\n"
+"POT-Creation-Date: 2018-04-10 03:02:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -54,7 +54,7 @@ msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#. Plugin Name of the plugin/theme
+#: classess/class-sites.php:62 classess/class-sites.php:67
 msgid "Customify Sites"
 msgstr ""
 
@@ -613,8 +613,8 @@ msgstr ""
 
 #: templates/modal.php:34
 msgid ""
-"You may have already run this theme setup wizard. If you would like to "
-"proceed anyway, click on the \"Start\" button below."
+"You may have already run this site import wizard. If you would like to "
+"proceed anyway, click on the \"Start Import\" button below."
 msgstr ""
 
 #: templates/modal.php:36
@@ -705,6 +705,10 @@ msgstr ""
 
 #: templates/preview.php:19
 msgid "Phone view"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Customify Sites Library"
 msgstr ""
 
 #. Author URI of the plugin/theme

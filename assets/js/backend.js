@@ -74,7 +74,7 @@ jQuery( document ).ready( function( $ ){
                     $( 'body' ).addClass( 'customify-sites-show-modal' );
                     that.modal.addClass( 'cs-show' );
                     if ( that.owl ) {
-                        that.owl.trigger( 'to.owl.carousel', [ 0 ] );
+                        that.owl.trigger( 'to.owl.carousel', [ 0, 0] );
                     }
                     that._reset();
                     $( window ).resize();

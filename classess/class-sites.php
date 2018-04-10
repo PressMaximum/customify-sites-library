@@ -44,7 +44,7 @@ Class Customify_Sites {
             $url = esc_url( 'theme-install.php?search='.self::THEME_NAME );
         }
 
-        $html = sprintf( 'Customify Theme needs to be active for you to use currently installed "Customify Sites" plugin. <a href="%1$s">Install &amp; Activate Now</a>', $url );
+        $html = sprintf( '<strong>Customify Sites Library</strong> requires <strong>Customify</strong> theme to be activated to work. <a href="%1$s">Install &amp; Activate Now</a>', $url );
         ?>
         <div class="notice notice-warning is-dismissible">
             <p>
