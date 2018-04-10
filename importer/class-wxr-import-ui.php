@@ -135,7 +135,7 @@ class Customify_Sites_WXR_Import_UI {
                 wp_update_post( array( 'ID' => $id, 'post_status' => 'pending' ) );
             }
         }
-        
+
 		ob_start();
 		ob_end_clean();
 		ob_end_flush();
