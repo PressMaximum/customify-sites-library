@@ -18,7 +18,7 @@ if( isset( $_REQUEST['dev'] ) ){
         <li><a href="#" data-slug="all" class="current"><?php _e( 'All', 'customify-sites' ); ?></a></li>
     </ul>
     <form class="search-form">
-        <label class="screen-reader-text" for="wp-filter-search-input"><?php _e( 'Search Themes', 'customify-sites' ); ?></label><input placeholder="<?php esc_attr_e( 'Search demos...', 'customify-sites' ); ?>" type="search" aria-describedby="live-search-desc" id="customify-sites-search-input" class="wp-filter-search">
+        <label class="screen-reader-text" for="wp-filter-search-input"><?php _e( 'Search Themes', 'customify-sites' ); ?></label><input placeholder="<?php esc_attr_e( 'Search sites...', 'customify-sites' ); ?>" type="search" aria-describedby="live-search-desc" id="customify-sites-search-input" class="wp-filter-search">
     </form>
     <ul id="customify-sites-filter-tag"  class="filter-links float-right" style="float: right;"></ul>
 </div>

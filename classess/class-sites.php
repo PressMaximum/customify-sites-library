@@ -64,7 +64,7 @@ Class Customify_Sites {
 
     function page(){
         echo '<div class="wrap">';
-        echo '<h1 class="wp-heading-inline">'.__( 'Customify Sites', 'customify-sites' ).'</h1>';
+        echo '<h1 class="wp-heading-inline">'.__( 'Customify Sites Library', 'customify-sites' ).'</h1>';
         require_once CUSTOMIFY_SITES_PATH.'/templates/dashboard.php';
         require_once CUSTOMIFY_SITES_PATH.'/templates/modal.php';
         echo '</div>';
