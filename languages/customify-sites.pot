@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Customify Sites Library 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/customify-sites\n"
-"POT-Creation-Date: 2018-04-10 03:02:56+00:00\n"
+"POT-Creation-Date: 2018-04-10 04:32:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -54,8 +54,12 @@ msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-sites.php:62 classess/class-sites.php:67
+#: classess/class-sites.php:62
 msgid "Customify Sites"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Customify Sites Library"
 msgstr ""
 
 #: classess/class-sites.php:128
@@ -576,7 +580,7 @@ msgid "Search Themes"
 msgstr ""
 
 #: templates/dashboard.php:21
-msgid "Search demos..."
+msgid "Search sites..."
 msgstr ""
 
 #: templates/dashboard.php:36 templates/modal.php:11
@@ -705,10 +709,6 @@ msgstr ""
 
 #: templates/preview.php:19
 msgid "Phone view"
-msgstr ""
-
-#. Plugin Name of the plugin/theme
-msgid "Customify Sites Library"
 msgstr ""
 
 #. Author URI of the plugin/theme
