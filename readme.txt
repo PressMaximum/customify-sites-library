@@ -1,4 +1,4 @@
-=== Customify Sites Library ===
+=== Customify Sites ===
 Contributors: WPCustomify
 Tags: demo, theme demos, one click import
 Requires at least: 4.9.5

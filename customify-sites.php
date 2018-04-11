@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Customify Site Library
+Plugin Name: Customify Sites
 Plugin URI: https://wpcustomify.com
 Description: Import free sites build with Customify theme.
 Author: WPCustomify
