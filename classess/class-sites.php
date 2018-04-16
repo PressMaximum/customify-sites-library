@@ -44,7 +44,7 @@ Class Customify_Sites {
             $url = esc_url( 'theme-install.php?search='.self::THEME_NAME );
         }
 
-        $html = sprintf( '<strong>Customify Sites Library</strong> requires <strong>Customify</strong> theme to be activated to work. <a href="%1$s">Install &amp; Activate Now</a>', $url );
+        $html = sprintf( '<strong>Customify Site Library</strong> requires <strong>Customify</strong> theme to be activated to work. <a href="%1$s">Install &amp; Activate Now</a>', $url );
         ?>
         <div class="notice notice-warning is-dismissible">
             <p>
@@ -64,7 +64,7 @@ Class Customify_Sites {
 
     function page(){
         echo '<div class="wrap">';
-        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', 'customify-sites' ).'</h1>';
+        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', 'customify-sites' ).'</h1><hr class="wp-header-end">';
         require_once CUSTOMIFY_SITES_PATH.'/templates/dashboard.php';
         require_once CUSTOMIFY_SITES_PATH.'/templates/modal.php';
         echo '</div>';

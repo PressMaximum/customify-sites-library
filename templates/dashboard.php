@@ -23,7 +23,6 @@ if( isset( $_REQUEST['dev'] ) ){
     <ul id="customify-sites-filter-tag"  class="filter-links float-right" style="float: right;"></ul>
 </div>
 
-<hr class="wp-header-end">
 
 <script id="customify-site-item-html" type="text/html">
     <div class="theme" title="{{ data.title }}" tabindex="0" aria-describedby="" data-slug="{{ data.slug }}">
