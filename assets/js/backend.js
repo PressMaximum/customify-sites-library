@@ -53,6 +53,7 @@ jQuery( document ).ready( function( $ ){
             json_id: 0,
             doing: false,
             current_builder: 'all',
+            recommend_plugins: {},
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -83,74 +84,26 @@ jQuery( document ).ready( function( $ ){
             _install_plugins_notice: function (){
                 //.cs-install-plugins
                 var that = this;
-                var installed_plugins   = '';
-                var install_plugins     = '';
                 var manual_plugins      = '';
 
-                if ( !_.isArray( that.data.plugins ) ) {
-                    that.data.plugins  = [];
+                if ( ! _.isObject( that.data.manual_plugins ) ) {
+                    that.data.manual_plugins  ={};
                 }
 
-                if ( _.isArray( that.data.manual_plugins ) ) {
-                    that.data.manual_plugins  = [];
-                }
-
-                var elementor = 'elementor';
-                var beaver_builder = 'beaver-builder-lite-version';
-
-                that.current_builder = 'all';
-
-                if ( current_page_builder === 'all' || current_page_builder === 'elementor' ) {
-                    // Elementor is recommend the remove beaver-builder
-                    if ( that.data.plugins.indexOf( elementor) > -1) {
-                        that.current_builder = elementor;
-                        that.data.plugins = _.reject( that.data.plugins, function(val, i){ return val === beaver_builder; });
-                    }
-                } else if ( current_page_builder == 'beaver-builder' || current_page_builder === beaver_builder ) {
-                    if ( that.data.plugins.indexOf( beaver_builder ) > -1) {
-                        that.current_builder = 'beaver-builder';
-                        that.data.plugins = _.reject( that.data.plugins, function(val, i){ return val === elementor; });
-                    }
-                }
-
-                _.each( that.data.plugins, function( plugin_file ){
-                    var plugin_name = plugin_file;
-                    if ( !_.isUndefined( Customify_Sites.support_plugins[ plugin_file ] ) ) {
-                        plugin_name = Customify_Sites.support_plugins[ plugin_file ];
-                    }
-                    if ( ! _.isUndefined( Customify_Sites.installed_plugins[ plugin_file ] ) ) {
-                        installed_plugins += '<li>'+plugin_name+'</li>';
-                    } else {
-                        install_plugins += '<li>'+plugin_name+'</li>';
-                    }
-                } );
-
-                _.each( that.data.manual_plugins, function( plugin_file ){
-                    var plugin_name = plugin_file;
-                    if ( !_.isUndefined( Customify_Sites.support_plugins[ plugin_file ] ) ) {
-                        plugin_name = Customify_Sites.support_plugins[ plugin_file ];
-                    }
-                    if ( _.isUndefined( Customify_Sites.installed_plugins[ plugin_file ] ) ) {
-                        manual_plugins += '<li><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+plugin_name+'</span></li>';
-                    } else {
-                        installed_plugins += '<li>'+plugin_name+'</li>';
+                _.each( that.data.manual_plugins, function( plugin_name, plugin_file ){
+                    // The manual plugin in the list recommend plugin
+                    if ( ! _.isUndefined( that.recommend_plugins[ plugin_file ] ) ) {
+                        if ( ! that.is_installed( plugin_file ) ) {
+                            if (_.isUndefined(Customify_Sites.installed_plugins[plugin_file])) {
+                                manual_plugins += '<li><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + plugin_name + '</span></li>';
+                            }
+                        }
                     }
                 } );
 
 
-                if ( install_plugins !==  '' ) {
-                    $( '.cs-install-plugins', that.modal ).show();
-                    $( '.cs-install-plugins ul', that.modal ).html( install_plugins );
-                } else {
-                    $( '.cs-install-plugins', that.modal ).hide();
-                }
-
-                if ( installed_plugins !==  '' ) {
-                    $( '.cs-installed-plugins', that.modal ).show();
-                    $( '.cs-installed-plugins ul', that.modal ).html( installed_plugins );
-                } else {
-                    $( '.cs-installed-plugins', that.modal ).hide();
-                }
+                $( '.cs-installed-plugins', that.modal ).hide();
+                $( '.cs-install-plugins', that.modal ).hide();
 
                 if ( manual_plugins !==  '' ) {
                     $( '.cs-install-manual-plugins', that.modal ).show();
@@ -158,8 +111,35 @@ jQuery( document ).ready( function( $ ){
                 } else {
                     $( '.cs-install-manual-plugins', that.modal ).hide();
                 }
+            },
+
+            _setup_plugins: function(){
+                var that = this;
+                _.each( that.recommend_plugins, function( name, slug ){
+                    var html = '';
+                    // If plugin not in manual install
+                    if ( _.isUndefined( that.data.manual_plugins[ slug ] ) ) {
+                        if ( that.is_activated( slug ) ) {
+                            html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                        } else if ( ! that.is_installed( slug ) ) { // plugin not installed
+                            html = '<li data-slug="' + slug + '" class="do-install-n-activate"><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                        } else { // Plugin install but not active
+                            html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                        }
+                    } else {
+                        // Manual Plugin installed and activated
+                        if( that.is_activated( slug ) ) {
+                            html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                        } else if ( that.is_installed( slug ) ) {   // Manual Plugin install but not activated
+                            html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                        }
+                    }
+
+                    $( '.cs-installing-plugins', that.modal ).append( html );
+                } );
 
             },
+
             disable_button: function( button ){
                 if ( !_.isUndefined( this.buttons[ button ] ) ) {
                     this.buttons[ button ].addClass( 'disabled' );
@@ -196,7 +176,6 @@ jQuery( document ).ready( function( $ ){
                     $( '.cs-step-install_plugins', that.modal ).remove();
                     that.buttons.install_plugins.remove();
                 }
-
                 that.breadcrumb = $( '.cs-breadcrumb li', that.modal );
 
                 /**
@@ -241,7 +220,6 @@ jQuery( document ).ready( function( $ ){
                 } );
 
                 that._breadcrumb_actions();
-                that._install_plugins_notice();
                 that._setup_plugins();
                 that._do_start_import();
                 that._installing_plugins();
@@ -302,42 +280,12 @@ jQuery( document ).ready( function( $ ){
                 } );
             },
 
-            _setup_plugins: function(){
-                var that = this;
-                if ( _.isEmpty( that.data.plugins ) ) {
-                    that.data.plugins = {};
-                }
-
-                if ( _.isEmpty( that.data.manual_plugins ) ) {
-                    that.data.manual_plugins = {};
-                }
-
-                _.each( that.data.plugins, function( slug ){
-                    var html = '';
-                    var name = slug;
-                    if ( !_.isUndefined( Customify_Sites.support_plugins[ slug ] ) ) {
-                        name = Customify_Sites.support_plugins[ slug ];
-                    }
-                    if ( ! _.isUndefined( Customify_Sites.activated_plugins[ slug ] ) ) {
-                        html = '<li data-slug="'+slug+'" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
-                    } else if (  _.isUndefined( Customify_Sites.installed_plugins[ slug ] ) ) { // plugin not installed
-                        html = '<li data-slug="'+slug+'" class="do-install-n-activate"><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
-                    } else { // Plugin install but not active
-                        html = '<li data-slug="'+slug+'" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">'+name+'</span></li>';
-                    }
-
-                    $( '.cs-installing-plugins', that.modal ).append( html );
-                } );
-
-
+            is_activated: function( plugin_slug ){
+                return _.isUndefined( Customify_Sites.activated_plugins[ plugin_slug ] ) ? false : true;
             },
 
-            is_activated: function( $plugin_slug ){
-                return _.isUndefined( Customify_Sites.activated_plugins[ $plugin_slug ] ) ? false : true;
-            },
-
-            is_installed: function( $plugin_slug ){
-                return _.isUndefined( Customify_Sites.installed_plugins[ $plugin_slug ] ) ? false : true;
+            is_installed: function( plugin_slug ){
+                return _.isUndefined( Customify_Sites.installed_plugins[ plugin_slug ] ) ? false : true;
             },
 
             step_completed: function( step ){
@@ -357,6 +305,7 @@ jQuery( document ).ready( function( $ ){
                     if ( ! that.doing ) {
                         that.loading_button('start');
                         that.doing = true;
+                        that.current_builder = $( '#customify-sites-filter-cat a.current' ).eq(0).attr( 'data-slug' ) || '';
                         $.ajax({
                             url: Customify_Sites.ajax_url,
                             dataType: 'json',
@@ -370,6 +319,12 @@ jQuery( document ).ready( function( $ ){
                             success: function (res) {
                                 that.xml_id = res.xml_id;
                                 that.json_id = res.json_id;
+                                that.recommend_plugins = res._recommend_plugins;
+                                console.log( 'res', res );
+                                console.log( 'recommend_plugins', that.recommend_plugins );
+                                if ( ! _.isObject( that.recommend_plugins ) ) {
+                                    that.recommend_plugins = {};
+                                }
                                 if (that.xml_id <= 0) {
                                     that._reset();
                                     $('.cs-error-download-files', that.modal).removeClass('cs-hide');
@@ -382,6 +337,9 @@ jQuery( document ).ready( function( $ ){
                                     that.step_completed('start');
                                 }
 
+                                that._install_plugins_notice();
+                                that._setup_plugins();
+
                             }
                         });
                     } // end if doing
@@ -390,15 +348,26 @@ jQuery( document ).ready( function( $ ){
 
             _installing_plugins: function() {
                 var that = this;
-                var n = this.data.plugins.length || 0;
+                var list;
                 var n_plugin_installed = 0;
-                if( n <= 0 ) {
-                    return;
-                }
+                var n;
+
+                that.buttons.install_plugins.on( 'click', function( e ){
+                    e.preventDefault();
+                    list = $( '.cs-installing-plugins li', that.modal );
+                    n = list.length;
+                    if ( n > 0 ) {
+                        if (!that.doing) {
+                            that.doing = true;
+                            that.loading_button('install_plugins');
+                            ajax_install_plugin();
+                        }
+                    }
+                } );
 
                 var ajax_install_plugin = function () {
                     that.doing = true;
-                    var plugin_data = that.data.plugins[n_plugin_installed];
+                    var plugin_data = list.eq(n_plugin_installed).attr( 'data-slug' ) || '';
                     if ( that.is_activated( plugin_data ) ){ // this plugin already installed
                         n_plugin_installed++;
                         if( n_plugin_installed < n ) {
@@ -426,7 +395,7 @@ jQuery( document ).ready( function( $ ){
 
                 var ajax_active_plugin = function () {
                     that.doing = true;
-                    var plugin_data = that.data.plugins[n_plugin_installed];
+                    var plugin_data = list.eq(n_plugin_installed).attr( 'data-slug' ) || '';
                     $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
                     $.ajax({
                         url: Customify_Sites.ajax_url,
@@ -445,15 +414,6 @@ jQuery( document ).ready( function( $ ){
                         }
                     });
                 };
-
-                $( '.cs-do-install-plugins', that.modal ).on( 'click', function( e ){
-                    e.preventDefault();
-                    if ( ! that.doing ) {
-                        that.doing = true;
-                        that.loading_button('install_plugins');
-                        ajax_install_plugin();
-                    }
-                } );
 
             },
 
@@ -633,6 +593,7 @@ jQuery( document ).ready( function( $ ){
 
 
         get_filter_data: function(){
+            var that = this;
             var cat = $( '#customify-sites-filter-cat a.current' ).eq(0).attr( 'data-slug' ) || '';
             var tag = $( '#customify-sites-filter-tag a.current' ).eq(0).attr( 'data-slug' ) || '';
             var s = $( '#customify-sites-search-input' ).val();
@@ -643,9 +604,11 @@ jQuery( document ).ready( function( $ ){
             if ( ! current_page_builder ) {
                 current_page_builder = 'all';
             }
+            that.current_builder = current_page_builder;
              return {
                 cat: cat,
                 tag: tag,
+                builder: current_page_builder,
                 s: s
             }
         },
@@ -660,6 +623,7 @@ jQuery( document ).ready( function( $ ){
                     $(this).addClass('current');
                     that.filter_data = {};
                     that.filter_data = that.get_filter_data();
+                    console.log( 'that.filter_data',that.filter_data );
                     that.skip_render_filter = true;
                     that.load_sites();
                 }

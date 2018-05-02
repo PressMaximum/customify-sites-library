@@ -25,5 +25,8 @@ You will find `Appearance -> Customify Sites` menu in your WordPress admin panel
 
 
 == Changelog ==
+v0.0.2
+* Improve and fix bugs.
+
 v0.0.1
 * Initial.

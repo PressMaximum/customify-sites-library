@@ -8,6 +8,8 @@ class Customify_Sites_Ajax {
         // Active Plugin
         add_action( 'wp_ajax_cs_active_plugin', array( Customify_Sites_Plugin::get_instance(), 'ajax' ) );
 
+        add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
+
         // Import Content
         add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_import_content' ) );
         add_action( 'wp_ajax_cs_import_options', array( $this, 'ajax_import_options' ) );
@@ -17,10 +19,35 @@ class Customify_Sites_Ajax {
 
         add_action( 'wp_ajax_cs_export', array( $this, 'ajax_export' ) );
 
-        add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
-
         add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
+        add_filter( 'export_wp_filename', array( $this, 'export_xml_file_name' ), 95 );
 
+    }
+
+    function get_export_file_name(){
+        $sitename = sanitize_key( get_bloginfo( 'name' ) );
+        if ( ! empty( $sitename ) ) {
+            $sitename .= '-';
+        }
+        $date = date( 'Y-m-d' );
+        $active_plugins = get_option('active_plugins');
+        $builder = false;
+        foreach( $active_plugins as $slug ){
+            if( !$builder ) {
+                if (strpos($slug, 'elementor') !== false) {
+                    $builder = 'elementor-';
+                } else if (strpos($slug, 'beaver-builder') !== false) {
+                    $builder = 'beaver-builder-';
+                }
+            }
+        }
+        $file_name = $sitename . $builder . $date;
+        return $file_name;
+    }
+
+
+    function export_xml_file_name(){
+        return $this->get_export_file_name().'.xml';
     }
 
     function export_remove_rss_title( ) {
@@ -160,12 +187,7 @@ class Customify_Sites_Ajax {
         ob_end_clean();
         ob_flush();
 
-        $sitename = sanitize_key( get_bloginfo( 'name' ) );
-        if ( ! empty( $sitename ) ) {
-            $sitename .= '.';
-        }
-        $date = date( 'Y-m-d' );
-        $filename = $sitename . 'wordpress.' . $date . '.json';
+        $filename = $this->get_export_file_name(). '.json';
 
         header( 'Content-Description: File Transfer' );
         header( 'Content-Disposition: attachment; filename=' . $filename );
@@ -175,6 +197,22 @@ class Customify_Sites_Ajax {
 
         $options = $this->_get_elementor_settings();
         $options['show_on_front'] = get_option( 'show_on_front' );
+
+        $active_plugins = get_option('active_plugins');
+        $all_plugins = get_plugins();
+        if ( ! is_array( $all_plugins ) ) {
+            $all_plugins = array();
+        }
+
+        // List Plugins
+        $plugins = array();
+        foreach ( $active_plugins as $file ) {
+            if ( isset( $all_plugins[ $file ] ) ) {
+                $info = $all_plugins[ $file ];
+                $slug = dirname( $file );
+                $plugins[ $slug ] = $info['Name'];
+            }
+        }
 
         $config = array(
             'home_url' => home_url('/'),
@@ -186,6 +224,7 @@ class Customify_Sites_Ajax {
             'options' => $options,
             'theme_mods' => get_theme_mods(),
             'widgets'  => $this->_get_widgets_export_data(),
+            '_recommend_plugins' => $plugins
         );
 
         echo wp_json_encode( $config );
@@ -257,20 +296,22 @@ class Customify_Sites_Ajax {
             'beaver_builder_xm_url' => '',
             'beaver_builder_json_url' => '',
         ) );
+
         $xml_url = false;
         $json_url = false;
         $suffix_name = '-no-builder';
         switch( $builder ) {
             case 'beaver-builder':
             case 'beaver-builder-lite-version':
-                $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
-                $json_url = sanitize_text_field( wp_unslash( $resources['elementor_json_url'] ) );
+                $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xm_url'] ) );
+                $json_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_json_url'] ) );
                 $suffix_name = '-beaver-builder';
                 break;
             case 'elementor':
+            case 'all':
                 $suffix_name = '-elementor';
-                $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xm_url'] ) );
-                $json_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_json_url'] ) );
+                $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
+                $json_url = sanitize_text_field( wp_unslash( $resources['elementor_json_url'] ) );
                 break;
         }
 
@@ -285,15 +326,21 @@ class Customify_Sites_Ajax {
             'xml_id' => 0,
             'json_id' => 0,
             'summary' => array(),
-            'texts' => array()
+            'texts' => array(),
+            '_recommend_plugins' => array()
         );
 
         if ( ! $slug ) {
             return $return;
         }
 
-        $xml_file_name = $slug.'-content'.$suffix_name;
-        $json_file_name = $slug.'-config'.$suffix_name;
+        $xml_file_name = str_replace( '.xml', '', basename( $xml_url ) );
+        $json_file_name = str_replace( '.json', '', basename( $json_url ) );
+        $xml_file_name = sanitize_title( $xml_file_name );
+        $json_file_name = sanitize_title( $json_file_name );
+
+        //$xml_file_name = $slug.'-content'.$suffix_name;
+        //$json_file_name = $slug.'-config'.$suffix_name;
 
         $xml_file_exists = get_page_by_path( $xml_file_name, OBJECT, 'attachment' );
         $json_file_exists = get_page_by_path( $json_file_name, OBJECT, 'attachment' );
@@ -335,6 +382,14 @@ class Customify_Sites_Ajax {
         $return['texts']['user_count'] = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], 'customify-sites' ), $return['summary']['user_count'] );
         $return['texts']['term_count'] = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], 'customify-sites' ), $return['summary']['term_count'] );
         $return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], 'customify-sites' ), $return['summary']['comment_count'] );
+
+        if ( $return['json_id'] ) {
+            $options = $this->get_config_options( $return['json_id'] );
+            if ( isset( $options['_recommend_plugins'] ) ) {
+                $return['_recommend_plugins'] = $options['_recommend_plugins'] ;
+            }
+        }
+
         wp_send_json( $return );
     }
 
@@ -397,6 +452,35 @@ class Customify_Sites_Ajax {
         }
     }
 
+
+    /**
+     * Get config from json file
+     *
+     * @param $file_id
+     * @return array|mixed|null|object
+     */
+    function get_config_options( $file_id ){
+        if ( is_numeric( $file_id ) ) {
+            $file = get_attached_file( $file_id );
+        } else {
+            $file = $file_id;
+        }
+
+        global $wp_filesystem;
+        WP_Filesystem();
+        if (file_exists($file)) {
+            $file_contents = $wp_filesystem->get_contents($file);
+            $customize_data = json_decode($file_contents, true);
+            if (null === $customize_data) {
+                $customize_data = maybe_unserialize($file_contents);
+            }
+        } else {
+            $customize_data = array();
+        }
+
+        return $customize_data;
+    }
+
     function ajax_import_options(){
         $this->user_can();
         $id = wp_unslash( (int) $_REQUEST['id'] );
@@ -409,18 +493,8 @@ class Customify_Sites_Ajax {
             if ( ! is_array( $this->mapping ) ) {
                 $this->mapping = array();
             }
-            global $wp_filesystem;
-            WP_Filesystem();
 
-            if (file_exists($file)) {
-                $file_contents = $wp_filesystem->get_contents($file);
-                $customize_data = json_decode($file_contents, true);
-                if (null === $customize_data) {
-                    $customize_data = maybe_unserialize($file_contents);
-                }
-            } else {
-                $customize_data = array();
-            }
+            $customize_data = $this->get_config_options( $id );
 
             if ( isset( $customize_data['options'] ) ) {
                 $this->_import_options( $customize_data['options'] );
@@ -659,6 +733,7 @@ class Customify_Sites_Ajax {
         }
         // Do the validation and storage stuff.
         $file_path_or_id = self::media_handle_sideload( $file_array, 0, null, array(), $save_attachment );
+
 
         // If error storing permanently, unlink.
         if ( is_wp_error( $file_path_or_id ) ) {

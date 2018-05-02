@@ -55,7 +55,7 @@ Class Customify_Sites {
     }
 
     static function get_api_url(){
-        return apply_filters( 'customify_sites/api_url', 'https://customifysites.com/wp-json/wp/v2/sites/' );
+        return apply_filters( 'customify_sites/api_url', 'https://customifysites.com/wp-json/wp/v2.1/sites/' );
     }
 
     function add_menu() {
