@@ -3,6 +3,7 @@ Contributors: WPCustomify
 Tags: demo, theme demos, one click import
 Requires at least: 4.9.5
 Tested up to: 4.9.5
+Stable tag:  0.0.2
 
 Browse and import demo sites with Customify with few clicks.
 
