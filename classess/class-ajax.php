@@ -29,7 +29,7 @@ class Customify_Sites_Ajax {
         if ( ! empty( $sitename ) ) {
             $sitename .= '-';
         }
-        $date = date( 'Y-m-d' );
+        $date = current_time('timestamp');
         $active_plugins = get_option('active_plugins');
         $builder = false;
         foreach( $active_plugins as $slug ){
@@ -215,6 +215,7 @@ class Customify_Sites_Ajax {
         }
 
         $config = array(
+            '_recommend_plugins' => $plugins,
             'home_url' => home_url('/'),
             'menus' => $nav_menu_locations,
             'pages' => array(
@@ -224,10 +225,22 @@ class Customify_Sites_Ajax {
             'options' => $options,
             'theme_mods' => get_theme_mods(),
             'widgets'  => $this->_get_widgets_export_data(),
-            '_recommend_plugins' => $plugins
         );
+        // myaccount, edit_address, shop, cart, checkout, pay, view_order, terms
+        /**
+         * @see wc_get_page_id
+         */
+        if (  function_exists( 'wc_get_page_id' ) ) {
+            foreach ( array( 'myaccount', 'edit_address', 'shop', 'cart', 'checkout', 'pay', 'view_order', 'terms' ) as $page_name ) {
+                $id = wc_get_page_id( $page_name );
+                if ( $id > 0 ) {
+                    $config['pages'][ 'woocommerce_' . $page_name . '_page_id' ] = $id;
+                }
+            }
+        }
 
-        echo wp_json_encode( $config );
+
+        echo wp_json_encode( $config , JSON_PRETTY_PRINT );
         die();
     }
 
