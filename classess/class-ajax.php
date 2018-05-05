@@ -29,18 +29,30 @@ class Customify_Sites_Ajax {
         if ( ! empty( $sitename ) ) {
             $sitename .= '-';
         }
-        $date = current_time('timestamp');
+        $date = date_i18n('YmdHi');
         $active_plugins = get_option('active_plugins');
-        $builder = false;
+        $builders = array();
+
         foreach( $active_plugins as $slug ){
-            if( !$builder ) {
-                if (strpos($slug, 'elementor') !== false) {
-                    $builder = 'elementor-';
-                } else if (strpos($slug, 'beaver-builder') !== false) {
-                    $builder = 'beaver-builder-';
-                }
+            if (strpos($slug, 'elementor') !== false) {
+                $builders['elementor'] = 'elementor-';
+            } else if (strpos($slug, 'beaver-builder') !== false) {
+                $builders['beaver-builder'] = 'beaver-builder-';
+            }else if (strpos($slug, 'gutenberg') !== false) {
+                $builders['gutenberg'] = 'gutenberg-';
             }
         }
+
+        $n = count( $builders );
+        if( $n > 1 ) {
+            $builder = "{$n}-builders-";
+        } elseif( $n == 1  ) {
+            $b = current( $builders );
+            $builder = "{$b}";
+        } else {
+            $builder = 'no-builders-';
+        }
+
         $file_name = $sitename . $builder . $date;
         return $file_name;
     }
@@ -204,13 +216,21 @@ class Customify_Sites_Ajax {
             $all_plugins = array();
         }
 
+        $include_plugins = apply_filters( 'customify-sites/export_plugins/exclude', array(
+            'customify-sites' => 1,
+            'customify-sites-api' => 1,
+            'customify-sites-listing' => 1,
+        ) );
+
         // List Plugins
         $plugins = array();
         foreach ( $active_plugins as $file ) {
             if ( isset( $all_plugins[ $file ] ) ) {
                 $info = $all_plugins[ $file ];
                 $slug = dirname( $file );
-                $plugins[ $slug ] = $info['Name'];
+                if ( ! isset( $include_plugins[ $slug ] ) ) {
+                    $plugins[ $slug ] = $info['Name'];
+                }
             }
         }
 
@@ -231,7 +251,7 @@ class Customify_Sites_Ajax {
          * @see wc_get_page_id
          */
         if (  function_exists( 'wc_get_page_id' ) ) {
-            foreach ( array( 'myaccount', 'edit_address', 'shop', 'cart', 'checkout', 'pay', 'view_order', 'terms' ) as $page_name ) {
+            foreach ( array( 'myaccount', 'shop', 'cart', 'checkout', 'view_order', 'terms' ) as $page_name ) {
                 $id = wc_get_page_id( $page_name );
                 if ( $id > 0 ) {
                     $config['pages'][ 'woocommerce_' . $page_name . '_page_id' ] = $id;
@@ -239,6 +259,7 @@ class Customify_Sites_Ajax {
             }
         }
 
+        $config = apply_filters( 'customify-sites/export/json',  $config );
 
         echo wp_json_encode( $config , JSON_PRETTY_PRINT );
         die();

@@ -26,8 +26,8 @@ $check-color: $brand-success;
 .circle-loader,
 .circle-loader:after {
     border-radius: 50%;
-    width: $loader-size;
-    height: $loader-size;
+    width: 20px;
+    height: 20px; 
 }
 
 .load-complete {

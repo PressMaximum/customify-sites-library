@@ -54,6 +54,7 @@ jQuery( document ).ready( function( $ ){
             doing: false,
             current_builder: 'all',
             recommend_plugins: {},
+            skip_plugins: false,
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
@@ -115,28 +116,33 @@ jQuery( document ).ready( function( $ ){
 
             _setup_plugins: function(){
                 var that = this;
-                _.each( that.recommend_plugins, function( name, slug ){
-                    var html = '';
-                    // If plugin not in manual install
-                    if ( _.isUndefined( that.data.manual_plugins[ slug ] ) ) {
-                        if ( that.is_activated( slug ) ) {
-                            html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
-                        } else if ( ! that.is_installed( slug ) ) { // plugin not installed
-                            html = '<li data-slug="' + slug + '" class="do-install-n-activate"><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
-                        } else { // Plugin install but not active
-                            html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
-                        }
-                    } else {
-                        // Manual Plugin installed and activated
-                        if( that.is_activated( slug ) ) {
-                            html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
-                        } else if ( that.is_installed( slug ) ) {   // Manual Plugin install but not activated
-                            html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
-                        }
-                    }
 
-                    $( '.cs-installing-plugins', that.modal ).append( html );
-                } );
+                if ( _.size( that.recommend_plugins ) > 0 ) {
+                    _.each(that.recommend_plugins, function (name, slug) {
+                        var html = '';
+                        // If plugin not in manual install
+                        if (_.isUndefined(that.data.manual_plugins[slug])) {
+                            if (that.is_activated(slug)) {
+                                html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                            } else if (!that.is_installed(slug)) { // plugin not installed
+                                html = '<li data-slug="' + slug + '" class="do-install-n-activate"><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                            } else { // Plugin install but not active
+                                html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                            }
+                        } else {
+                            // Manual Plugin installed and activated
+                            if (that.is_activated(slug)) {
+                                html = '<li data-slug="' + slug + '" class="is-activated"><div class="circle-loader load-complete"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                            } else if (that.is_installed(slug)) {   // Manual Plugin install but not activated
+                                html = '<li data-slug="' + slug + '" class="do-activate"><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + name + '</span></li>';
+                            }
+                        }
+
+                        $('.cs-installing-plugins', that.modal).append(html);
+                    });
+                } else {
+                    that.skip_plugins = true;
+                }
 
             },
 
@@ -203,6 +209,10 @@ jQuery( document ).ready( function( $ ){
                     that.current_step = e.page.index;
                     that._make_steps_clickable();
                     that.doing = false;
+
+                    if ( that.current_step === 1 && that.skip_plugins ) {
+                        that.step_completed( 'install_plugins', 0 );
+                    }
                 });
 
                 // back to list
@@ -220,7 +230,6 @@ jQuery( document ).ready( function( $ ){
                 } );
 
                 that._breadcrumb_actions();
-                that._setup_plugins();
                 that._do_start_import();
                 that._installing_plugins();
                 that._importing_content();
@@ -288,13 +297,16 @@ jQuery( document ).ready( function( $ ){
                 return _.isUndefined( Customify_Sites.installed_plugins[ plugin_slug ] ) ? false : true;
             },
 
-            step_completed: function( step ){
+            step_completed: function( step, t ){
                 var that = this;
                 $( '.cs-step.cs-step-'+step, this.modal ).addClass('completed');
                 this.completed_button( step );
+                if ( _.isUndefined( t ) ) {
+                    t = 2000;
+                }
                 setTimeout( function(){
                     that.next_step();
-                }, 2000 );
+                }, t );
             },
 
             _do_start_import: function(){
@@ -320,8 +332,8 @@ jQuery( document ).ready( function( $ ){
                                 that.xml_id = res.xml_id;
                                 that.json_id = res.json_id;
                                 that.recommend_plugins = res._recommend_plugins;
-                                console.log( 'res', res );
-                                console.log( 'recommend_plugins', that.recommend_plugins );
+
+
                                 if ( ! _.isObject( that.recommend_plugins ) ) {
                                     that.recommend_plugins = {};
                                 }
@@ -334,11 +346,12 @@ jQuery( document ).ready( function( $ ){
                                     _.each(res.texts, function (t, k) {
                                         $('.cs-' + k, that.modal).html(t);
                                     });
+
+                                    that._install_plugins_notice();
+                                    that._setup_plugins();
+
                                     that.step_completed('start');
                                 }
-
-                                that._install_plugins_notice();
-                                that._setup_plugins();
 
                             }
                         });
@@ -362,6 +375,8 @@ jQuery( document ).ready( function( $ ){
                             that.loading_button('install_plugins');
                             ajax_install_plugin();
                         }
+                    } else {
+                        that.step_completed( 'install_plugins' );
                     }
                 } );
 
