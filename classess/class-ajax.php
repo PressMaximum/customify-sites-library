@@ -11,6 +11,7 @@ class Customify_Sites_Ajax {
         add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
 
         // Import Content
+        add_action( 'wp_ajax_cs_import__check', array( $this, 'ajax_import__check' ) );
         add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_import_content' ) );
         add_action( 'wp_ajax_cs_import_options', array( $this, 'ajax_import_options' ) );
 
@@ -22,6 +23,10 @@ class Customify_Sites_Ajax {
         add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
         add_filter( 'export_wp_filename', array( $this, 'export_xml_file_name' ), 95 );
 
+    }
+
+    function ajax_import__check(){
+        die( 'ajax_import__check' );
     }
 
     function get_export_file_name(){
@@ -303,7 +308,6 @@ class Customify_Sites_Ajax {
         $import_ui->import();
 
         die( 'content_imported' );
-
     }
 
 
@@ -367,27 +371,31 @@ class Customify_Sites_Ajax {
         if ( ! $slug ) {
             return $return;
         }
+        $xml_file_name =  basename( $xml_url );
+        $json_file_name = basename( $json_url );
 
-        $xml_file_name = str_replace( '.xml', '', basename( $xml_url ) );
-        $json_file_name = str_replace( '.json', '', basename( $json_url ) );
+        /*
+        $xml_file_name = str_replace( '.xml', '.xml', basename( $xml_url ) );
+        $json_file_name = str_replace( '.json', '.xml', basename( $json_url ) );
         $xml_file_name = sanitize_title( $xml_file_name );
         $json_file_name = sanitize_title( $json_file_name );
+        */
 
         //$xml_file_name = $slug.'-content'.$suffix_name;
         //$json_file_name = $slug.'-config'.$suffix_name;
 
-        $xml_file_exists = get_page_by_path( $xml_file_name, OBJECT, 'attachment' );
-        $json_file_exists = get_page_by_path( $json_file_name, OBJECT, 'attachment' );
+        $xml_file_exists = get_page_by_path( str_replace( '.', '-', $xml_file_name ), OBJECT, 'attachment' );
+        $json_file_exists = get_page_by_path( str_replace( '.', '-', $json_file_name ), OBJECT, 'attachment' );
         if ( $xml_file_exists ) {
             $return['xml_id'] = $xml_file_exists->ID;
         } else {
-            $return['xml_id'] = Customify_Sites_Ajax::download_file( $xml_url, $xml_file_name.'.xml' );
+            $return['xml_id'] = Customify_Sites_Ajax::download_file( $xml_url, $xml_file_name );
         }
 
         if ( $json_file_exists ) {
             $return['json_id'] = $json_file_exists->ID;
         } else {
-            $return['json_id'] = Customify_Sites_Ajax::download_file( $json_url, $json_file_name.'.json' );
+            $return['json_id'] = Customify_Sites_Ajax::download_file( $json_url, $json_file_name );
         }
 
         $import_ui = new Customify_Sites_WXR_Import_UI();
@@ -457,7 +465,7 @@ class Customify_Sites_Ajax {
         $url = $file['url'];
         $type = $file['type'];
         $file = $file['file'];
-        $title = preg_replace('/\.[^.]+$/', '', basename($file));
+        $title = $file_array['name'];
         $content = '';
 
         if ( $save_attachment ) {
@@ -720,7 +728,22 @@ class Customify_Sites_Ajax {
                             $imported_terms = array();
                         }
                         foreach ($mod_value as $menu_location => $menu_term_id) {
-                            $mod_value[$menu_location] = isset($imported_terms[$menu_term_id]) ? $imported_terms[$menu_term_id] : $menu_term_id;
+                            if ( empty( $imported_terms ) ) {
+                                $t = false;
+                                if ( $menu_location == 'menu-1' ) {
+                                    $t = get_term_by('name', 'Primary', 'nav_menu');
+                                } elseif ( $menu_location == 'menu-2' ) {
+                                    $t = get_term_by('name', 'Secondary', 'nav_menu');
+                                }
+
+                                if ( $t ) {
+                                    $mod_value[$menu_location] = $t->term_id;
+                                }
+
+                            } else {
+                                $mod_value[$menu_location] = isset($imported_terms[$menu_term_id]) ? $imported_terms[$menu_term_id] : $menu_term_id;
+                            }
+
                         }
                     }
                     if ('custom_logo' == $mod_key) {

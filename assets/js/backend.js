@@ -118,6 +118,7 @@ jQuery( document ).ready( function( $ ){
                 var that = this;
 
                 if ( _.size( that.recommend_plugins ) > 0 ) {
+                    $('.cs-installing-plugins', that.modal).html('');
                     _.each(that.recommend_plugins, function (name, slug) {
                         var html = '';
                         // If plugin not in manual install
@@ -442,23 +443,42 @@ jQuery( document ).ready( function( $ ){
                         that.disable_button('import_content');
                         that.loading_button('import_content');
                         $('.cs-import-content-status .circle-loader', that.modal).addClass('circle-loading');
-                        $.ajax({
+
+                        var cb = function(){
+                            $.ajax({
+                                url: Customify_Sites.ajax_url,
+                                data: {
+                                    action: 'cs_import_content',
+                                    id: that.xml_id
+                                },
+                                success: function (res) {
+                                    console.log('Imported', res);
+                                    $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                    that.step_completed('import_content');
+                                },
+                                error: function (res) {
+                                    console.log('Imported Error', res);
+                                    $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
+                                    that.step_completed('import_content');
+                                }
+                            });
+                        };
+
+                        $.ajax({ // ajax_import__check
                             url: Customify_Sites.ajax_url,
                             data: {
-                                action: 'cs_import_content',
-                                id: that.xml_id
+                                action: 'ajax_import__check'
                             },
                             success: function (res) {
-                                console.log('Imported', res);
-                                $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
-                                that.step_completed('import_content');
+                                cb();
                             },
                             error: function (res) {
-                                console.log('Imported Error', res);
-                                $('.cs-import-content-status .circle-loader', that.modal).removeClass('circle-loading').addClass('load-complete');
-                                that.step_completed('import_content');
+                                cb();
                             }
                         });
+
+
+
                     } // end if doing
                 } );
             },

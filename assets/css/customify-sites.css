@@ -6,10 +6,14 @@
   vertical-align: top;
 }
 .circle-loader.circle-loading {
-  animation-name: loader-spin;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  -webkit-animation-name: loader-spin;
+          animation-name: loader-spin;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
   border-left-color: #5cb85c;
 }
 
@@ -24,6 +28,7 @@
   -webkit-animation: none;
   animation: none;
   border-color: #5cb85c;
+  -webkit-transition: border 500ms ease-out;
   transition: border 500ms ease-out;
 }
 .load-complete .checkmark {
@@ -34,16 +39,23 @@
   display: none;
 }
 .checkmark.draw:after {
-  animation-duration: 800ms;
-  animation-timing-function: ease;
-  animation-name: checkmark;
-  transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+  -webkit-animation-duration: 800ms;
+          animation-duration: 800ms;
+  -webkit-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-name: checkmark;
+          animation-name: checkmark;
+  -webkit-transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+      -ms-transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+          transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
 }
 .checkmark:after {
   opacity: 1;
   height: 50%;
   width: 25%;
-  transform-origin: left top;
+  -webkit-transform-origin: left top;
+      -ms-transform-origin: left top;
+          transform-origin: left top;
   border-right: 2px solid #5cb85c;
   border-top: 2px solid #5cb85c;
   content: '';
@@ -52,12 +64,47 @@
   position: absolute;
 }
 
-@keyframes loader-spin {
+@-webkit-keyframes loader-spin {
   0% {
-    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 0.4em;
+    opacity: 1;
+  }
+  40% {
+    height: 0.8em;
+    width: 0.4em;
+    opacity: 1;
+  }
+  100% {
+    height: 0.8em;
+    width: 0.4em;
+    opacity: 1;
   }
 }
 @keyframes checkmark {
@@ -116,13 +163,11 @@
 }
 @-webkit-keyframes fill {
   100% {
-    -webkit-box-shadow: inset 0 0 0 100px #46b450;
     box-shadow: inset 0 0 0 100px #46b450;
   }
 }
 @keyframes fill {
   100% {
-    -webkit-box-shadow: inset 0 0 0 100px #46b450;
     box-shadow: inset 0 0 0 100px #46b450;
   }
 }
@@ -130,7 +175,6 @@
   -webkit-animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
   animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
   border-radius: 50%;
-  -webkit-box-shadow: inset 0 0 0 #46b450;
   box-shadow: inset 0 0 0 #46b450;
   display: block;
   height: 110px;
@@ -359,6 +403,7 @@
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
+  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
 }
 .theme-browser .theme .theme-screenshot:after {
@@ -386,11 +431,13 @@
   position: absolute;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
   right: 0;
   padding: 10px 15px;
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
   opacity: 0;
+  -webkit-transition: opacity .1s ease-in-out;
   transition: opacity .1s ease-in-out;
   height: auto;
   background: rgba(244, 244, 244, 0.7);
@@ -482,6 +529,8 @@
 }
 .customify-sites-modal-wrapper .cs-modal {
   background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-top: 30px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
@@ -503,6 +552,7 @@
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
+  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
@@ -513,6 +563,7 @@
   left: 0;
   top: 0;
   width: 100%;
+  -webkit-transition: opacity .2s ease-in-out;
   transition: opacity .2s ease-in-out;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail:after {
@@ -528,6 +579,7 @@
 }
 .customify-sites-modal-wrapper .cs-modal .cs-desc {
   clear: both;
+  margin-top: 10px;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-open-preview {
   float: right;
@@ -548,10 +600,13 @@
   margin: 0px;
   list-style: none;
   border-bottom: 1px solid #e5e5e5;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-breadcrumb li {
-  flex-basis: 25%;
+  -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
   margin-bottom: 0px;
   font-weight: 600;
   line-height: 1;
@@ -640,6 +695,7 @@ body.cs-previewing-site {
   top: 0px;
   bottom: 0px;
   display: block;
+  -webkit-transition: width .4s linear;
   transition: width .4s linear;
   background: #fff;
 }
@@ -668,8 +724,10 @@ body.cs-previewing-site {
   height: 100%;
   display: block;
   overflow-x: hidden;
+  -webkit-transition-property: left,right,top,bottom,width,margin, background;
   transition-property: left,right,top,bottom,width,margin, background;
-  transition-duration: .2s;
+  -webkit-transition-duration: .2s;
+          transition-duration: .2s;
 }
 #customify-site-preview .cs-iframe-outer .cs-iframe[data-device="tablet"] {
   margin: auto 0 auto -360px;
@@ -764,12 +822,12 @@ body.cs-previewing-site {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   z-index: 9999;
 }
 #customify-site-preview.cs-iframe-loaded .cs-preview-loading {
   z-index: -1;
   display: none;
 }
-
-/*# sourceMappingURL=customify-sites.css.map */
