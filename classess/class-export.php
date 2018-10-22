@@ -13,7 +13,7 @@ class Customify_Sites_Export {
         $this->maybe_insert_placeholder();
 		// add_filter( 'wp_get_attachment_url', array( $this, 'wp_get_attachment_url' ), 95, 2 );
 		add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
-		add_filter( 'the_content_export', array( $this, 'the_content_export' ), 95 );
+		add_filter( 'the_content_export', array( $this, 'the_content_export' ), 999 );
 		if ( $_GET['from_customify'] == 'placeholder' ) {
 			/**
 			 * @see export_wp
@@ -43,12 +43,16 @@ class Customify_Sites_Export {
 	}
 
 	function image_reg_url_cb( $matches ){
-		$ext = end( explode( '.', $matches[1] ) );
-		$ext = strtolower( $ext );
-		if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
-			return str_replace( $matches[1], $this->placeholder_url, $matches[0]  );
-		}
+	    if ( isset(  $matches[1] ) ) {
+		    $array = explode( '.', $matches[1] );
+		    $ext   = end( $array );
+		    $ext   = strtolower( $ext );
+		    if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
+			    return str_replace( $matches[1], $this->placeholder_url, $matches[0] );
+		    }
 
+
+	    }
 		return $matches[0];
     }
 
@@ -66,7 +70,7 @@ class Customify_Sites_Export {
 
 
 		    //Image URL
-		    $pattern = '/< *img[^>]*src *= *["\']?([^"\']*)/i';
+		    $pattern = '/<*img[^>]*src*=*["\']?([^"\']*)/i';
 
 		    $content = preg_replace_callback(
 			    $pattern,
