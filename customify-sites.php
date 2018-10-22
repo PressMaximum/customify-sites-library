@@ -27,15 +27,12 @@ require dirname( __FILE__ ) . '/importer/class-wxr-import-ui.php';
 require dirname( __FILE__ ) . '/classess/class-tgm.php';
 require dirname( __FILE__ ) . '/classess/class-plugin.php';
 require dirname( __FILE__ ) . '/classess/class-sites.php';
+require dirname( __FILE__ ) . '/classess/class-export.php';
 require dirname( __FILE__ ) . '/classess/class-ajax.php';
 
 
 Customify_Sites::get_instance();
 new Customify_Sites_Ajax();
-
-
-//var_dump(  get_theme_mod( 'nav_menu_locations' ) ); die();
-
 
 /**
  * Redirect to import page
@@ -59,3 +56,16 @@ function customify_sites_plugin_activate( $plugin, $network_wide = false ) {
     }
 }
 add_action( 'activated_plugin', 'customify_sites_plugin_activate', 90, 2 );
+
+if ( is_admin() ){
+	function customify_sites_admin_footer( $html ){
+		if( isset( $_REQUEST['dev'] ) ) {
+			$sc = get_current_screen();
+			if ( $sc->id == 'appearance_page_customify-sites' ) {
+				$html = '<a class="page-title-action" href="' . admin_url( 'export.php?content=all&download=true&from_customify=placeholder' ) . '">Export XML Placeholder</a> - <a class="page-title-action" href="' . admin_url( 'export.php?content=all&download=true&from_customify' ) . '">Export XML</a> - <a class="page-title-action" href="' . admin_url( 'admin-ajax.php?action=cs_export' ) . '">Export Config</a>';
+			}
+		}
+		return $html;
+	}
+	add_filter( 'update_footer', 'customify_sites_admin_footer', 199 );
+}

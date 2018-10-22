@@ -120,15 +120,42 @@ Class Customify_Sites {
         return $plugins;
     }
 
+    function is_license_valid(){
+
+        if ( ! class_exists('Customify_Pro' ) ) {
+            return false;
+        }
+	    $pro_data = get_option('customify_pro_license_data');
+	    if ( ! is_array( $pro_data ) ) {
+	        return false;
+        }
+	    if ( ! isset( $pro_data['license'] ) ) {
+		    return false;
+	    }
+
+	    if ( ! isset( $pro_data['data'] ) || ! is_array( $pro_data['data'] ) ) {
+		    return false;
+	    }
+
+	    if ( isset( $pro_data['data']['license'] ) && $pro_data['data']['license'] == 'valid' &&  $pro_data['data']['success'] ) {
+            return true;
+        }
+
+        return false;
+    }
+
     function get_localize_script(){
+
         $args = array(
             'api_url' => self::get_api_url(),
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
-            'try_again' => __( 'Try Again', 'customify-site', 'customify-sites' ),
+            'try_again' => __( 'Try Again', 'customify-sites' ),
+            'pro_text' => __( 'Pro only', 'customify-sites' ),
             'activated_plugins' => $this->get_activated_plugins(),
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),
+            'license_valid' =>   $this->is_license_valid(),
         );
 
         $args['elementor_clear_cache_nonce'] = wp_create_nonce( 'elementor_clear_cache' );

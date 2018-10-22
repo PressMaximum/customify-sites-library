@@ -58,6 +58,7 @@ jQuery( document ).ready( function( $ ){
             add_modal: function () {
                 var that = this;
                 var template = that.getTemplate();
+
                 that.data = data;
                 var html = template( data, 'tpl-cs-item-modal' );
                 that.modal = $( html );
@@ -71,16 +72,25 @@ jQuery( document ).ready( function( $ ){
             },
             _open: function(){
                 var that = this;
-                that.item.on( 'click', '.cs-open-modal, .theme-screenshot', function ( e ) {
+
+                that.item.on('click', '.cs-open-modal, .theme-screenshot', function (e) {
                     e.preventDefault();
-                    $( 'body' ).addClass( 'customify-sites-show-modal' );
-                    if ( that.owl ) {
-                        that.owl.trigger( 'to.owl.carousel', [ 0, 0] );
+                    $('body').addClass('customify-sites-show-modal');
+                    if (that.owl) {
+                        that.owl.trigger('to.owl.carousel', [0, 0]);
                     }
-                    that.modal.addClass( 'cs-show' );
+                    that.modal.addClass('cs-show');
                     that._reset();
-                    $( window ).resize();
-                } );
+                    $(window).resize();
+
+                    if ( that.data.pro && ! Customify_Sites.license_valid ) {
+                        that.disable_button( 'start' );
+                        that.buttons.start.addClass( 'pro-only' );
+                        that.buttons.start.find( '.cs-btn-circle-text' ).text( Customify_Sites.pro_text );
+                    }
+
+                });
+
             },
             _install_plugins_notice: function (){
                 //.cs-install-plugins
@@ -312,13 +322,20 @@ jQuery( document ).ready( function( $ ){
 
             _do_start_import: function(){
                 var that = this;
+
                 // Skip or start import
                 that.buttons.start.on( 'click', function( e  ) {
                     e.preventDefault();
+
+                    if ( $( this ).hasClass( 'disabled' ) ) {
+                        return;
+                    }
+
                     if ( ! that.doing ) {
                         that.loading_button('start');
                         that.doing = true;
                         that.current_builder = $( '#customify-sites-filter-cat a.current' ).eq(0).attr( 'data-slug' ) || '';
+                        var placeholder_only = $( 'input[name="import_placeholder_only"]', that.modal ).length > 0 ? $( 'input[name="import_placeholder_only"]', that.modal ).is(':checked') : false ;
                         $.ajax({
                             url: Customify_Sites.ajax_url,
                             dataType: 'json',
@@ -327,13 +344,13 @@ jQuery( document ).ready( function( $ ){
                                 action: 'cs_download_files',
                                 resources: that.data.resources,
                                 builder: that.current_builder,
-                                site_slug: that.data.slug
+                                site_slug: that.data.slug,
+                                placeholder_only : placeholder_only
                             },
                             success: function (res) {
                                 that.xml_id = res.xml_id;
                                 that.json_id = res.json_id;
                                 that.recommend_plugins = res._recommend_plugins;
-
 
                                 if ( ! _.isObject( that.recommend_plugins ) ) {
                                     that.recommend_plugins = {};
@@ -449,7 +466,8 @@ jQuery( document ).ready( function( $ ){
                                 url: Customify_Sites.ajax_url,
                                 data: {
                                     action: 'cs_import_content',
-                                    id: that.xml_id
+                                    id: that.xml_id,
+
                                 },
                                 success: function (res) {
                                     console.log('Imported', res);
@@ -599,7 +617,8 @@ jQuery( document ).ready( function( $ ){
             }
             $( '#customify-sites-listing .theme' ).remove();
 
-            _.each( that.data.posts, function( item ){
+            _.each( that.data.posts, function( item ) {
+                // console.log( 'item', item );
                 var html = template( item );
                 var $item_html = $( html );
                 $( '#customify-sites-listing' ).append( $item_html );
@@ -644,7 +663,8 @@ jQuery( document ).ready( function( $ ){
                 cat: cat,
                 tag: tag,
                 builder: current_page_builder,
-                s: s
+                s: s,
+                license_key: ''
             }
         },
 
@@ -658,7 +678,9 @@ jQuery( document ).ready( function( $ ){
                     $(this).addClass('current');
                     that.filter_data = {};
                     that.filter_data = that.get_filter_data();
-                    console.log( 'that.filter_data',that.filter_data );
+
+                    //console.log( 'that.filter_data',that.filter_data );
+
                     that.skip_render_filter = true;
                     that.load_sites();
                 }

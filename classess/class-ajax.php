@@ -20,9 +20,6 @@ class Customify_Sites_Ajax {
 
         add_action( 'wp_ajax_cs_export', array( $this, 'ajax_export' ) );
 
-        add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
-        add_filter( 'export_wp_filename', array( $this, 'export_xml_file_name' ), 95 );
-
     }
 
     function ajax_import__check(){
@@ -60,22 +57,6 @@ class Customify_Sites_Ajax {
 
         $file_name = $sitename . $builder . $date;
         return $file_name;
-    }
-
-
-    function export_xml_file_name(){
-        return $this->get_export_file_name().'.xml';
-    }
-
-    function export_remove_rss_title( ) {
-        if ( isset( $_GET['download'], $_GET['download'] ) ) {
-            remove_filter( 'the_title_rss','strip_tags' );
-            remove_filter( 'the_title_rss','ent2ncr', 8 );
-            remove_filter( 'the_title_rss','esc_html' );
-
-           // apply_filters( 'the_title_rss', $post->post_title );
-            add_filter( 'the_title_rss', array( $this, 'the_title_rss' ) );
-        }
     }
 
     function the_title_rss( $title ){
@@ -311,7 +292,6 @@ class Customify_Sites_Ajax {
     }
 
 
-
     function is_url( $url ){
         $result = ( false !== filter_var( $url, FILTER_VALIDATE_URL ) );
         return $result;
@@ -324,14 +304,21 @@ class Customify_Sites_Ajax {
 
         $slug = isset( $_REQUEST['site_slug'] ) ?  sanitize_text_field( wp_unslash( $_REQUEST['site_slug'] ) ) : '';
         $builder = isset( $_REQUEST['builder'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['builder'] ) ) : '';
+        //$placeholder_only = isset( $_REQUEST['placeholder_only'] ) && $_REQUEST['placeholder_only'] ? true : false;
+        $placeholder_only = apply_filters( 'customify_import_placeholder_only', true );
 
         $resources = isset( $_REQUEST['resources'] ) ? wp_unslash( $_REQUEST['resources'] ) : array();
         $resources = wp_parse_args( $resources, array(
             'xml_url' => '',
+            'xml_placeholder_url' => '',
             'json_url' => '',
+
             'elementor_xml_url' => '',
+            'elementor_xml_placeholder_url' => '',
             'elementor_json_url' => '',
-            'beaver_builder_xm_url' => '',
+
+            'beaver_builder_xml_url' => '',
+            'beaver_builder_xml_placeholder_url' => '',
             'beaver_builder_json_url' => '',
         ) );
 
@@ -341,17 +328,35 @@ class Customify_Sites_Ajax {
         switch( $builder ) {
             case 'beaver-builder':
             case 'beaver-builder-lite-version':
-                $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xm_url'] ) );
+            	if ( $placeholder_only && $resources['beaver_builder_xml_placeholder_url'] ) {
+		            $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xml_placeholder_url'] ) );
+		            $suffix_name = '-beaver-builder-placeholder';
+	            } else {
+		            $xml_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_xml_url'] ) );
+		            $suffix_name = '-beaver-builder';
+	            }
+
                 $json_url = sanitize_text_field( wp_unslash( $resources['beaver_builder_json_url'] ) );
-                $suffix_name = '-beaver-builder';
                 break;
             case 'elementor':
             case 'all':
-                $suffix_name = '-elementor';
-                $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
+
+		        if ( $placeholder_only && $resources['elementor_xml_placeholder_url'] ) {
+			        $suffix_name = '-elementor-placeholder';
+			        $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_placeholder_url'] ) );
+		        } else {
+			        $suffix_name = '-elementor';
+			        $xml_url = sanitize_text_field( wp_unslash( $resources['elementor_xml_url'] ) );
+		        }
+
                 $json_url = sanitize_text_field( wp_unslash( $resources['elementor_json_url'] ) );
                 break;
         }
+
+	    if ( ! $xml_url &&  $placeholder_only && $resources['xml_placeholder_url'] ) {
+		    $xml_url = sanitize_text_field( wp_unslash( $resources['xml_placeholder_url'] ) );
+		    $suffix_name = '-no-builder-placeholder';
+	    }
 
         if ( ! $xml_url ) {
             $xml_url = sanitize_text_field( wp_unslash( $resources['xml_url'] ) );
@@ -633,7 +638,6 @@ class Customify_Sites_Ajax {
                         $widget[ $k ] = isset( $imported_posts[ $v ] ) ? $imported_posts[ $v ] : 0;
                     }
                 }
-
 
                 $base_id = preg_replace('/-[0-9]+$/', '', $widget_instance_id);
                 if (isset($widget_instances[$base_id])) {

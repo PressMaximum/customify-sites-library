@@ -32,6 +32,9 @@
                             <div class="cs-text-center">
                                <h3><?php _e( 'Hi! Welcome back', 'customify-sites' ) ?></h3>
                                 <p><?php _e( 'You may have already run this site import wizard. If you would like to proceed anyway, click on the "Start Import" button below.', 'customify-sites' ); ?></p>
+                                <p class="cs-list-plugins" style="margin-top: 10px; display: none;">
+                                    <label><input type="checkbox" checked="checked" name="import_placeholder_only"> <?php _e( 'Import placeholder image.', 'customify-sites' ); ?></label>
+                                </p>
                                 <p class="cs-error cs-hide cs-error-download-files">
                                     <?php _e( 'Oops! Could not download demo content xml and config files.', 'customify-sites' ); ?>
                                 </p>
@@ -67,6 +70,8 @@
 
                             <h3 class="cs-text-center"><?php _e( 'Import Content', 'customify-sites' ); ?></h3>
                             <p class="cs-text-center"><?php _e( 'Let\'s import content to your website, to help you get familiar with the theme.', 'customify-sites' ); ?></p>
+
+
                             <ul class="cs-import-content-status cs-list-plugins">
                                 <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-post_count"></span></li>
                                 <li><div class="circle-loader"><div class="checkmark draw"></div></div><span class="cs-plugin-name cs-media_count"></span></li>
