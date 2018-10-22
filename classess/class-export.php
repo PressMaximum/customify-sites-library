@@ -50,8 +50,7 @@ class Customify_Sites_Export {
 		    if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
 			    return str_replace( $matches[1], $this->placeholder_url, $matches[0] );
 		    }
-
-
+		    
 	    }
 		return $matches[0];
     }
