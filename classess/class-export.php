@@ -3,14 +3,9 @@
 add_filter( 'http_request_host_is_external', '__return_true' );
 
 class Customify_Sites_Export {
-    public $placeholder_id = 0;
-    public $placeholder_post = false;
-    public $placeholder_url = '';
-
 	function __construct( $args ) {
 
 		//$url = apply_filters( 'wp_get_attachment_url', $url, $post->ID );
-        $this->maybe_insert_placeholder();
 		// add_filter( 'wp_get_attachment_url', array( $this, 'wp_get_attachment_url' ), 95, 2 );
 		add_filter( 'rss2_head', array( $this, 'export_remove_rss_title' ), 95 );
 		add_filter( 'the_content_export', array( $this, 'the_content_export' ), 999 );
@@ -18,9 +13,11 @@ class Customify_Sites_Export {
 			/**
 			 * @see export_wp
 			 */
+			update_option( 'customify_import_placeholder_only', true );
 			$this->export_wp( $args );
 			die();
         } else {
+			update_option( 'customify_import_placeholder_only', null );
 		    add_filter( 'export_wp_filename', array( $this, 'wp_export_filename' ) );
         }
 	}
@@ -30,136 +27,12 @@ class Customify_Sites_Export {
 		return $filename;
     }
 
-	function gallery_reg_cb($matches)
-	{
-		if ( strtolower( $matches[2] ) == 'gallery' ) {
-			$n = count( explode( ',', $matches['3'] ) );
-			$new_gallery =  array_fill( 0, $n - 1, $this->placeholder_id );
-			return '[gallery ids="'.join( ',', $new_gallery ).'"]';
-		}
-
-		return $matches[0];
-
-	}
-
-	function image_reg_url_cb( $matches ){
-	    if ( isset(  $matches[1] ) ) {
-		    $array = explode( '.', $matches[1] );
-		    $ext   = end( $array );
-		    $ext   = strtolower( $ext );
-		    if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
-			    return str_replace( $matches[1], $this->placeholder_url, $matches[0] );
-		    }
-		    
-	    }
-		return $matches[0];
-    }
-
 	function the_content_export( $content ){
-
-	    if ( $this->placeholder_id ) {
-
-		    // filter gallery shortcode
-		    $pattern = get_shortcode_regex();
-		    $content =  preg_replace_callback(
-			    '/'. $pattern .'/s',
-			    array( $this, 'gallery_reg_cb' ),
-			    $content
-		    );
-
-
-		    //Image URL
-		    $pattern = '/<*img[^>]*src*=*["\']?([^"\']*)/i';
-
-		    $content = preg_replace_callback(
-			    $pattern,
-			    array( $this, 'image_reg_url_cb' ),
-			    $content
-		    );
-
-	    }
-
-        return $content;
+        return Customify_Sites_Placeholder::get_instance()->content_replace_placeholder( $content );
     }
-
-	function maybe_insert_placeholder(){
-	    if ( $this->placeholder_id ) {
-	        return $this->placeholder_id;
-        }
-
-	    $name = sanitize_title( 'placeholder' );
-
-	    $placeholder_post = get_page_by_path( $name, OBJECT , 'attachment' );
-	    if ( $placeholder_post ) {
-	        $this->placeholder_post = $placeholder_post;
-		    $this->placeholder_id = $placeholder_post->ID;
-		    $this->placeholder_url = wp_get_attachment_url( $placeholder_post->ID );
-        } else {
-	        $this->upload_placeholder_attachment();
-        }
-
-    }
-
-	function get_placeholder_img(){
-		return '/assets/placeholder/placeholder.jpg';
-    }
-
-	function upload_placeholder_attachment( $name = '', $parent_id = 0 ){
-
-		// $filename should be the path to a file in the upload directory.
-		$filename = CUSTOMIFY_SITES_PATH.$this->get_placeholder_img();
-		// Get the path to the upload directory.
-		$wp_upload_dir = wp_upload_dir();
-
-		$save_to_path =  $wp_upload_dir['path'] . '/' . basename( $filename );
-		$save_to_url =  $wp_upload_dir['url'] . '/' . basename( $filename );
-
-		global $wp_filesystem;
-		WP_Filesystem();
-
-		$wp_filesystem->copy( $filename, $save_to_path, true );
-
-        // The ID of the post this attachment is for.
-		$parent_post_id = 0;
-
-        // Check the type of file. We'll use this as the 'post_mime_type'.
-		$filetype = wp_check_filetype( basename( $save_to_path ), null );
-
-         // Prepare an array of post data for the attachment.
-		$attachment = array(
-			'guid'           => $save_to_url,
-			'post_mime_type' => $filetype['type'],
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $save_to_path ) ),
-			'post_content'   => '',
-			'post_status'    => 'inherit'
-		);
-
-        // Insert the attachment.
-		$attach_id = wp_insert_attachment( $attachment, $save_to_path, $parent_post_id );
-
-        // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
-
-            // Generate the metadata for the attachment, and update the database record.
-		$attach_data = wp_generate_attachment_metadata( $attach_id, $save_to_path );
-		wp_update_attachment_metadata( $attach_id, $attach_data );
-
-		if ( ! is_wp_error( $attach_id ) ) {
-			$this->placeholder_post = get_post( $attach_id );
-			$this->placeholder_id = $attach_id;
-			$this->placeholder_url = wp_get_attachment_url( $attach_id );
-        }
-
-	}
 
 	function wp_get_attachment_url( $url, $post_id = false ){
-        $ext = end( explode( '.', $url ) );
-		$ext = strtolower( $ext );
-        if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
-	        $url = $this->placeholder_url;
-        }
-
-        return $url;
+		return Customify_Sites_Placeholder::get_instance()->wp_get_attachment_url( $url, $post_id );
     }
 
 	/**
@@ -648,11 +521,17 @@ class Customify_Sites_Export {
                  * NEW
 				 * For attachment image
 				 */
-                if ( $this->placeholder_post ) {
-	                $post = $this->placeholder_post;
+                if ( Customify_Sites_Placeholder::get_instance()->placeholder_post ) {
+	                $post = Customify_Sites_Placeholder::get_instance()->placeholder_post;
 	                setup_postdata( $post );
 	                $this->post_item( $post );
                 }
+
+				if ( Customify_Sites_Placeholder::get_instance()->logo_post ) {
+					$post = Customify_Sites_Placeholder::get_instance()->logo_post;
+					setup_postdata( $post );
+					$this->post_item( $post );
+				}
 
                 if ( $post_ids ) {
 					/**
@@ -681,63 +560,11 @@ class Customify_Sites_Export {
 	}
 
 	function progress_elementor_data( $data ){
-	    if ( is_array( $data ) ) {
-	        if( isset( $data['url'] ) &&  isset( $data['id'] )  ) {
-                $data['url'] = $this->placeholder_url;
-		        $data['id'] = $this->placeholder_id;
-            }
-            foreach ( $data as $index => $_d ) {
-	            $data[ $index ] = $this->progress_elementor_data( $_d );
-            }
-        }
-
-		return $data;
+	    return Customify_Sites_Placeholder::get_instance()->progress_elementor_data( $data );
     }
 
 	function progress_meta( $meta ){
-
-		/**
-         *
-         * _thumbnail_id : 12
-         *
-		 * _product_image_gallery :  37,38,39,36,35
-         *
-         * _customify_page_header_image: array( 'id' => '', 'url' )
-		 */
-
-        switch ( $meta->meta_key ) {
-            case '_thumbnail_id':
-	            $meta->meta_value = $this->placeholder_id;
-                break;
-            case '_product_image_gallery':
-                $value = maybe_unserialize( $meta -> meta_value );
-                if ( is_string( $value ) ) {
-	                $value = explode( ',', $value );
-	                $n = count( $value );
-	                $value = array_fill( 0, $n - 1, $this->placeholder_id );
-	                $meta->meta_value = join(',', $value);
-                }
-
-                break;
-            case '_customify_page_header_image':
-                $value = maybe_unserialize( $meta -> meta_value );
-                if ( is_array( $value ) ) {
-                    $value['id'] = $this->placeholder_id;
-                    $value['url'] = $this->placeholder_url;
-	                $meta->meta_value = serialize( $value );
-                }
-
-                break;
-
-            case '_elementor_data':
-	            // $meta->meta_value = '';
-	            $value = json_decode( $meta->meta_value , true );
-	            $value = $this->progress_elementor_data( $value );
-	            $meta->meta_value = json_encode( $value );
-                break;
-        }
-
-        return $meta;
+        return Customify_Sites_Placeholder::get_instance()->progress_meta( $meta );
     }
 
 	function post_item( $post ){

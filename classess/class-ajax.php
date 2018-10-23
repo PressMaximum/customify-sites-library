@@ -1,6 +1,10 @@
 <?php
 class Customify_Sites_Ajax {
     protected $mapping = array();
+	public $placeholder_id = 0;
+	public $placeholder_post = false;
+	public $placeholder_url = '';
+
     function __construct()
     {
         // Install Plugin
@@ -307,6 +311,8 @@ class Customify_Sites_Ajax {
         //$placeholder_only = isset( $_REQUEST['placeholder_only'] ) && $_REQUEST['placeholder_only'] ? true : false;
         $placeholder_only = apply_filters( 'customify_import_placeholder_only', true );
 
+        update_option( 'customify_import_placeholder_only', $placeholder_only );
+
         $resources = isset( $_REQUEST['resources'] ) ? wp_unslash( $_REQUEST['resources'] ) : array();
         $resources = wp_parse_args( $resources, array(
             'xml_url' => '',
@@ -543,6 +549,8 @@ class Customify_Sites_Ajax {
 
             $customize_data = $this->get_config_options( $id );
 
+	        $customize_data = Customify_Sites_Placeholder::get_instance()->progress_config( $customize_data );
+
             if ( isset( $customize_data['options'] ) ) {
                 $this->_import_options( $customize_data['options'] );
             }
@@ -638,6 +646,9 @@ class Customify_Sites_Ajax {
                         $widget[ $k ] = isset( $imported_posts[ $v ] ) ? $imported_posts[ $v ] : 0;
                     }
                 }
+
+                // Replace all images with placeholder
+                $widget = Customify_Sites_Placeholder::get_instance()->replace_placeholder( $widget );
 
                 $base_id = preg_replace('/-[0-9]+$/', '', $widget_instance_id);
                 if (isset($widget_instances[$base_id])) {
