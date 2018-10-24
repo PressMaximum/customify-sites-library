@@ -328,6 +328,12 @@ class Customify_Sites_Ajax {
             'beaver_builder_json_url' => '',
         ) );
 
+        foreach( $resources as $k => $v ) {
+        	if ( $v == 'false' ) {
+		        $resources[ $k ] = false;
+	        }
+        }
+
         $xml_url = false;
         $json_url = false;
         $suffix_name = '-no-builder';
