@@ -297,12 +297,6 @@ class Customify_Sites_Placeholder {
 
 				break;
 
-			case '_elementor_data':
-				$meta_value = json_decode( $meta_value , true );
-				$meta_value = $this->progress_elementor_data( $meta_value );
-				$meta_value = json_encode( $meta_value );
-				break;
-
 			case '_fl_builder_data':
 			case '_fl_builder_data_settings':
 			case '_fl_builder_draft_settings':
