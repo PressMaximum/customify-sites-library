@@ -1174,6 +1174,10 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$value = maybe_unserialize( $meta_item['value'] );
 				}
 
+				if ( class_exists( 'Customify_Sites_Placeholder' ) ) {
+					$value = Customify_Sites_Placeholder::get_instance()->progress_post_meta( $key, $value, $post_id);
+				}
+
 				add_post_meta( $post_id, $key, $value );
 				do_action( 'import_post_meta', $post_id, $key, $value );
 

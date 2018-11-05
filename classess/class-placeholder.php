@@ -4,7 +4,6 @@ class Customify_Sites_Placeholder {
 	public $placeholder_id = 0;
 	public $placeholder_post = false;
 	public $placeholder_url = '';
-
 	public $logo_post = false;
 
 	private static $_instance = null;
@@ -105,11 +104,15 @@ class Customify_Sites_Placeholder {
 	 * @return string
 	 */
 	function wp_get_attachment_url( $url, $post_id = false ){
-		if ( $this->placeholder_url ) {
-			$ext = end( explode( '.', $url ) );
-			$ext = strtolower( $ext );
-			if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
-				$url = $this->placeholder_url;
+		if ( $this->placeholder_url && is_string( $url ) ) {
+			$name = basename( $url );
+			$ext = explode( '.', $url );
+			if ( is_array( $ext ) ) {
+				$ext = end( $ext );
+				$ext = strtolower( $ext );
+				if ( $ext && in_array( $ext, array( 'png', 'jpeg', 'jpg' ) ) ) {
+					$url = $this->placeholder_url;
+				}
 			}
 		}
 
@@ -132,6 +135,58 @@ class Customify_Sites_Placeholder {
 			}
 		} elseif ( is_string( $data ) ) {
 			$data = $this->content_replace_placeholder( $data );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return array|null|string|string[]
+	 */
+	function progress_beaver_data( $data ){
+		if ( is_object( $data ) ) {
+
+			if ( property_exists( $data, 'photo' ) &&  property_exists( $data, 'photo_src' )  ) {
+				$data->photo_src = $this->placeholder_url;
+				$data->photo = $this->placeholder_id;
+			}
+
+			foreach ( $data as $index => $_d ) {
+				if ( $index == 'bg_image_src' ) {
+					$data->{ $index } = $this->placeholder_url;
+				}
+
+				if ( $index == 'bg_image' ) {
+					$data->{ $index } = $this->placeholder_id;
+				}
+
+				$data->{ $index } = $this->progress_beaver_data( $_d );
+			}
+		} elseif ( is_array( $data ) ) {
+
+			//var_dump( $data );
+
+			if( isset( $data['photo'] ) &&  isset( $data['photo_src'] )  ) {
+				$data['photo_src'] = $this->placeholder_url;
+				$data['photo'] = $this->placeholder_id;
+			}
+
+			foreach ( $data as $index => $_d ) {
+				if ( $index == 'bg_image_src' ) {
+					$data[$index] = $this->placeholder_url;
+				}
+
+				if ( $index == 'bg_image' ) {
+					$data[ $index ] = $this->placeholder_id;
+				}
+
+				$data[$index] = $this->progress_beaver_data( $_d );
+			}
+
+		} elseif ( is_string( $data ) ) {
+			$data = $this->replace_placeholder( $data );
 		}
 
 		return $data;
@@ -211,6 +266,56 @@ class Customify_Sites_Placeholder {
 		return $matches[0];
 	}
 
+	/**
+	 *
+	 * @param bool $key
+	 * @param bool $value
+	 * @param bool $post_id
+	 *
+	 * @return string|array
+	 */
+	function progress_post_meta( $meta_key = false ,$meta_value = false , $post_id = false ){
+
+		switch ( $meta_key ) {
+			case '_thumbnail_id':
+				$meta_value = $this->placeholder_id;
+				break;
+			case '_product_image_gallery':
+				if ( is_string( $meta_value ) ) {
+					$meta_value = explode( ',', $meta_value );
+					$n = count( $meta_value );
+					$meta_value = array_fill( 0, $n - 1, $this->placeholder_id );
+					$meta_value = join(',', $meta_value );
+				}
+
+				break;
+			case '_customify_page_header_image':
+				if ( is_array( $meta_value ) ) {
+					$meta_value['id'] = $this->placeholder_id;
+					$meta_value['url'] = $this->placeholder_url;
+				}
+
+				break;
+
+			case '_elementor_data':
+				$meta_value = json_decode( $meta_value , true );
+				$meta_value = $this->progress_elementor_data( $meta_value );
+				$meta_value = json_encode( $meta_value );
+				break;
+
+			case '_fl_builder_data':
+			case '_fl_builder_data_settings':
+			case '_fl_builder_draft_settings':
+			case '_fl_builder_draft':
+				if ( is_object( $meta_value ) || is_array( $meta_value ) ) {
+					$meta_value            = $this->progress_beaver_data( $meta_value );
+				}
+				break;
+		}
+
+		return $meta_value;
+	}
+
 
 	function progress_meta( $meta ){
 
@@ -252,6 +357,17 @@ class Customify_Sites_Placeholder {
 				$value = json_decode( $meta->meta_value , true );
 				$value = $this->progress_elementor_data( $value );
 				$meta->meta_value = json_encode( $value );
+				break;
+
+			case '_fl_builder_data':
+			case '_fl_builder_data_settings':
+			case '_fl_builder_draft_settings':
+			case '_fl_builder_draft':
+				$value = maybe_unserialize( $meta->meta_value );
+				if ( is_object( $value ) || is_array( $value ) ) {
+					$value            = $this->progress_beaver_data( $value );
+					$meta->meta_value = serialize( $value );
+				}
 				break;
 		}
 

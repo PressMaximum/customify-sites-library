@@ -5,7 +5,7 @@ Plugin URI: https://wpcustomify.com
 Description: Import free sites build with Customify theme.
 Author: WPCustomify
 Author URI: https://wpcustomify.com/about/
-Version: 0.0.4
+Version: 0.0.6
 Text Domain: customify-sites
 License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
