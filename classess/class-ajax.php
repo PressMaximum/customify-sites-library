@@ -559,9 +559,9 @@ class Customify_Sites_Ajax {
 
 	function ajax_import_options() {
 		$this->user_can();
-		$id     = wp_unslash( (int) $_REQUEST['id'] );
-		$xml_id = wp_unslash( (int) $_REQUEST['xml_id'] );
-		$file   = get_attached_file( $id );
+		$id         = wp_unslash( (int) $_REQUEST['id'] );
+		$xml_id     = wp_unslash( (int) $_REQUEST['xml_id'] );
+		$file       = get_attached_file( $id );
 		$config_url = '';
 
 		$response      = wp_remote_get( $config_url );
@@ -753,7 +753,8 @@ class Customify_Sites_Ajax {
 		global $wp_customize;
 
 		if ( ! empty( $customize_data ) ) {
-
+			set_theme_mod( 'header_builder_version', 'v2' );
+			set_theme_mod( 'hide_header_builder_switcher', 'yes' );
 			$imported_terms  = isset( $this->mapping['term_id'] ) ? $this->mapping['term_id'] : array();
 			$processed_posts = isset( $this->mapping['post'] ) ? $this->mapping['post'] : array();
 
@@ -855,8 +856,20 @@ class Customify_Sites_Ajax {
 			if ( ! in_array( $slug, $valid_slugs ) ) {
 				return;
 			}
-			$config_url    = sprintf( 'https://customifysites.com/wp-content/uploads/demo-meta/%s.txt', $slug );
-			$response      = wp_remote_get( $config_url );
+			$header_items = array(
+				'outfit'         => 'a:2:{s:7:"desktop";a:3:{s:3:"top";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"html";}}s:6:"center";a:0:{}s:5:"right";a:1:{i:0;a:1:{s:2:"id";s:12:"social-icons";}}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:12:"primary-menu";}}s:6:"center";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:7:"wc_cart";}i:1;a:1:{s:2:"id";s:11:"search_icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}}s:6:"mobile";a:4:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:7:"sidebar";a:1:{s:7:"sidebar";a:5:{i:0;a:1:{s:2:"id";s:4:"html";}i:1;a:1:{s:2:"id";s:10:"search_box";}i:2;a:1:{s:2:"id";s:12:"primary-menu";}i:3;a:1:{s:2:"id";s:12:"social-icons";}i:4;a:1:{s:2:"id";s:6:"button";}}}}}',
+				'charity'        => 'a:2:{s:7:"desktop";a:3:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:12:"social-icons";}i:1;a:1:{s:2:"id";s:6:"button";}}}s:6:"bottom";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:12:"primary-menu";}}s:6:"center";a:0:{}s:5:"right";a:1:{i:0;a:1:{s:2:"id";s:11:"search_icon";}}}}s:6:"mobile";a:4:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:7:"sidebar";a:1:{s:7:"sidebar";a:5:{i:0;a:1:{s:2:"id";s:4:"html";}i:1;a:1:{s:2:"id";s:10:"search_box";}i:2;a:1:{s:2:"id";s:12:"primary-menu";}i:3;a:1:{s:2:"id";s:12:"social-icons";}i:4;a:1:{s:2:"id";s:6:"button";}}}}}',
+				'consulting'     => 'a:2:{s:7:"desktop";a:3:{s:3:"top";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"html";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:10:"search_box";}i:1;a:1:{s:2:"id";s:12:"social-icons";}}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:12:"primary-menu";}i:1;a:1:{s:2:"id";s:6:"button";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}}s:6:"mobile";a:4:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:7:"sidebar";a:1:{s:7:"sidebar";a:5:{i:0;a:1:{s:2:"id";s:4:"html";}i:1;a:1:{s:2:"id";s:10:"search_box";}i:2;a:1:{s:2:"id";s:12:"primary-menu";}i:3;a:1:{s:2:"id";s:12:"social-icons";}i:4;a:1:{s:2:"id";s:6:"button";}}}}}',
+				'customify-2018' => 'a:2:{s:7:"desktop";a:3:{s:3:"top";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"html";}}s:6:"center";a:0:{}s:5:"right";a:1:{i:0;a:1:{s:2:"id";s:12:"social-icons";}}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:1:{i:0;a:1:{s:2:"id";s:12:"primary-menu";}}s:5:"right";a:3:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}i:2;a:1:{s:2:"id";s:6:"button";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}}s:6:"mobile";a:4:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:7:"sidebar";a:1:{s:7:"sidebar";a:5:{i:0;a:1:{s:2:"id";s:4:"html";}i:1;a:1:{s:2:"id";s:10:"search_box";}i:2;a:1:{s:2:"id";s:12:"primary-menu";}i:3;a:1:{s:2:"id";s:12:"social-icons";}i:4;a:1:{s:2:"id";s:6:"button";}}}}}',
+				'studio'         => 'a:2:{s:7:"desktop";a:3:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:1:{i:0;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}}s:6:"mobile";a:4:{s:3:"top";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:4:"main";a:3:{s:4:"left";a:1:{i:0;a:1:{s:2:"id";s:4:"logo";}}s:6:"center";a:0:{}s:5:"right";a:2:{i:0;a:1:{s:2:"id";s:11:"search_icon";}i:1;a:1:{s:2:"id";s:8:"nav-icon";}}}s:6:"bottom";a:3:{s:4:"left";a:0:{}s:6:"center";a:0:{}s:5:"right";a:0:{}}s:7:"sidebar";a:1:{s:7:"sidebar";a:5:{i:0;a:1:{s:2:"id";s:4:"html";}i:1;a:1:{s:2:"id";s:10:"search_box";}i:2;a:1:{s:2:"id";s:12:"primary-menu";}i:3;a:1:{s:2:"id";s:12:"social-icons";}i:4;a:1:{s:2:"id";s:6:"button";}}}}}',
+			);
+			if ( isset( $header_items[ $slug ] ) && ! empty( $header_items[ $slug ] ) ) {
+				$header_data = unserialize( $header_items[ $slug ] );
+				set_theme_mod( 'header_builder_panel_v2', $header_data );
+			}
+
+			$config_url = sprintf( 'https://customifysites.com/wp-content/uploads/demo-meta/%s.txt', $slug );
+			$response   = wp_remote_get( $config_url );
 			if ( is_wp_error( $response ) ) {
 				return;
 			}
@@ -867,7 +880,7 @@ class Customify_Sites_Ajax {
 					$result = unserialize( $this->decode_settings( $response_body ) );
 					if ( is_array( $result ) && ! is_wp_error( $result ) ) {
 						$page_front = get_option( 'page_on_front', 0 );
-						if ( is_numeric( $page_front ) && $page_front > 0 && get_post_status ( $page_front ) ) {
+						if ( is_numeric( $page_front ) && $page_front > 0 && get_post_status( $page_front ) ) {
 							foreach ( $result as $key => $res ) {
 								if ( is_array( $res ) && isset( $res[0] ) && ! empty( $res[0] ) ) {
 									$value = $res[0];
