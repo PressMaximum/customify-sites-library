@@ -1,10 +1,10 @@
 <?php
 
 class Customify_Sites_Ajax {
-	protected $mapping = array();
-	public $placeholder_id = 0;
+	protected $mapping       = array();
+	public $placeholder_id   = 0;
 	public $placeholder_post = false;
-	public $placeholder_url = '';
+	public $placeholder_url  = '';
 
 	function __construct() {
 		// Install Plugin
@@ -23,7 +23,6 @@ class Customify_Sites_Ajax {
 		add_action( 'wp_ajax_cs_download_files', array( $this, 'ajax_download_files' ) );
 
 		add_action( 'wp_ajax_cs_export', array( $this, 'ajax_export' ) );
-
 	}
 
 	function ajax_import__check() {
@@ -312,8 +311,8 @@ class Customify_Sites_Ajax {
 		$this->user_can();
 
 		// try to get files exists
-		$slug    = isset( $_REQUEST['site_slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['site_slug'] ) ) : '';
-		$builder = isset( $_REQUEST['builder'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['builder'] ) ) : '';
+		$slug             = isset( $_REQUEST['site_slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['site_slug'] ) ) : '';
+		$builder          = isset( $_REQUEST['builder'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['builder'] ) ) : '';
 		$placeholder_only = apply_filters( 'customify_import_placeholder_only', true );
 
 		update_option( 'customify_import_placeholder_only', $placeholder_only );
@@ -322,13 +321,13 @@ class Customify_Sites_Ajax {
 		$resources = wp_parse_args(
 			$resources,
 			array(
-				'xml_url'             => '',
-				'xml_placeholder_url' => '',
-				'json_url'            => '',
+				'xml_url'                            => '',
+				'xml_placeholder_url'                => '',
+				'json_url'                           => '',
 
-				'elementor_xml_url'             => '',
-				'elementor_xml_placeholder_url' => '',
-				'elementor_json_url'            => '',
+				'elementor_xml_url'                  => '',
+				'elementor_xml_placeholder_url'      => '',
+				'elementor_json_url'                 => '',
 
 				'beaver_builder_xml_url'             => '',
 				'beaver_builder_xml_placeholder_url' => '',
@@ -458,6 +457,8 @@ class Customify_Sites_Ajax {
 			}
 		}
 
+		update_option( 'customify_imported_site_slug', $slug );
+
 		wp_send_json( $return );
 	}
 
@@ -561,9 +562,18 @@ class Customify_Sites_Ajax {
 		$id     = wp_unslash( (int) $_REQUEST['id'] );
 		$xml_id = wp_unslash( (int) $_REQUEST['xml_id'] );
 		$file   = get_attached_file( $id );
+		$config_url = '';
+
+		$response      = wp_remote_get( $config_url );
+		$response_body = wp_remote_retrieve_body( $response );
+		if ( ! empty( $response_body ) ) {
+			$result = unserialize( $response_body );
+			if ( is_array( $result ) && ! is_wp_error( $result ) ) {
+
+			}
+		}
 
 		if ( $file ) {
-
 			$this->mapping = get_post_meta( $xml_id, '_wxr_importer_mapping', true );
 			if ( ! is_array( $this->mapping ) ) {
 				$this->mapping = array();
@@ -588,6 +598,11 @@ class Customify_Sites_Ajax {
 			if ( isset( $customize_data['widgets'] ) ) {
 				$this->_import_widgets( $customize_data['widgets'] );
 			}
+		}
+
+		$imported_slug = get_option( 'customify_imported_site_slug', '' );
+		if ( ! empty( $imported_slug ) ) {
+			$this->import_elementor_page_setting( $imported_slug );
 		}
 
 		die( 'ajax_import_options' );
@@ -834,4 +849,86 @@ class Customify_Sites_Ajax {
 		return $file_path_or_id;
 	}
 
+	function import_elementor_page_setting( $slug ) {
+		if ( isset( $slug ) && ! empty( $slug ) ) {
+			$valid_slugs = array( 'outfit', 'charity', 'consulting', 'customify-2018', 'studio' );
+			if ( ! in_array( $slug, $valid_slugs ) ) {
+				return;
+			}
+			$config_url    = sprintf( 'https://customifysites.com/wp-content/uploads/demo-meta/%s.txt', $slug );
+			$response      = wp_remote_get( $config_url );
+			if ( is_wp_error( $response ) ) {
+				return;
+			}
+			$response_body = wp_remote_retrieve_body( $response );
+
+			if ( ! empty( $response_body ) ) {
+				try {
+					$result = unserialize( $this->decode_settings( $response_body ) );
+
+					if ( is_array( $result ) && ! is_wp_error( $result ) ) {
+						$page_front = get_option( 'page_on_front', 0 );
+						if ( is_numeric( $page_front ) && $page_front > 0 && get_post_status ( $page_front ) ) {
+			
+							foreach ( $result as $key => $res ) {
+								if ( is_array( $res ) && isset( $res[0] ) && ! empty( $res[0] ) ) {
+									$value = $res[0];
+									if ( '_elementor_data' == $key ) {
+										$value = json_decode( $res[0], true );
+									}
+									if ( '_elementor_css' == $key ) {
+										$value = unserialize( $res[0] );
+									}
+									// echo 'ID: ' . $page_front . ' -- key: ' . $key . ' -- data: ';
+									// echo '<pre>Data: ';
+									// var_dump( $values );
+									// echo '</pre>';
+									update_post_meta( $page_front, $key, $value );
+								}
+							}
+							if ( defined( 'ELEMENTOR_VERSION' ) ) {
+								Elementor\Plugin::$instance->files_manager->clear_cache();
+							}
+						}
+						
+						die;
+					}
+				} catch ( Exception $e ) {
+					// catch $e.
+				}
+			}
+		}
+	}
+
+	function decode_settings( $input ) {
+		$keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+		$chr1   = $chr2 = $chr3 = '';
+		$enc1   = $enc2 = $enc3 = $enc4 = '';
+		$i      = 0;
+		$output = '';
+
+		$input = preg_replace( '[^A-Za-z0-9\+\/\=]', '', $input );
+		do {
+			$enc1   = strpos( $keyStr, substr( $input, $i++, 1 ) );
+			$enc2   = strpos( $keyStr, substr( $input, $i++, 1 ) );
+			$enc3   = strpos( $keyStr, substr( $input, $i++, 1 ) );
+			$enc4   = strpos( $keyStr, substr( $input, $i++, 1 ) );
+			$chr1   = ( $enc1 << 2 ) | ( $enc2 >> 4 );
+			$chr2   = ( ( $enc2 & 15 ) << 4 ) | ( $enc3 >> 2 );
+			$chr3   = ( ( $enc3 & 3 ) << 6 ) | $enc4;
+			$output = $output . chr( (int) $chr1 );
+			if ( $enc3 != 64 ) {
+				$output = $output . chr( (int) $chr2 );
+			}
+			if ( $enc4 != 64 ) {
+				$output = $output . chr( (int) $chr3 );
+			}
+			$chr1 = $chr2 = $chr3 = '';
+			$enc1 = $enc2 = $enc3 = $enc4 = '';
+		} while ( $i < strlen( $input ) );
+		return urldecode( $output );
+	}
+
 }
+
+
