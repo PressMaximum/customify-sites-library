@@ -865,24 +865,19 @@ class Customify_Sites_Ajax {
 			if ( ! empty( $response_body ) ) {
 				try {
 					$result = unserialize( $this->decode_settings( $response_body ) );
-
 					if ( is_array( $result ) && ! is_wp_error( $result ) ) {
 						$page_front = get_option( 'page_on_front', 0 );
 						if ( is_numeric( $page_front ) && $page_front > 0 && get_post_status ( $page_front ) ) {
-			
 							foreach ( $result as $key => $res ) {
 								if ( is_array( $res ) && isset( $res[0] ) && ! empty( $res[0] ) ) {
 									$value = $res[0];
 									if ( '_elementor_data' == $key ) {
 										$value = json_decode( $res[0], true );
+										array_walk_recursive( $value, array( $this, 'replace_by_placeholder' ) );
 									}
 									if ( '_elementor_css' == $key ) {
 										$value = unserialize( $res[0] );
 									}
-									// echo 'ID: ' . $page_front . ' -- key: ' . $key . ' -- data: ';
-									// echo '<pre>Data: ';
-									// var_dump( $values );
-									// echo '</pre>';
 									update_post_meta( $page_front, $key, $value );
 								}
 							}
@@ -890,13 +885,17 @@ class Customify_Sites_Ajax {
 								Elementor\Plugin::$instance->files_manager->clear_cache();
 							}
 						}
-						
-						die;
 					}
 				} catch ( Exception $e ) {
 					// catch $e.
 				}
 			}
+		}
+	}
+
+	function replace_by_placeholder( &$value, $key ) {
+		if ( false !== strpos( $value, 'https://customifysites.com/' ) && ( false !== strpos( $value, '.jpeg' ) || false !== strpos( $value, '.jpg' ) || false !== strpos( $value, '.png' ) ) ) {
+			$value = 'https://customifysites.com/outfit/wp-content/uploads/sites/15/2018/10/placeholder.jpg';
 		}
 	}
 
