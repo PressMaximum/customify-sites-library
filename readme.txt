@@ -26,6 +26,18 @@ You will find `Appearance -> Customify Sites` menu in your WordPress admin panel
 
 
 == Changelog ==
+v0.0.8
+* Improve and fix bugs.
+
+v0.0.7
+* Fix localize scripts.
+
+v0.0.6
+* Improve Elementor.
+
+v0.0.5
+* Update check resources.
+
 v0.0.4
 * Import placeholder images.
 
