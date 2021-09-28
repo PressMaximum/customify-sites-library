@@ -2,7 +2,7 @@
 Contributors: WPCustomify
 Tags: demo, theme demos, one click import
 Requires at least: 4.9.5
-Tested up to: 4.9.5
+Tested up to: 5.8.1
 Stable tag: trunk
 
 Browse and import demo sites with Customify with few clicks.
@@ -26,6 +26,9 @@ You will find `Appearance -> Customify Sites` menu in your WordPress admin panel
 
 
 == Changelog ==
+v0.0.9
+* Improve and fix bugs.
+
 v0.0.8
 * Improve and fix bugs.
 
