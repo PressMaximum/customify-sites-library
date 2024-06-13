@@ -127,7 +127,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		}
 
 		if ( ! $status ) {
-			return new WP_Error( 'wxr_importer.cannot_parse', __( 'Could not open the file for parsing', 'wordpress-importer', 'customify-sites' ) );
+			return new WP_Error( 'wxr_importer.cannot_parse', __( 'Could not open the file for parsing', 'customify-sites' ) );
 		}
 
 		return $reader;

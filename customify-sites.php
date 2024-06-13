@@ -19,6 +19,7 @@ if ( ! class_exists( 'WP_Importer' ) ) {
 }
 
 require dirname( __FILE__ ) . '/classess/class-placeholder.php';
+
 require dirname( __FILE__ ) . '/importer/class-logger.php';
 require dirname( __FILE__ ) . '/importer/class-logger-serversentevents.php';
 require dirname( __FILE__ ) . '/importer/class-wxr-importer.php';
