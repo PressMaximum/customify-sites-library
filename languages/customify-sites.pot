@@ -1,14 +1,15 @@
-# Copyright (C) 2021 WPCustomify
+# Copyright (C) 2024 pressmaximum
 # This file is distributed under the GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
 msgid ""
 msgstr ""
-"Project-Id-Version: Customify Site Library 0.0.9\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/customify-sites\n"
-"POT-Creation-Date: 2021-09-28 02:15:08+00:00\n"
+"Project-Id-Version: Customify Site Library 0.0.10\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/customify-sites-library\n"
+"POT-Creation-Date: 2024-06-13 10:08:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
@@ -567,6 +568,25 @@ msgstr ""
 msgid "Could not update comment #%d with mapped data"
 msgstr ""
 
+#: importer/parsers/class-wxr-parser-regex.php:102
+#: importer/parsers/class-wxr-parser-simplexml.php:46
+#: importer/parsers/class-wxr-parser-simplexml.php:52
+#: importer/parsers/class-wxr-parser-xml.php:107
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: importer/parsers/class-wxr-parser-simplexml.php:33
+#: importer/parsers/class-wxr-parser-simplexml.php:41
+#: importer/parsers/class-wxr-parser.php:45
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: importer/parsers/class-wxr-parser.php:46
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
 #: templates/dashboard.php:12
 msgid "All"
 msgstr ""
@@ -724,11 +744,11 @@ msgid "Import free sites build with Customify theme."
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "WPCustomify"
+msgid "pressmaximum"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "https://wpcustomify.com/about/"
+msgid "https://pressmaximum.com/customify"
 msgstr ""
 
 #: classess/class-sites.php:105
