@@ -2,7 +2,7 @@
 Contributors: WPCustomify
 Tags: demo, theme demos, one click import
 Requires at least: 4.9.5
-Tested up to: 5.8.1
+Tested up to: 6.5.4
 Stable tag: trunk
 
 Browse and import demo sites with Customify with few clicks.
