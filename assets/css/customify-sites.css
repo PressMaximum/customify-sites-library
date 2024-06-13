@@ -58,7 +58,7 @@
           transform-origin: left top;
   border-right: 2px solid #5cb85c;
   border-top: 2px solid #5cb85c;
-  content: '';
+  content: "";
   left: 50%;
   top: 50%;
   position: absolute;
@@ -140,8 +140,7 @@
   }
 }
 @-webkit-keyframes scale {
-  0%,
-    100% {
+  0%, 100% {
     -webkit-transform: none;
     transform: none;
   }
@@ -151,8 +150,7 @@
   }
 }
 @keyframes scale {
-  0%,
-    100% {
+  0%, 100% {
     -webkit-transform: none;
     transform: none;
   }
@@ -178,7 +176,7 @@
   box-shadow: inset 0 0 0 #46b450;
   display: block;
   height: 110px;
-  left: calc( 50% - 55px);
+  left: calc(50% - 55px);
   position: absolute;
   top: 20px;
   width: 110px;
@@ -403,8 +401,8 @@
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
-  -webkit-transition: opacity .2s ease-in-out;
-  transition: opacity .2s ease-in-out;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 .theme-browser .theme .theme-screenshot:after {
   content: "";
@@ -437,8 +435,8 @@
   padding: 10px 15px;
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
   opacity: 0;
-  -webkit-transition: opacity .1s ease-in-out;
-  transition: opacity .1s ease-in-out;
+  -webkit-transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
   height: auto;
   background: rgba(244, 244, 244, 0.7);
   border-left: 1px solid rgba(0, 0, 0, 0.05);
@@ -552,8 +550,8 @@
   overflow: hidden;
   position: relative;
   -webkit-backface-visibility: hidden;
-  -webkit-transition: opacity .2s ease-in-out;
-  transition: opacity .2s ease-in-out;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
 }
@@ -563,11 +561,11 @@
   left: 0;
   top: 0;
   width: 100%;
-  -webkit-transition: opacity .2s ease-in-out;
-  transition: opacity .2s ease-in-out;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 .customify-sites-modal-wrapper .cs-modal .cs-thumbnail:after {
-  content: '';
+  content: "";
   display: block;
   padding-top: 100%;
 }
@@ -688,10 +686,10 @@
 .cs-error {
   background-color: #fcf8e3;
   color: #8a6d3b;
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   margin-bottom: 1rem;
   border: 1px solid #faf2cc;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 body.cs-previewing-site {
@@ -706,8 +704,8 @@ body.cs-previewing-site {
   top: 0px;
   bottom: 0px;
   display: block;
-  -webkit-transition: width .4s linear;
-  transition: width .4s linear;
+  -webkit-transition: width 0.4s linear;
+  transition: width 0.4s linear;
   background: #fff;
 }
 #customify-site-preview.cs-hide {
@@ -735,12 +733,12 @@ body.cs-previewing-site {
   height: 100%;
   display: block;
   overflow-x: hidden;
-  -webkit-transition-property: left,right,top,bottom,width,margin, background;
-  transition-property: left,right,top,bottom,width,margin, background;
-  -webkit-transition-duration: .2s;
-          transition-duration: .2s;
+  -webkit-transition-property: left, right, top, bottom, width, margin, background;
+  transition-property: left, right, top, bottom, width, margin, background;
+  -webkit-transition-duration: 0.2s;
+          transition-duration: 0.2s;
 }
-#customify-site-preview .cs-iframe-outer .cs-iframe[data-device="tablet"] {
+#customify-site-preview .cs-iframe-outer .cs-iframe[data-device=tablet] {
   margin: auto 0 auto -360px;
   width: 720px;
   height: 1080px;
@@ -749,7 +747,7 @@ body.cs-previewing-site {
   left: 50%;
   right: auto;
 }
-#customify-site-preview .cs-iframe-outer .cs-iframe[data-device="phone"] {
+#customify-site-preview .cs-iframe-outer .cs-iframe[data-device=phone] {
   margin: auto 0 auto -207px;
   width: 414px;
   height: 736px;
@@ -874,16 +872,16 @@ body.cs-previewing-site {
   }
 }
 #customify-sites-listing.themes .theme {
-  -ms-flex-preferred-size: calc(  33.3333333% - 2em );
-      flex-basis: calc(  33.3333333% - 2em );
-  width: calc(  33.3333333% - 2em );
+  -ms-flex-preferred-size: calc(33.3333333% - 2em);
+      flex-basis: calc(33.3333333% - 2em);
+  width: calc(33.3333333% - 2em);
   margin: 1em;
 }
 @media screen and (max-width: 80em) {
   #customify-sites-listing.themes .theme {
-    -ms-flex-preferred-size: calc(  50% - 2em );
-        flex-basis: calc(  50% - 2em );
-    width: calc( 50% - 2em );
+    -ms-flex-preferred-size: calc(50% - 2em);
+        flex-basis: calc(50% - 2em);
+    width: calc(50% - 2em);
     margin: 1em 0px;
   }
 }

@@ -163,7 +163,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', 'wordpress-importer', 'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  'customify-sites' ),
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -279,7 +279,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', 'wordpress-importer', 'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  'customify-sites' ),
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -352,7 +352,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', 'wordpress-importer', 'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', 'customify-sites' ),
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -501,7 +501,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	 */
 	protected function import_start( $file ) {
 		if ( ! is_file( $file ) ) {
-			return new WP_Error( 'wxr_importer.file_missing', __( 'The file does not exist, please try again.', 'wordpress-importer', 'customify-sites' ) );
+			return new WP_Error( 'wxr_importer.file_missing', __( 'The file does not exist, please try again.',  'customify-sites' ) );
 		}
 
 		// Suspend bunches of stuff in WP core
@@ -564,7 +564,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	public function set_user_mapping( $mapping ) {
 		foreach ( $mapping as $map ) {
 			if ( empty( $map['old_slug'] ) || empty( $map['old_id'] ) || empty( $map['new_id'] ) ) {
-				$this->logger->warning( __( 'Invalid author mapping', 'wordpress-importer', 'customify-sites' ) );
+				$this->logger->warning( __( 'Invalid author mapping',  'customify-sites' ) );
 				$this->logger->debug( var_export( $map, true ) );
 				continue;
 			}
@@ -753,7 +753,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		// Is this type even valid?
 		if ( ! $post_type_object ) {
 			$this->logger->warning( sprintf(
-				__( 'Failed to import "%s": Invalid post type %s', 'wordpress-importer', 'customify-sites' ),
+				__( 'Failed to import "%s": Invalid post type %s',  'customify-sites' ),
 				$data['post_title'],
 				$data['post_type']
 			) );
@@ -763,7 +763,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$post_exists = $this->post_exists( $data );
 		if ( $post_exists ) {
 			$this->logger->info( sprintf(
-				__( '%s "%s" already exists.', 'wordpress-importer', 'customify-sites' ),
+				__( '%s "%s" already exists.',  'customify-sites' ),
 				$post_type_object->labels->singular_name,
 				$data['post_title']
 			) );
@@ -873,7 +873,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		if ( is_wp_error( $post_id ) ) {
 			$this->logger->error( sprintf(
-				__( 'Failed to import "%s" (%s)', 'wordpress-importer', 'customify-sites' ),
+				__( 'Failed to import "%s" (%s)', 'customify-sites' ),
 				$data['post_title'],
 				$post_type_object->labels->singular_name
 			) );
@@ -905,12 +905,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mark_post_exists( $data, $post_id );
 
 		$this->logger->info( sprintf(
-			__( 'Imported "%s" (%s)', 'wordpress-importer', 'customify-sites' ),
+			__( 'Imported "%s" (%s)', 'customify-sites' ),
 			$data['post_title'],
 			$post_type_object->labels->singular_name
 		) );
 		$this->logger->debug( sprintf(
-			__( 'Post %d remapped to %d', 'wordpress-importer', 'customify-sites' ),
+			__( 'Post %d remapped to %d', 'customify-sites' ),
 			$original_id,
 			$post_id
 		) );
@@ -1054,7 +1054,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		$info = wp_check_filetype( $upload['file'] );
 		if ( ! $info ) {
-			return new WP_Error( 'attachment_processing_error', __( 'Invalid file type', 'wordpress-importer', 'customify-sites' ) );
+			return new WP_Error( 'attachment_processing_error', __( 'Invalid file type',  'customify-sites' ) );
 		}
 
 		$post['post_mime_type'] = $info['type'];
@@ -1549,7 +1549,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$user_id = wp_insert_user( wp_slash( $userdata ) );
 		if ( is_wp_error( $user_id ) ) {
 			$this->logger->error( sprintf(
-				__( 'Failed to import user "%s"', 'wordpress-importer', 'customify-sites' ),
+				__( 'Failed to import user "%s"',  'customify-sites' ),
 				$userdata['user_login']
 			) );
 			$this->logger->debug( $user_id->get_error_message() );
@@ -1570,11 +1570,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mapping['user_slug'][ $original_slug ] = $user_id;
 
 		$this->logger->info( sprintf(
-			__( 'Imported user "%s"', 'wordpress-importer', 'customify-sites' ),
+			__( 'Imported user "%s"',  'customify-sites' ),
 			$userdata['user_login']
 		) );
 		$this->logger->debug( sprintf(
-			__( 'User %d remapped to %d', 'wordpress-importer', 'customify-sites' ),
+			__( 'User %d remapped to %d',  'customify-sites' ),
 			$original_id,
 			$user_id
 		) );
@@ -1719,7 +1719,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$result = wp_insert_term( $data['name'], $data['taxonomy'], $termdata );
 		if ( is_wp_error( $result ) ) {
 			$this->logger->warning( sprintf(
-				__( 'Failed to import %s %s', 'wordpress-importer', 'customify-sites' ),
+				__( 'Failed to import %s %s',  'customify-sites' ),
 				$data['taxonomy'],
 				$data['name']
 			) );
@@ -1743,12 +1743,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mapping['term_id'][ $original_id ] = $term_id;
 
 		$this->logger->info( sprintf(
-			__( 'Imported "%s" (%s)', 'wordpress-importer', 'customify-sites' ),
+			__( 'Imported "%s" (%s)',  'customify-sites' ),
 			$data['name'],
 			$data['taxonomy']
 		) );
 		$this->logger->debug( sprintf(
-			__( 'Term %d remapped to %d', 'wordpress-importer', 'customify-sites' ),
+			__( 'Term %d remapped to %d',  'customify-sites' ),
 			$original_id,
 			$term_id
 		) );
@@ -1801,7 +1801,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			return new WP_Error(
 				'import_file_error',
 				sprintf(
-					__( 'Remote server returned %1$d %2$s for %3$s', 'wordpress-importer', 'customify-sites' ),
+					__( 'Remote server returned %1$d %2$s for %3$s',  'customify-sites' ),
 					$code,
 					get_status_header_desc( $code ),
 					$url
@@ -1814,18 +1814,18 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		if ( isset( $headers['content-length'] ) && $filesize !== (int) $headers['content-length'] ) {
 			unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __( 'Remote file is incorrect size', 'wordpress-importer', 'customify-sites' ) );
+			return new WP_Error( 'import_file_error', __( 'Remote file is incorrect size',  'customify-sites' ) );
 		}
 
 		if ( 0 === $filesize ) {
 			unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __( 'Zero size file downloaded', 'wordpress-importer', 'customify-sites' ) );
+			return new WP_Error( 'import_file_error', __( 'Zero size file downloaded',  'customify-sites' ) );
 		}
 
 		$max_size = (int) $this->max_attachment_size();
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
 			unlink( $upload['file'] );
-			$message = sprintf( __( 'Remote file is too large, limit is %s', 'wordpress-importer', 'customify-sites' ), size_format( $max_size ) );
+			$message = sprintf( __( 'Remote file is too large, limit is %s',  'customify-sites' ), size_format( $max_size ) );
 			return new WP_Error( 'import_file_error', $message );
 		}
 
@@ -1847,7 +1847,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$this->logger->debug( sprintf(
 				// Note: title intentionally not used to skip extra processing
 				// for when debug logging is off
-				__( 'Running post-processing for post %d', 'wordpress-importer', 'customify-sites' ),
+				__( 'Running post-processing for post %d',  'customify-sites' ),
 				$post_id
 			) );
 
@@ -1860,12 +1860,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['post_parent'] = $this->mapping['post'][ $parent_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the post parent for "%s" (post #%d)', 'wordpress-importer', 'customify-sites' ),
+						__( 'Could not find the post parent for "%s" (post #%d)',  'customify-sites' ),
 						get_the_title( $post_id ),
 						$post_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Post %d was imported with parent %d, but could not be found', 'wordpress-importer', 'customify-sites' ),
+						__( 'Post %d was imported with parent %d, but could not be found',  'customify-sites' ),
 						$post_id,
 						$parent_id
 					) );
@@ -1879,12 +1879,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['post_author'] = $this->mapping['user_slug'][ $author_slug ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the author for "%s" (post #%d)', 'wordpress-importer', 'customify-sites' ),
+						__( 'Could not find the author for "%s" (post #%d)',  'customify-sites' ),
 						get_the_title( $post_id ),
 						$post_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Post %d was imported with author "%s", but could not be found', 'wordpress-importer', 'customify-sites' ),
+						__( 'Post %d was imported with author "%s", but could not be found',  'customify-sites' ),
 						$post_id,
 						$author_slug
 					) );
@@ -1910,7 +1910,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			// Do we have updates to make?
 			if ( empty( $data ) ) {
 				$this->logger->debug( sprintf(
-					__( 'Post %d was marked for post-processing, but none was required.', 'wordpress-importer', 'customify-sites' ),
+					__( 'Post %d was marked for post-processing, but none was required.',  'customify-sites' ),
 					$post_id
 				) );
 				continue;
@@ -1921,7 +1921,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$result = wp_update_post( $data, true );
 			if ( is_wp_error( $result ) ) {
 				$this->logger->warning( sprintf(
-					__( 'Could not update "%s" (post #%d) with mapped data', 'wordpress-importer', 'customify-sites' ),
+					__( 'Could not update "%s" (post #%d) with mapped data',  'customify-sites' ),
 					get_the_title( $post_id ),
 					$post_id
 				) );
@@ -1966,12 +1966,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			update_post_meta( $post_id, '_menu_item_object_id', wp_slash( $menu_object ) );
 		} else {
 			$this->logger->warning( sprintf(
-				__( 'Could not find the menu object for "%s" (post #%d)', 'wordpress-importer', 'customify-sites' ),
+				__( 'Could not find the menu object for "%s" (post #%d)',  'customify-sites' ),
 				get_the_title( $post_id ),
 				$post_id
 			) );
 			$this->logger->debug( sprintf(
-				__( 'Post %d was imported with object "%d" of type "%s", but could not be found', 'wordpress-importer', 'customify-sites' ),
+				__( 'Post %d was imported with object "%d" of type "%s", but could not be found',  'customify-sites' ),
 				$post_id,
 				$menu_object_id,
 				$menu_item_type
@@ -1993,11 +1993,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['comment_parent'] = $this->mapping['comment'][ $parent_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the comment parent for comment #%d', 'wordpress-importer', 'customify-sites' ),
+						__( 'Could not find the comment parent for comment #%d',  'customify-sites' ),
 						$comment_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Comment %d was imported with parent %d, but could not be found', 'wordpress-importer', 'customify-sites' ),
+						__( 'Comment %d was imported with parent %d, but could not be found',  'customify-sites' ),
 						$comment_id,
 						$parent_id
 					) );
@@ -2011,11 +2011,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['user_id'] = $this->mapping['user'][ $author_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the author for comment #%d', 'wordpress-importer', 'customify-sites' ),
+						__( 'Could not find the author for comment #%d',  'customify-sites' ),
 						$comment_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Comment %d was imported with author %d, but could not be found', 'wordpress-importer', 'customify-sites' ),
+						__( 'Comment %d was imported with author %d, but could not be found',  'customify-sites' ),
 						$comment_id,
 						$author_id
 					) );
@@ -2032,7 +2032,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$result = wp_update_comment( wp_slash( $data ) );
 			if ( empty( $result ) ) {
 				$this->logger->warning( sprintf(
-					__( 'Could not update comment #%d with mapped data', 'wordpress-importer', 'customify-sites' ),
+					__( 'Could not update comment #%d with mapped data',  'customify-sites' ),
 					$comment_id
 				) );
 				continue;

@@ -238,7 +238,7 @@ module.exports = function( grunt ) {
 
     grunt.registerTask('zipfile', ['clean:zip', 'copy:main', 'compress:main', 'clean:main']);
     grunt.registerTask('release', function (ver) {
-        var newVersion = grunt.option('ver');
+        var newVersion = pkgInfo.version;
         if (newVersion) {
             // Replace new version
             newVersion = newVersion ? newVersion : 'patch';
@@ -249,6 +249,7 @@ module.exports = function( grunt ) {
             grunt.task.run(['addtextdomain', 'makepot']);
             // re create css file and min
             grunt.task.run([ 'css', 'postcss' ]);
+            grunt.task.run([ 'zipfile' ]);
         }
     });
 };
