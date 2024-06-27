@@ -2,10 +2,10 @@
 # This file is distributed under the GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
 msgid ""
 msgstr ""
-"Project-Id-Version: Customify Site Library 0.0.10\n"
+"Project-Id-Version: Customify Starter Sites 0.0.10\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/customify-sites-library\n"
-"POT-Creation-Date: 2024-06-15 03:22:56+00:00\n"
+"POT-Creation-Date: 2024-06-27 04:38:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -55,19 +55,19 @@ msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classess/class-sites.php:62
+#: classess/class-sites.php:69
 msgid "Customify Sites"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
+#: classess/class-sites.php:74
 msgid "Customify Site Library"
 msgstr ""
 
-#: classess/class-sites.php:153
+#: classess/class-sites.php:160
 msgid "Try Again"
 msgstr ""
 
-#: classess/class-sites.php:154
+#: classess/class-sites.php:161
 msgid "Pro only"
 msgstr ""
 
@@ -75,8 +75,8 @@ msgstr ""
 msgid "Install Required Plugins"
 msgstr ""
 
-#: classess/class-tgm.php:335 templates/modal.php:18 templates/modal.php:51
-#: templates/modal.php:125
+#: classess/class-tgm.php:335 templates/modal.php:18 templates/modal.php:53
+#: templates/modal.php:162
 msgid "Install Plugins"
 msgstr ""
 
@@ -93,25 +93,6 @@ msgstr ""
 #: classess/class-tgm.php:340
 msgid "Something went wrong with the plugin API."
 msgstr ""
-
-#: classess/class-tgm.php:371
-#. translators: 1: plugin name(s).
-msgid "Begin installing plugin"
-msgid_plural "Begin installing plugins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: classess/class-tgm.php:375
-msgid "Begin updating plugin"
-msgid_plural "Begin updating plugins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: classess/class-tgm.php:379
-msgid "Begin activating plugin"
-msgid_plural "Begin activating plugins"
-msgstr[0] ""
-msgstr[1] ""
 
 #: classess/class-tgm.php:383
 msgid "Return to Required Plugins Installer"
@@ -419,7 +400,7 @@ msgstr ""
 msgid "Installing Plugin %1$s (%2$d/%3$d)"
 msgstr ""
 
-#: importer/class-wxr-import-ui.php:74
+#: importer/class-wxr-import-ui.php:77
 msgid "Could not cache information on the import."
 msgstr ""
 
@@ -459,10 +440,10 @@ msgid "Skipping attachment \"%s\", fetching attachments disabled"
 msgstr ""
 
 #: importer/class-wxr-importer.php:876
-msgid "Failed to import \"%s\" (%s)"
+msgid "Failed to import \"%1s\" (%2s)"
 msgstr ""
 
-#: importer/class-wxr-importer.php:908 importer/class-wxr-importer.php:1746
+#: importer/class-wxr-importer.php:908
 msgid "Imported \"%s\" (%s)"
 msgstr ""
 
@@ -483,15 +464,19 @@ msgid "Imported user \"%s\""
 msgstr ""
 
 #: importer/class-wxr-importer.php:1577
-msgid "User %d remapped to %d"
+msgid "User %1d remapped to %2d"
 msgstr ""
 
 #: importer/class-wxr-importer.php:1722
-msgid "Failed to import %s %s"
+msgid "Failed to import %1s %2s"
+msgstr ""
+
+#: importer/class-wxr-importer.php:1746
+msgid "Imported \"%1s\" (%2s)"
 msgstr ""
 
 #: importer/class-wxr-importer.php:1751
-msgid "Term %d remapped to %d"
+msgid "Term %1d remapped to %2d"
 msgstr ""
 
 #: importer/class-wxr-importer.php:1804
@@ -571,7 +556,7 @@ msgstr ""
 #: importer/parsers/class-wxr-parser-regex.php:102
 #: importer/parsers/class-wxr-parser-simplexml.php:46
 #: importer/parsers/class-wxr-parser-simplexml.php:52
-#: importer/parsers/class-wxr-parser-xml.php:107
+#: importer/parsers/class-wxr-parser-xml.php:110
 msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
 msgstr ""
 
@@ -623,91 +608,91 @@ msgstr ""
 msgid "Import Overview"
 msgstr ""
 
-#: templates/modal.php:19 templates/modal.php:71 templates/modal.php:126
+#: templates/modal.php:19 templates/modal.php:74 templates/modal.php:163
 msgid "Import Content"
 msgstr ""
 
-#: templates/modal.php:20 templates/modal.php:91 templates/modal.php:127
+#: templates/modal.php:20 templates/modal.php:115 templates/modal.php:164
 msgid "Import Options"
 msgstr ""
 
-#: templates/modal.php:33
+#: templates/modal.php:34
 msgid "Hi! Welcome back"
 msgstr ""
 
-#: templates/modal.php:34
+#: templates/modal.php:35
 msgid ""
 "You may have already run this site import wizard. If you would like to "
 "proceed anyway, click on the \"Start Import\" button below."
 msgstr ""
 
-#: templates/modal.php:36
+#: templates/modal.php:37
 msgid "Import placeholder image."
 msgstr ""
 
-#: templates/modal.php:39
+#: templates/modal.php:40
 msgid "Oops! Could not download demo content xml and config files."
 msgstr ""
 
-#: templates/modal.php:53
+#: templates/modal.php:55
 msgid "Let's install some essential WordPress plugins to get your site up to speed."
 msgstr ""
 
-#: templates/modal.php:58
+#: templates/modal.php:60
 msgid "The following plugins need to be installed and activated manually."
 msgstr ""
 
-#: templates/modal.php:72
+#: templates/modal.php:75
 msgid ""
 "Let's import content to your website, to help you get familiar with the "
 "theme."
 msgstr ""
 
-#: templates/modal.php:93
+#: templates/modal.php:117
 msgid "This step will import the theme options, menus and widgets"
 msgstr ""
 
-#: templates/modal.php:96
+#: templates/modal.php:123
 msgid "Customize Options"
 msgstr ""
 
-#: templates/modal.php:97
+#: templates/modal.php:128
 msgid "Widgets"
 msgstr ""
 
-#: templates/modal.php:98
+#: templates/modal.php:133
 msgid "Options"
 msgstr ""
 
-#: templates/modal.php:110
+#: templates/modal.php:147
 msgid "All done. Have fun!"
 msgstr ""
 
-#: templates/modal.php:111
+#: templates/modal.php:148
 msgid "Your theme has been all set up. Enjoy your new theme by the WordPress team."
 msgstr ""
 
-#: templates/modal.php:113
+#: templates/modal.php:150
 msgid "Explore WordPress"
 msgstr ""
 
-#: templates/modal.php:114
+#: templates/modal.php:151
 msgid "Get Theme Support"
 msgstr ""
 
-#: templates/modal.php:115
+#: templates/modal.php:152
 msgid "Start Customizing"
 msgstr ""
 
-#: templates/modal.php:122
+#: templates/modal.php:159
 msgid "Skip"
 msgstr ""
 
-#: templates/modal.php:124
+#: templates/modal.php:161
 msgid "Start Import"
 msgstr ""
 
-#: templates/modal.php:128
+#: templates/modal.php:165
 msgid "View Your Website"
 msgstr ""
 
@@ -735,6 +720,10 @@ msgstr ""
 msgid "Phone view"
 msgstr ""
 
+#. Plugin Name of the plugin/theme
+msgid "Customify Starter Sites"
+msgstr ""
+
 #. Plugin URI of the plugin/theme
 msgid "https://wpcustomify.com"
 msgstr ""
@@ -751,57 +740,57 @@ msgstr ""
 msgid "https://pressmaximum.com/customify"
 msgstr ""
 
-#: classess/class-sites.php:105
+#: classess/class-sites.php:112
 msgctxt "plugin-name"
 msgid "Customify Pro"
 msgstr ""
 
-#: classess/class-sites.php:107
+#: classess/class-sites.php:114
 msgctxt "plugin-name"
 msgid "Elementor"
 msgstr ""
 
-#: classess/class-sites.php:108
+#: classess/class-sites.php:115
 msgctxt "plugin-name"
 msgid "Elementor Pro"
 msgstr ""
 
-#: classess/class-sites.php:109
+#: classess/class-sites.php:116
 msgctxt "plugin-name"
 msgid "Beaver Builder"
 msgstr ""
 
-#: classess/class-sites.php:110
+#: classess/class-sites.php:117
 msgctxt "plugin-name"
 msgid "Contact Form 7"
 msgstr ""
 
-#: classess/class-sites.php:112
+#: classess/class-sites.php:119
 msgctxt "plugin-name"
 msgid "Breadcrumb NavXT"
 msgstr ""
 
-#: classess/class-sites.php:113
+#: classess/class-sites.php:120
 msgctxt "plugin-name"
 msgid "JetPack"
 msgstr ""
 
-#: classess/class-sites.php:114
+#: classess/class-sites.php:121
 msgctxt "plugin-name"
 msgid "Mega menu"
 msgstr ""
 
-#: classess/class-sites.php:115
+#: classess/class-sites.php:122
 msgctxt "plugin-name"
 msgid "Polylang"
 msgstr ""
 
-#: classess/class-sites.php:116
+#: classess/class-sites.php:123
 msgctxt "plugin-name"
 msgid "WooCommerce"
 msgstr ""
 
-#: classess/class-sites.php:117
+#: classess/class-sites.php:124
 msgctxt "plugin-name"
 msgid "Give – Donation Plugin and Fundraising Platform"
 msgstr ""

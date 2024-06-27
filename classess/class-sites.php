@@ -1,12 +1,12 @@
 <?php
 
-Class Customify_Sites {
+Class Customify_Starter_Sites {
     static $_instance = null;
     const THEME_NAME = 'customify';
 
 
     function admin_scripts( $id ){
-        if( $id == 'appearance_page_customify-sites-library' ){
+        if( $id == 'appearance_page_customify-starter-sites' ){
 
             if( ! function_exists('get_plugin_data') ){
                 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -14,13 +14,13 @@ Class Customify_Sites {
             $plugin_data = get_plugin_data( __FILE__ );
 
 
-            wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
-            wp_enqueue_style('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/css/owl.carousel.css', [], $plugin_data['Version'] );
-            wp_enqueue_style('owl.theme.default', CUSTOMIFY_SITES_URL.'/assets/css/owl.theme.default.css', [], $plugin_data['Version'] );
-            wp_enqueue_style("customify-sites-library", CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css', [], $plugin_data['Version'] );
+            wp_localize_script('jquery', 'Customify_Starter_Sites',  $this->get_localize_script() );
+            wp_enqueue_style('owl.carousel', CUSTOMIFY_STARTER_SITES_URL.'/assets/css/owl.carousel.css', [], $plugin_data['Version'] );
+            wp_enqueue_style('owl.theme.default', CUSTOMIFY_STARTER_SITES_URL.'/assets/css/owl.theme.default.css', [], $plugin_data['Version'] );
+            wp_enqueue_style("customify-starter-sites", CUSTOMIFY_STARTER_SITES_URL.'/assets/css/customify-sites.css', [], $plugin_data['Version'] );
 
-            wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), $plugin_data['Version'], true );
-            wp_enqueue_script("customify-sites-library", CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), $plugin_data['Version'], true );
+            wp_enqueue_script('owl.carousel', CUSTOMIFY_STARTER_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), $plugin_data['Version'], true );
+            wp_enqueue_script("customify-starter-sites", CUSTOMIFY_STARTER_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), $plugin_data['Version'], true );
         }
     }
 
@@ -66,16 +66,16 @@ Class Customify_Sites {
     }
 
     function add_menu() {
-        add_theme_page(__( 'Customify Sites', "customify-sites-library" ), __( 'Customify Sites', "customify-sites-library" ), 'edit_theme_options', "customify-sites-library", array( $this, 'page' ));
+        add_theme_page(__( 'Customify Sites', "customify-starter-sites", 'customify-sites' ), __( 'Customify Sites', "customify-starter-sites", 'customify-sites' ), 'edit_theme_options', "customify-starter-sites", array( $this, 'page' ));
     }
 
     function page(){
         echo '<div class="wrap">';
-        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', "customify-sites-library" ).'</h1><hr class="wp-header-end">';
-        require_once CUSTOMIFY_SITES_PATH.'/templates/dashboard.php';
-        require_once CUSTOMIFY_SITES_PATH.'/templates/modal.php';
+        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', "customify-starter-sites", 'customify-sites' ).'</h1><hr class="wp-header-end">';
+        require_once CUSTOMIFY_STARTER_SITES_PATH.'/templates/dashboard.php';
+        require_once CUSTOMIFY_STARTER_SITES_PATH.'/templates/modal.php';
         echo '</div>';
-        require_once CUSTOMIFY_SITES_PATH.'/templates/preview.php';
+        require_once CUSTOMIFY_STARTER_SITES_PATH.'/templates/preview.php';
     }
 
     function get_installed_plugins(){
@@ -109,19 +109,19 @@ Class Customify_Sites {
 
     function get_support_plugins(){
         $plugins = array(
-            'customify-pro' => _x( 'Customify Pro', 'plugin-name', "customify-sites-library" ),
+            'customify-pro' => _x( 'Customify Pro', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
 
-            'elementor' => _x( 'Elementor', 'plugin-name', "customify-sites-library" ),
-            'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', "customify-sites-library" ),
-            'beaver-builder-lite-version' => _x( 'Beaver Builder', 'plugin-name', "customify-sites-library" ),
-            'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', "customify-sites-library" ),
+            'elementor' => _x( 'Elementor', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'beaver-builder-lite-version' => _x( 'Beaver Builder', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
 
-            'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', "customify-sites-library" ),
-            'jetpack' => _x( 'JetPack', 'plugin-name', "customify-sites-library" ),
-            'easymega' => _x( 'Mega menu', 'plugin-name', "customify-sites-library" ),
-            'polylang' => _x( 'Polylang', 'plugin-name', "customify-sites-library" ),
-            'woocommerce' => _x( 'WooCommerce', 'plugin-name', "customify-sites-library" ),
-            'give' => _x( 'Give – Donation Plugin and Fundraising Platform', 'plugin-name', "customify-sites-library" ),
+            'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'jetpack' => _x( 'JetPack', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'easymega' => _x( 'Mega menu', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'polylang' => _x( 'Polylang', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'woocommerce' => _x( 'WooCommerce', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
+            'give' => _x( 'Give – Donation Plugin and Fundraising Platform', 'plugin-name', "customify-starter-sites", 'customify-sites' ),
         );
 
         return $plugins;
@@ -157,8 +157,8 @@ Class Customify_Sites {
             'api_url' => self::get_api_url(),
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
-            'try_again' => __( 'Try Again', "customify-sites-library" ),
-            'pro_text' => __( 'Pro only', "customify-sites-library" ),
+            'try_again' => __( 'Try Again', "customify-starter-sites", 'customify-sites' ),
+            'pro_text' => __( 'Pro only', "customify-starter-sites", 'customify-sites' ),
             'activated_plugins' => $this->get_activated_plugins(),
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),

@@ -1,6 +1,6 @@
 <?php
 
-class Customify_Sites_Ajax {
+class Customify_Starter_Sites_Ajax {
 	protected $mapping       = array();
 	public $placeholder_id   = 0;
 	public $placeholder_post = false;
@@ -8,9 +8,9 @@ class Customify_Sites_Ajax {
 
 	function __construct() {
 		// Install Plugin
-		add_action( 'wp_ajax_cs_install_plugin', array( Customify_Sites_Plugin::get_instance(), 'ajax' ) );
+		add_action( 'wp_ajax_cs_install_plugin', array( Customify_Starter_Sites_Plugin::get_instance(), 'ajax' ) );
 		// Active Plugin
-		add_action( 'wp_ajax_cs_active_plugin', array( Customify_Sites_Plugin::get_instance(), 'ajax' ) );
+		add_action( 'wp_ajax_cs_active_plugin', array( Customify_Starter_Sites_Plugin::get_instance(), 'ajax' ) );
 
 		add_filter( 'upload_mimes', array( $this, 'add_mime_type_xml_json' ) );
 
@@ -163,7 +163,7 @@ class Customify_Sites_Ajax {
 		}
 
 		// Filter pre-encoded data
-		$data = apply_filters( 'customify_sites_export_widgets_data', $sidebars_widget_instances );
+		$data = apply_filters( 'customify_starter_sites_export_widgets_data', $sidebars_widget_instances );
 
 		// Encode the data for file contents
 		return $data;
@@ -207,7 +207,7 @@ class Customify_Sites_Ajax {
 		$include_plugins = apply_filters(
 			'customify-sites/export_plugins/exclude',
 			array(
-				"customify-sites-library"         => 1,
+				"customify-starter-sites"         => 1,
 				'customify-sites-api'     => 1,
 				'customify-sites-listing' => 1,
 			)
@@ -294,7 +294,7 @@ class Customify_Sites_Ajax {
 
 		$this->user_can();
 
-		$import_ui = new Customify_Sites_WXR_Import_UI();
+		$import_ui = new Customify_Starter_Sites_WXR_Import_UI();
 		$import_ui->import();
 
 		die( 'content_imported' );
@@ -420,7 +420,7 @@ class Customify_Sites_Ajax {
 			$return['json_id'] = self::download_file( $json_url, $json_file_name );
 		}
 
-		$import_ui         = new Customify_Sites_WXR_Import_UI();
+		$import_ui         = new Customify_Starter_Sites_WXR_Import_UI();
 		$return['summary'] = $import_ui->get_data_for_attachment( $return['xml_id'] );
 
 		$return['summary'] = (array) $return['summary'];
@@ -444,11 +444,11 @@ class Customify_Sites_Ajax {
 			$return['summary']['user_count'] = count( $return['summary']['users'] );
 		}
 
-		$return['texts']['post_count']    = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], "customify-sites-library" ), $return['summary']['post_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-		$return['texts']['media_count']   = sprintf( _n( '%d media item', '%d media items', $return['summary']['media_count'], "customify-sites-library" ), $return['summary']['media_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-		$return['texts']['user_count']    = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], "customify-sites-library" ), $return['summary']['user_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-		$return['texts']['term_count']    = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], "customify-sites-library" ), $return['summary']['term_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-		$return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], "customify-sites-library" ), $return['summary']['comment_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['post_count']    = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], "customify-starter-sites", 'customify-sites' ), $return['summary']['post_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['media_count']   = sprintf( _n( '%d media item', '%d media items', $return['summary']['media_count'], "customify-starter-sites", 'customify-sites' ), $return['summary']['media_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['user_count']    = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], "customify-starter-sites", 'customify-sites' ), $return['summary']['user_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['term_count']    = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], "customify-starter-sites", 'customify-sites' ), $return['summary']['term_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], "customify-starter-sites", 'customify-sites' ), $return['summary']['comment_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 
 		if ( $return['json_id'] ) {
 			$options = $this->get_config_options( $return['json_id'] );
@@ -581,7 +581,7 @@ class Customify_Sites_Ajax {
 
 			$customize_data = $this->get_config_options( $id );
 
-			$customize_data = Customify_Sites_Placeholder::get_instance()->progress_config( $customize_data );
+			$customize_data = Customify_Starter_Sites_Placeholder::get_instance()->progress_config( $customize_data );
 
 			if ( isset( $customize_data['options'] ) ) {
 				$this->_import_options( $customize_data['options'] );
@@ -684,14 +684,14 @@ class Customify_Sites_Ajax {
 				}
 
 				// Replace all images with placeholder
-				$widget = Customify_Sites_Placeholder::get_instance()->replace_placeholder( $widget );
+				$widget = Customify_Starter_Sites_Placeholder::get_instance()->replace_placeholder( $widget );
 
 				$base_id = preg_replace( '/-[0-9]+$/', '', $widget_instance_id );
 				if ( isset( $widget_instances[ $base_id ] ) ) {
 					$single_widget_instances = get_option( 'widget_' . $base_id );
 					$single_widget_instances = ! empty( $single_widget_instances ) ? $single_widget_instances : array( '_multiwidget' => 1 );
 
-					$single_widget_instances[] = apply_filters( 'customify_sites_import_widget_data', $widget, $widget_instances[ $base_id ], $base_id );
+					$single_widget_instances[] = apply_filters( 'customify_starter_sites_import_widget_data', $widget, $widget_instances[ $base_id ], $base_id );
 					end( $single_widget_instances );
 					$new_instance_id_number = key( $single_widget_instances );
 					if ( '0' === strval( $new_instance_id_number ) ) {

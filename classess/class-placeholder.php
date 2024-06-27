@@ -1,5 +1,5 @@
 <?php
-class Customify_Sites_Placeholder {
+class Customify_Starter_Sites_Placeholder {
 
 	public $placeholder_id = 0;
 	public $placeholder_post = false;
@@ -52,7 +52,7 @@ class Customify_Sites_Placeholder {
 	private function upload_placeholder_attachment( $name = '', $parent_id = 0 ){
 
 		// $filename should be the path to a file in the upload directory.
-		$filename = CUSTOMIFY_SITES_PATH.$this->get_placeholder_img();
+		$filename = CUSTOMIFY_STARTER_SITES_PATH.$this->get_placeholder_img();
 		// Get the path to the upload directory.
 		$wp_upload_dir = wp_upload_dir();
 

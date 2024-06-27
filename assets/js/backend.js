@@ -83,10 +83,10 @@ jQuery( document ).ready( function( $ ){
                     that._reset();
                     $(window).resize();
 
-                    if ( that.data.pro && ! Customify_Sites.license_valid ) {
+                    if ( that.data.pro && ! Customify_Starter_Sites.license_valid ) {
                         that.disable_button( 'start' );
                         that.buttons.start.addClass( 'pro-only' );
-                        that.buttons.start.find( '.cs-btn-circle-text' ).text( Customify_Sites.pro_text );
+                        that.buttons.start.find( '.cs-btn-circle-text' ).text( Customify_Starter_Sites.pro_text );
                     }
 
                 });
@@ -105,7 +105,7 @@ jQuery( document ).ready( function( $ ){
                     // The manual plugin in the list recommend plugin
                     if ( ! _.isUndefined( that.recommend_plugins[ plugin_file ] ) ) {
                         if ( ! that.is_installed( plugin_file ) ) {
-                            if (_.isUndefined(Customify_Sites.installed_plugins[plugin_file])) {
+                            if (_.isUndefined(Customify_Starter_Sites.installed_plugins[plugin_file])) {
                                 manual_plugins += '<li><div class="circle-loader "><div class="checkmark draw"></div></div><span class="cs-plugin-name">' + plugin_name + '</span></li>';
                             }
                         }
@@ -301,11 +301,11 @@ jQuery( document ).ready( function( $ ){
             },
 
             is_activated: function( plugin_slug ){
-                return _.isUndefined( Customify_Sites.activated_plugins[ plugin_slug ] ) ? false : true;
+                return _.isUndefined( Customify_Starter_Sites.activated_plugins[ plugin_slug ] ) ? false : true;
             },
 
             is_installed: function( plugin_slug ){
-                return _.isUndefined( Customify_Sites.installed_plugins[ plugin_slug ] ) ? false : true;
+                return _.isUndefined( Customify_Starter_Sites.installed_plugins[ plugin_slug ] ) ? false : true;
             },
 
             step_completed: function( step, t ){
@@ -337,7 +337,7 @@ jQuery( document ).ready( function( $ ){
                         that.current_builder = $( '#customify-sites-filter-cat a.current' ).eq(0).attr( 'data-slug' ) || '';
                         var placeholder_only = $( 'input[name="import_placeholder_only"]', that.modal ).length > 0 ? $( 'input[name="import_placeholder_only"]', that.modal ).is(':checked') : false ;
                         $.ajax({
-                            url: Customify_Sites.ajax_url,
+                            url: Customify_Starter_Sites.ajax_url,
                             dataType: 'json',
                             type: 'post',
                             data: {
@@ -359,7 +359,7 @@ jQuery( document ).ready( function( $ ){
                                     that._reset();
                                     $('.cs-error-download-files', that.modal).removeClass('cs-hide');
                                     that.doing = false;
-                                    that.buttons.start.find('.cs-btn-circle-text').text(Customify_Sites.try_again);
+                                    that.buttons.start.find('.cs-btn-circle-text').text(Customify_Starter_Sites.try_again);
                                 } else {
                                     _.each(res.texts, function (t, k) {
                                         $('.cs-' + k, that.modal).html(t);
@@ -413,7 +413,7 @@ jQuery( document ).ready( function( $ ){
                     } else {
                         $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
                         $.ajax({
-                            url: Customify_Sites.ajax_url,
+                            url: Customify_Starter_Sites.ajax_url,
                             data: {
                                 action: 'cs_install_plugin',
                                 plugin: plugin_data
@@ -431,7 +431,7 @@ jQuery( document ).ready( function( $ ){
                     var plugin_data = list.eq(n_plugin_installed).attr( 'data-slug' ) || '';
                     $( '.cs-installing-plugins li[data-slug="'+plugin_data+'"] .circle-loader', that.modal ).removeClass('load-complete').addClass('circle-loading');
                     $.ajax({
-                        url: Customify_Sites.ajax_url,
+                        url: Customify_Starter_Sites.ajax_url,
                         data: {
                             action: 'cs_active_plugin',
                             plugin: plugin_data
@@ -463,7 +463,7 @@ jQuery( document ).ready( function( $ ){
 
                         var cb = function(){
                             $.ajax({
-                                url: Customify_Sites.ajax_url,
+                                url: Customify_Starter_Sites.ajax_url,
                                 data: {
                                     action: 'cs_import_content',
                                     id: that.xml_id,
@@ -483,7 +483,7 @@ jQuery( document ).ready( function( $ ){
                         };
 
                         $.ajax({ // ajax_import__check
-                            url: Customify_Sites.ajax_url,
+                            url: Customify_Starter_Sites.ajax_url,
                             data: {
                                 action: 'ajax_import__check'
                             },
@@ -509,20 +509,20 @@ jQuery( document ).ready( function( $ ){
 
                     // Clear cache and reset library
                     $.ajax({
-                        url: Customify_Sites.ajax_url,
+                        url: Customify_Starter_Sites.ajax_url,
                         type: 'POST',
                         data: {
                             action: 'elementor_clear_cache',
-                            _nonce: Customify_Sites.elementor_clear_cache_nonce
+                            _nonce: Customify_Starter_Sites.elementor_clear_cache_nonce
                         }
                     });
 
                     $.ajax({
-                        url: Customify_Sites.ajax_url,
+                        url: Customify_Starter_Sites.ajax_url,
                         type: 'POST',
                         data: {
                             action: 'elementor_reset_library',
-                            _nonce: Customify_Sites.elementor_reset_library_nonce
+                            _nonce: Customify_Starter_Sites.elementor_reset_library_nonce
                         }
                     });
 
@@ -536,7 +536,7 @@ jQuery( document ).ready( function( $ ){
                         that.loading_button('import_options');
                         $('.cs-import-options-status .circle-loader', that.modal).addClass('circle-loading');
                         $.ajax({
-                            url: Customify_Sites.ajax_url,
+                            url: Customify_Starter_Sites.ajax_url,
                             data: {
                                 action: 'cs_import_options',
                                 id: that.json_id,
@@ -582,7 +582,7 @@ jQuery( document ).ready( function( $ ){
             that.filter_data = that.get_filter_data();
             that.filter_data['_t'] = new Date().getTime();
             that.xhr = $.ajax( {
-                url: Customify_Sites.api_url,
+                url: Customify_Starter_Sites.api_url,
                 data: that.filter_data,
                 type: 'GET',
                 success: function( res ){

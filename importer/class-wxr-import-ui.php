@@ -1,6 +1,6 @@
 <?php
 
-class Customify_Sites_WXR_Import_UI
+class Customify_Starter_Sites_WXR_Import_UI
 {
 	/**
 	 * Should we fetch attachments?
@@ -50,7 +50,7 @@ class Customify_Sites_WXR_Import_UI
 	 * This is a quick pre-parse to verify the file and grab authors from it.
 	 *
 	 * @param int $id Media item ID.
-	 * @return Customify_Sites_WXR_Import_Info|WP_Error Import info instance on success, error otherwise.
+	 * @return Customify_Starter_Sites_WXR_Import_Info|WP_Error Import info instance on success, error otherwise.
 	 */
 	public function get_data_for_attachment($id)
 	{
@@ -74,7 +74,7 @@ class Customify_Sites_WXR_Import_UI
 		if (!update_post_meta($id, '_wxr_import_info', $data)) {
 			return new WP_Error(
 				'wxr_importer.upload.failed_save_meta',
-				__('Could not cache information on the import.', "customify-sites-library"),
+				__('Could not cache information on the import.', "customify-starter-sites", 'customify-sites'),
 				compact('id')
 			);
 		}
@@ -158,12 +158,12 @@ class Customify_Sites_WXR_Import_UI
 	/**
 	 * Get the importer instance.
 	 *
-	 * @return Customify_Sites_WXR_Importer
+	 * @return Customify_Starter_Sites_WXR_Importer
 	 */
 	protected function get_importer()
 	{
-		$importer = new Customify_Sites_WXR_Importer($this->get_import_options());
-		$logger = new Customify_Sites_Importer_Logger_ServerSentEvents();
+		$importer = new Customify_Starter_Sites_WXR_Importer($this->get_import_options());
+		$logger = new Customify_Starter_Sites_Importer_Logger_ServerSentEvents();
 		$importer->set_logger($logger);
 		return $importer;
 	}
@@ -171,7 +171,7 @@ class Customify_Sites_WXR_Import_UI
 	/**
 	 * Get options for the importer.
 	 *
-	 * @return array Options to pass to Customify_Sites_WXR_Importer::__construct
+	 * @return array Options to pass to Customify_Starter_Sites_WXR_Importer::__construct
 	 */
 	protected function get_import_options()
 	{
@@ -183,7 +183,7 @@ class Customify_Sites_WXR_Import_UI
 		/**
 		 * Filter the importer options used in the admin UI.
 		 *
-		 * @param array $options Options to pass to Customify_Sites_WXR_Importer::__construct
+		 * @param array $options Options to pass to Customify_Starter_Sites_WXR_Importer::__construct
 		 */
 		return apply_filters('wxr_importer.admin.import_options', $options);
 	}

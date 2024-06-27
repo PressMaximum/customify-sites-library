@@ -1,5 +1,5 @@
 {
-  "name": "customify-sites-library",
+  "name": "customify-starter-sites",
   "version": "0.0.10",
   "main": "Gruntfile.js",
   "engines": {

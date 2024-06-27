@@ -1,18 +1,18 @@
 <?php
 /*
-Plugin Name: Customify Site Library
+Plugin Name: Customify Starter Sites
 Plugin URI: https://wpcustomify.com
 Description: Import free sites build with Customify theme.
 Author: pressmaximum
 Author URI: https://pressmaximum.com/customify
 Version: 0.0.10
-Text Domain: customify-sites-library
+Text Domain: customify-starter-sites
 License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-define( 'CUSTOMIFY_SITES_FILE',__FILE__ );
-define( 'CUSTOMIFY_SITES_URL', untrailingslashit( plugins_url( '', CUSTOMIFY_SITES_FILE ) ) );
-define( 'CUSTOMIFY_SITES_PATH', dirname( __FILE__ ) );
+define( 'CUSTOMIFY_STARTER_SITES_FILE',__FILE__ );
+define( 'CUSTOMIFY_STARTER_SITES_URL', untrailingslashit( plugins_url( '', CUSTOMIFY_STARTER_SITES_FILE ) ) );
+define( 'CUSTOMIFY_STARTER_SITES_PATH', dirname( __FILE__ ) );
 
 if ( ! class_exists( 'WP_Importer' ) ) {
 	defined( 'WP_LOAD_IMPORTERS' ) || define( 'WP_LOAD_IMPORTERS', true );
@@ -34,8 +34,8 @@ require dirname( __FILE__ ) . '/classess/class-export.php';
 require dirname( __FILE__ ) . '/classess/class-ajax.php';
 
 
-Customify_Sites::get_instance();
-new Customify_Sites_Ajax();
+Customify_Starter_Sites::get_instance();
+new Customify_Starter_Sites_Ajax();
 
 /**
  * Redirect to import page
@@ -43,12 +43,12 @@ new Customify_Sites_Ajax();
  * @param $plugin
  * @param bool|false $network_wide
  */
-function customify_sites_plugin_activate( $plugin, $network_wide = false ) {
+function customify_starter_sites_plugin_activate( $plugin, $network_wide = false ) {
 	if ( ! $network_wide && $plugin == plugin_basename( __FILE__ ) ) {
 
 		$url = add_query_arg(
 			array(
-				'page' => "customify-sites-library",
+				'page' => "customify-starter-sites",
 			),
 			admin_url( 'themes.php' )
 		);
@@ -58,10 +58,10 @@ function customify_sites_plugin_activate( $plugin, $network_wide = false ) {
 
 	}
 }
-add_action( 'activated_plugin', 'customify_sites_plugin_activate', 90, 2 );
+add_action( 'activated_plugin', 'customify_starter_sites_plugin_activate', 90, 2 );
 
 if ( is_admin() ) {
-	function customify_sites_admin_footer( $html ) {
+	function customify_starter_sites_admin_footer( $html ) {
 		if ( isset( $_REQUEST['dev'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$sc = get_current_screen();
 			if ( $sc->id == 'appearance_page_customify-sites' ) {
@@ -70,5 +70,5 @@ if ( is_admin() ) {
 		}
 		return $html;
 	}
-	add_filter( 'update_footer', 'customify_sites_admin_footer', 199 );
+	add_filter( 'update_footer', 'customify_starter_sites_admin_footer', 199 );
 }

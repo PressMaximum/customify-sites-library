@@ -1,6 +1,6 @@
 <?php
 
-class Customify_Sites_Importer_Logger_ServerSentEvents extends Customify_Sites_Importer_Logger {
+class Customify_Starter_Sites_Importer_Logger_ServerSentEvents extends Customify_Starter_Sites_Importer_Logger {
 	/**
 	 * Logs with an arbitrary level.
 	 *

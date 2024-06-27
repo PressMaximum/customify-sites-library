@@ -4,7 +4,7 @@ add_filter( 'http_request_host_is_external', '__return_true' );
 
 // phpcs:disable
 
-class Customify_Sites_Export {
+class Customify_Starter_Sites_Export {
 	function __construct( $args ) {
 
 		//$url = apply_filters( 'wp_get_attachment_url', $url, $post->ID );
@@ -30,11 +30,11 @@ class Customify_Sites_Export {
     }
 
 	function the_content_export( $content ){
-        return Customify_Sites_Placeholder::get_instance()->content_replace_placeholder( $content );
+        return Customify_Starter_Sites_Placeholder::get_instance()->content_replace_placeholder( $content );
     }
 
 	function wp_get_attachment_url( $url, $post_id = false ){
-		return Customify_Sites_Placeholder::get_instance()->wp_get_attachment_url( $url, $post_id );
+		return Customify_Starter_Sites_Placeholder::get_instance()->wp_get_attachment_url( $url, $post_id );
     }
 
 	/**
@@ -523,14 +523,14 @@ class Customify_Sites_Export {
                  * NEW
 				 * For attachment image
 				 */
-                if ( Customify_Sites_Placeholder::get_instance()->placeholder_post ) {
-	                $post = Customify_Sites_Placeholder::get_instance()->placeholder_post;
+                if ( Customify_Starter_Sites_Placeholder::get_instance()->placeholder_post ) {
+	                $post = Customify_Starter_Sites_Placeholder::get_instance()->placeholder_post;
 	                setup_postdata( $post );
 	                $this->post_item( $post );
                 }
 
-				if ( Customify_Sites_Placeholder::get_instance()->logo_post ) {
-					$post = Customify_Sites_Placeholder::get_instance()->logo_post;
+				if ( Customify_Starter_Sites_Placeholder::get_instance()->logo_post ) {
+					$post = Customify_Starter_Sites_Placeholder::get_instance()->logo_post;
 					setup_postdata( $post );
 					$this->post_item( $post );
 				}
@@ -562,11 +562,11 @@ class Customify_Sites_Export {
 	}
 
 	function progress_elementor_data( $data ){
-	    return Customify_Sites_Placeholder::get_instance()->progress_elementor_data( $data );
+	    return Customify_Starter_Sites_Placeholder::get_instance()->progress_elementor_data( $data );
     }
 
 	function progress_meta( $meta ){
-        return Customify_Sites_Placeholder::get_instance()->progress_meta( $meta );
+        return Customify_Starter_Sites_Placeholder::get_instance()->progress_meta( $meta );
     }
 
 	function post_item( $post ){
@@ -694,9 +694,9 @@ class Customify_Sites_Export {
 
 // phpcs:enable
 
-function customify_sites_export_wp( $args = array() ){
+function customify_starter_sites_export_wp( $args = array() ){
 	if ( isset( $_GET['download'], $_GET['content'], $_GET['from_customify'] ) ) {
-		new Customify_Sites_Export( $args );
+		new Customify_Starter_Sites_Export( $args );
 	}
 }
-add_action( 'export_wp', 'customify_sites_export_wp' );
+add_action( 'export_wp', 'customify_starter_sites_export_wp' );

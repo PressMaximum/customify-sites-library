@@ -1,5 +1,5 @@
 <?php
-class Customify_Sites_Plugin extends TGM_Plugin_Activation{
+class Customify_Starter_Sites_Plugin extends TGM_Plugin_Activation{
 
     static $instance;
 
