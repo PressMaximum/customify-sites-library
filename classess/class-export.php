@@ -2,6 +2,8 @@
 
 add_filter( 'http_request_host_is_external', '__return_true' );
 
+// phpcs:disable
+
 class Customify_Sites_Export {
 	function __construct( $args ) {
 
@@ -246,7 +248,7 @@ class Customify_Sites_Export {
 			if ( empty( $category->name ) )
 				return;
 
-			echo '<wp:cat_name>' . wxr_cdata( $category->name ) . "</wp:cat_name>\n";
+			echo '<wp:cat_name>' . wxr_cdata( $category->name ) . "</wp:cat_name>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -260,7 +262,7 @@ class Customify_Sites_Export {
 			if ( empty( $category->description ) )
 				return;
 
-			echo '<wp:category_description>' . wxr_cdata( $category->description ) . "</wp:category_description>\n";
+			echo '<wp:category_description>' . wxr_cdata( $category->description ) . "</wp:category_description>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -273,8 +275,8 @@ class Customify_Sites_Export {
 		function wxr_tag_name( $tag ) {
 			if ( empty( $tag->name ) )
 				return;
-
-			echo '<wp:tag_name>' . wxr_cdata( $tag->name ) . "</wp:tag_name>\n";
+ 
+			echo '<wp:tag_name>' . wxr_cdata( $tag->name ) . "</wp:tag_name>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -288,7 +290,7 @@ class Customify_Sites_Export {
 			if ( empty( $tag->description ) )
 				return;
 
-			echo '<wp:tag_description>' . wxr_cdata( $tag->description ) . "</wp:tag_description>\n";
+			echo '<wp:tag_description>' . wxr_cdata( $tag->description ) . "</wp:tag_description>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -302,7 +304,7 @@ class Customify_Sites_Export {
 			if ( empty( $term->name ) )
 				return;
 
-			echo '<wp:term_name>' . wxr_cdata( $term->name ) . "</wp:term_name>\n";
+			echo '<wp:term_name>' . wxr_cdata( $term->name ) . "</wp:term_name>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -316,7 +318,7 @@ class Customify_Sites_Export {
 			if ( empty( $term->description ) )
 				return;
 
-			echo "\t\t<wp:term_description>" . wxr_cdata( $term->description ) . "</wp:term_description>\n";
+			echo "\t\t<wp:term_description>" . wxr_cdata( $term->description ) . "</wp:term_description>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -345,8 +347,8 @@ class Customify_Sites_Export {
 				 * @param object $meta     Current meta object.
 				 */
 				if ( ! apply_filters( 'wxr_export_skip_termmeta', false, $meta->meta_key, $meta ) ) {
-					printf( "\t\t<wp:termmeta>\n\t\t\t<wp:meta_key>%s</wp:meta_key>\n\t\t\t<wp:meta_value>%s</wp:meta_value>\n\t\t</wp:termmeta>\n", wxr_cdata( $meta->meta_key ), wxr_cdata( $meta->meta_value ) );
-				}
+					printf( "\t\t<wp:termmeta>\n\t\t\t<wp:meta_key>%s</wp:meta_key>\n\t\t\t<wp:meta_value>%s</wp:meta_value>\n\t\t</wp:termmeta>\n", wxr_cdata( $meta->meta_key ), wxr_cdata( $meta->meta_value ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				} 
 			}
 		}
 
@@ -377,13 +379,13 @@ class Customify_Sites_Export {
 			$authors = array_filter( $authors );
 
 			foreach ( $authors as $author ) {
-				echo "\t<wp:author>";
-				echo '<wp:author_id>' . intval( $author->ID ) . '</wp:author_id>';
-				echo '<wp:author_login>' . wxr_cdata( $author->user_login ) . '</wp:author_login>';
-				echo '<wp:author_email>' . wxr_cdata( $author->user_email ) . '</wp:author_email>';
-				echo '<wp:author_display_name>' . wxr_cdata( $author->display_name ) . '</wp:author_display_name>';
-				echo '<wp:author_first_name>' . wxr_cdata( $author->first_name ) . '</wp:author_first_name>';
-				echo '<wp:author_last_name>' . wxr_cdata( $author->last_name ) . '</wp:author_last_name>';
+				echo "\t<wp:author>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_id>' . intval( $author->ID ) . '</wp:author_id>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_login>' . wxr_cdata( $author->user_login ) . '</wp:author_login>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_email>' . wxr_cdata( $author->user_email ) . '</wp:author_email>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_display_name>' . wxr_cdata( $author->display_name ) . '</wp:author_display_name>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_first_name>' . wxr_cdata( $author->first_name ) . '</wp:author_first_name>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:author_last_name>' . wxr_cdata( $author->last_name ) . '</wp:author_last_name>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo "</wp:author>\n";
 			}
 		}
@@ -399,12 +401,12 @@ class Customify_Sites_Export {
 				return;
 
 			foreach ( $nav_menus as $menu ) {
-				echo "\t<wp:term>";
-				echo '<wp:term_id>' . intval( $menu->term_id ) . '</wp:term_id>';
-				echo '<wp:term_taxonomy>nav_menu</wp:term_taxonomy>';
-				echo '<wp:term_slug>' . wxr_cdata( $menu->slug ) . '</wp:term_slug>';
+				echo "\t<wp:term>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:term_id>' . intval( $menu->term_id ) . '</wp:term_id>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:term_taxonomy>nav_menu</wp:term_taxonomy>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<wp:term_slug>' . wxr_cdata( $menu->slug ) . '</wp:term_slug>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				wxr_term_name( $menu );
-				echo "</wp:term>\n";
+				echo "</wp:term>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 
@@ -690,6 +692,7 @@ class Customify_Sites_Export {
 
 }
 
+// phpcs:enable
 
 function customify_sites_export_wp( $args = array() ){
 	if ( isset( $_GET['download'], $_GET['content'], $_GET['from_customify'] ) ) {

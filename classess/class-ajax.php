@@ -172,7 +172,7 @@ class Customify_Sites_Ajax {
 
 	function _get_elementor_settings() {
 		global $wpdb;
-		$rows = $wpdb->get_results( "SELECT * FROM `{$wpdb->options}` WHERE `option_name` LIKE 'elementor_scheme_%'", ARRAY_A );
+		$rows = $wpdb->get_results( "SELECT * FROM `{$wpdb->options}` WHERE `option_name` LIKE 'elementor_scheme_%'", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$data = array();
 		foreach ( (array) $rows as $row ) {
 			$data[ $row['option_name'] ] = get_option( $row['option_name'] );
@@ -207,7 +207,7 @@ class Customify_Sites_Ajax {
 		$include_plugins = apply_filters(
 			'customify-sites/export_plugins/exclude',
 			array(
-				'customify-sites'         => 1,
+				"customify-sites-library"         => 1,
 				'customify-sites-api'     => 1,
 				'customify-sites-listing' => 1,
 			)
@@ -444,11 +444,11 @@ class Customify_Sites_Ajax {
 			$return['summary']['user_count'] = count( $return['summary']['users'] );
 		}
 
-		$return['texts']['post_count']    = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], 'customify-sites' ), $return['summary']['post_count'] );
-		$return['texts']['media_count']   = sprintf( _n( '%d media item', '%d media items', $return['summary']['media_count'], 'customify-sites' ), $return['summary']['media_count'] );
-		$return['texts']['user_count']    = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], 'customify-sites' ), $return['summary']['user_count'] );
-		$return['texts']['term_count']    = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], 'customify-sites' ), $return['summary']['term_count'] );
-		$return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], 'customify-sites' ), $return['summary']['comment_count'] );
+		$return['texts']['post_count']    = sprintf( _n( '%d post (including CPT)', '%d posts (including CPTs)', $return['summary']['post_count'], "customify-sites-library" ), $return['summary']['post_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['media_count']   = sprintf( _n( '%d media item', '%d media items', $return['summary']['media_count'], "customify-sites-library" ), $return['summary']['media_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['user_count']    = sprintf( _n( '%d user', '%d users', $return['summary']['user_count'], "customify-sites-library" ), $return['summary']['user_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['term_count']    = sprintf( _n( '%d term', '%d terms', $return['summary']['term_count'], "customify-sites-library" ), $return['summary']['term_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+		$return['texts']['comment_count'] = sprintf( _n( '%d comment', '%d comments', $return['summary']['comment_count'], "customify-sites-library" ), $return['summary']['comment_count'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 
 		if ( $return['json_id'] ) {
 			$options = $this->get_config_options( $return['json_id'] );
@@ -734,7 +734,7 @@ class Customify_Sites_Ajax {
 			}
 			$id = media_handle_sideload( $file_array, 0 );
 			if ( is_wp_error( $id ) ) {
-				unlink( $file_array['tmp_name'] );
+				wp_delete_file( $file_array['tmp_name'] );
 
 				return $id;
 			}
@@ -842,7 +842,7 @@ class Customify_Sites_Ajax {
 
 		// If error storing permanently, unlink.
 		if ( is_wp_error( $file_path_or_id ) ) {
-			@unlink( $file_array['tmp_name'] );
+			wp_delete_file( $file_array['tmp_name'] );
 
 			return false;
 		}

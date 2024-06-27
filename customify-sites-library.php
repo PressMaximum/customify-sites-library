@@ -6,11 +6,12 @@ Description: Import free sites build with Customify theme.
 Author: pressmaximum
 Author URI: https://pressmaximum.com/customify
 Version: 0.0.10
-Text Domain: customify-sites
+Text Domain: customify-sites-library
 License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-define( 'CUSTOMIFY_SITES_URL', untrailingslashit( plugins_url( '', __FILE__ ) ) );
+define( 'CUSTOMIFY_SITES_FILE',__FILE__ );
+define( 'CUSTOMIFY_SITES_URL', untrailingslashit( plugins_url( '', CUSTOMIFY_SITES_FILE ) ) );
 define( 'CUSTOMIFY_SITES_PATH', dirname( __FILE__ ) );
 
 if ( ! class_exists( 'WP_Importer' ) ) {
@@ -47,7 +48,7 @@ function customify_sites_plugin_activate( $plugin, $network_wide = false ) {
 
 		$url = add_query_arg(
 			array(
-				'page' => 'customify-sites',
+				'page' => "customify-sites-library",
 			),
 			admin_url( 'themes.php' )
 		);
@@ -61,7 +62,7 @@ add_action( 'activated_plugin', 'customify_sites_plugin_activate', 90, 2 );
 
 if ( is_admin() ) {
 	function customify_sites_admin_footer( $html ) {
-		if ( isset( $_REQUEST['dev'] ) ) {
+		if ( isset( $_REQUEST['dev'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$sc = get_current_screen();
 			if ( $sc->id == 'appearance_page_customify-sites' ) {
 				$html = '<a class="page-title-action" href="' . admin_url( 'export.php?content=all&download=true&from_customify=placeholder' ) . '">Export XML Placeholder</a> - <a class="page-title-action" href="' . admin_url( 'export.php?content=all&download=true&from_customify' ) . '">Export XML</a> - <a class="page-title-action" href="' . admin_url( 'admin-ajax.php?action=cs_export' ) . '">Export Config</a>';

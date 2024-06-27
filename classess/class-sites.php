@@ -6,14 +6,21 @@ Class Customify_Sites {
 
 
     function admin_scripts( $id ){
-        if( $id == 'appearance_page_customify-sites' ){
-            wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
-            wp_enqueue_style('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/css/owl.carousel.css' );
-            wp_enqueue_style('owl.theme.default', CUSTOMIFY_SITES_URL.'/assets/css/owl.theme.default.css' );
-            wp_enqueue_style('customify-sites', CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css' );
+        if( $id == 'appearance_page_customify-sites-library' ){
 
-            wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), false, true );
-            wp_enqueue_script('customify-sites', CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), false, true );
+            if( ! function_exists('get_plugin_data') ){
+                require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+            }
+            $plugin_data = get_plugin_data( __FILE__ );
+
+
+            wp_localize_script('jquery', 'Customify_Sites',  $this->get_localize_script() );
+            wp_enqueue_style('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/css/owl.carousel.css', [], $plugin_data['Version'] );
+            wp_enqueue_style('owl.theme.default', CUSTOMIFY_SITES_URL.'/assets/css/owl.theme.default.css', [], $plugin_data['Version'] );
+            wp_enqueue_style("customify-sites-library", CUSTOMIFY_SITES_URL.'/assets/css/customify-sites.css', [], $plugin_data['Version'] );
+
+            wp_enqueue_script('owl.carousel', CUSTOMIFY_SITES_URL.'/assets/js/owl.carousel.min.js',  array( 'jquery' ), $plugin_data['Version'], true );
+            wp_enqueue_script("customify-sites-library", CUSTOMIFY_SITES_URL.'/assets/js/backend.js',  array( 'jquery', 'underscore' ), $plugin_data['Version'], true );
         }
     }
 
@@ -59,12 +66,12 @@ Class Customify_Sites {
     }
 
     function add_menu() {
-        add_theme_page(__( 'Customify Sites', 'customify-sites' ), __( 'Customify Sites', 'customify-sites' ), 'edit_theme_options', 'customify-sites', array( $this, 'page' ));
+        add_theme_page(__( 'Customify Sites', "customify-sites-library" ), __( 'Customify Sites', "customify-sites-library" ), 'edit_theme_options', "customify-sites-library", array( $this, 'page' ));
     }
 
     function page(){
         echo '<div class="wrap">';
-        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', 'customify-sites' ).'</h1><hr class="wp-header-end">';
+        echo '<h1 class="wp-heading-inline">'.__( 'Customify Site Library', "customify-sites-library" ).'</h1><hr class="wp-header-end">';
         require_once CUSTOMIFY_SITES_PATH.'/templates/dashboard.php';
         require_once CUSTOMIFY_SITES_PATH.'/templates/modal.php';
         echo '</div>';
@@ -102,19 +109,19 @@ Class Customify_Sites {
 
     function get_support_plugins(){
         $plugins = array(
-            'customify-pro' => _x( 'Customify Pro', 'plugin-name', 'customify-sites' ),
+            'customify-pro' => _x( 'Customify Pro', 'plugin-name', "customify-sites-library" ),
 
-            'elementor' => _x( 'Elementor', 'plugin-name', 'customify-sites' ),
-            'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', 'customify-sites' ),
-            'beaver-builder-lite-version' => _x( 'Beaver Builder', 'plugin-name', 'customify-sites' ),
-            'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', 'customify-sites' ),
+            'elementor' => _x( 'Elementor', 'plugin-name', "customify-sites-library" ),
+            'elementor-pro' => _x( 'Elementor Pro', 'plugin-name', "customify-sites-library" ),
+            'beaver-builder-lite-version' => _x( 'Beaver Builder', 'plugin-name', "customify-sites-library" ),
+            'contact-form-7' => _x( 'Contact Form 7', 'plugin-name', "customify-sites-library" ),
 
-            'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', 'customify-sites' ),
-            'jetpack' => _x( 'JetPack', 'plugin-name', 'customify-sites' ),
-            'easymega' => _x( 'Mega menu', 'plugin-name', 'customify-sites' ),
-            'polylang' => _x( 'Polylang', 'plugin-name', 'customify-sites' ),
-            'woocommerce' => _x( 'WooCommerce', 'plugin-name', 'customify-sites' ),
-            'give' => _x( 'Give – Donation Plugin and Fundraising Platform', 'plugin-name', 'customify-sites' ),
+            'breadcrumb-navxt' => _x( 'Breadcrumb NavXT', 'plugin-name', "customify-sites-library" ),
+            'jetpack' => _x( 'JetPack', 'plugin-name', "customify-sites-library" ),
+            'easymega' => _x( 'Mega menu', 'plugin-name', "customify-sites-library" ),
+            'polylang' => _x( 'Polylang', 'plugin-name', "customify-sites-library" ),
+            'woocommerce' => _x( 'WooCommerce', 'plugin-name', "customify-sites-library" ),
+            'give' => _x( 'Give – Donation Plugin and Fundraising Platform', 'plugin-name', "customify-sites-library" ),
         );
 
         return $plugins;
@@ -150,8 +157,8 @@ Class Customify_Sites {
             'api_url' => self::get_api_url(),
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_admin' => is_admin(),
-            'try_again' => __( 'Try Again', 'customify-sites' ),
-            'pro_text' => __( 'Pro only', 'customify-sites' ),
+            'try_again' => __( 'Try Again', "customify-sites-library" ),
+            'pro_text' => __( 'Pro only', "customify-sites-library" ),
             'activated_plugins' => $this->get_activated_plugins(),
             'installed_plugins' => $this->get_installed_plugins(),
             'support_plugins' => $this->get_support_plugins(),

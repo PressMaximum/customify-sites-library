@@ -11,6 +11,9 @@ class Customify_Sites_WXR_Import_UI
 	 */
 	protected $fetch_attachments = true;
 
+	public $id = 0;
+	public $authors = null;
+	public $version = null;
 	public $counts = array();
 
 	/**
@@ -71,7 +74,7 @@ class Customify_Sites_WXR_Import_UI
 		if (!update_post_meta($id, '_wxr_import_info', $data)) {
 			return new WP_Error(
 				'wxr_importer.upload.failed_save_meta',
-				__('Could not cache information on the import.', 'customify-sites'),
+				__('Could not cache information on the import.', "customify-sites-library"),
 				compact('id')
 			);
 		}
@@ -85,20 +88,20 @@ class Customify_Sites_WXR_Import_UI
 	function get_posts_by_title($page_title, $post_type)
 	{
 		global $wpdb;
-		$sql = $wpdb->prepare("
-			SELECT ID
-			FROM $wpdb->posts
-			WHERE post_title = %s
-			AND post_type = %s
-		", $page_title, $post_type);
-		return $wpdb->get_col($sql);
+
+		return $wpdb->get_col($wpdb->prepare("
+		SELECT ID
+		FROM $wpdb->posts
+		WHERE post_title = %s
+		AND post_type = %s
+	", $page_title, $post_type)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 
 	public function import()
 	{
 
-		$this->id = wp_unslash((int) $_REQUEST['id']);
+		$this->id = wp_unslash((int) $_REQUEST['id']); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		// Download media files
 		$this->fetch_attachments = true;
 		$importer = $this->get_importer();

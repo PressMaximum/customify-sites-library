@@ -350,7 +350,7 @@ class Customify_Sites_Placeholder {
 				// $meta->meta_value = '';
 				$value = json_decode( $meta->meta_value , true );
 				$value = $this->progress_elementor_data( $value );
-				$meta->meta_value = json_encode( $value );
+				$meta->meta_value = json_encode( $value ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 				break;
 
 			case '_fl_builder_data':

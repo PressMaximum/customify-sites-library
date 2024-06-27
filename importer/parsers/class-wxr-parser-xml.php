@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WordPress eXtended RSS file parser implementations
  *
@@ -9,7 +10,8 @@
 /**
  * WXR Parser that makes use of the XML Parser PHP extension.
  */
-class WXR_Parser_XML {
+class WXR_Parser_XML
+{
 	public $wp_tags     = array(
 		'wp:post_id',
 		'wp:post_date',
@@ -73,7 +75,8 @@ class WXR_Parser_XML {
 	public $base_url;
 	public $base_blog_url;
 
-	function parse( $file ) {
+	function parse($file)
+	{
 		$this->wxr_version = false;
 		$this->in_post     = false;
 		$this->cdata       = false;
@@ -87,24 +90,24 @@ class WXR_Parser_XML {
 		$this->category    = array();
 		$this->tag         = array();
 
-		$xml = xml_parser_create( 'UTF-8' );
-		xml_parser_set_option( $xml, XML_OPTION_SKIP_WHITE, 1 );
-		xml_parser_set_option( $xml, XML_OPTION_CASE_FOLDING, 0 );
-		xml_set_object( $xml, $this );
-		xml_set_character_data_handler( $xml, 'cdata' );
-		xml_set_element_handler( $xml, 'tag_open', 'tag_close' );
+		$xml = xml_parser_create('UTF-8');
+		xml_parser_set_option($xml, XML_OPTION_SKIP_WHITE, 1);
+		xml_parser_set_option($xml, XML_OPTION_CASE_FOLDING, 0);
+		xml_set_object($xml, $this);
+		xml_set_character_data_handler($xml, 'cdata');
+		xml_set_element_handler($xml, 'tag_open', 'tag_close');
 
-		if ( ! xml_parse( $xml, file_get_contents( $file ), true ) ) {
-			$current_line   = xml_get_current_line_number( $xml );
-			$current_column = xml_get_current_column_number( $xml );
-			$error_code     = xml_get_error_code( $xml );
-			$error_string   = xml_error_string( $error_code );
-			return new WP_Error( 'XML_parse_error', 'There was an error when reading this WXR file', array( $current_line, $current_column, $error_string ) );
+		if (!xml_parse($xml, file_get_contents($file), true)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents	
+			$current_line   = xml_get_current_line_number($xml);
+			$current_column = xml_get_current_column_number($xml);
+			$error_code     = xml_get_error_code($xml);
+			$error_string   = xml_error_string($error_code);
+			return new WP_Error('XML_parse_error', 'There was an error when reading this WXR file', array($current_line, $current_column, $error_string));
 		}
-		xml_parser_free( $xml );
+		xml_parser_free($xml);
 
-		if ( ! preg_match( '/^\d+\.\d+$/', $this->wxr_version ) ) {
-			return new WP_Error( 'WXR_parse_error', __( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'customify-sites' ) );
+		if (!preg_match('/^\d+\.\d+$/', $this->wxr_version)) {
+			return new WP_Error('WXR_parse_error', __('This does not appear to be a WXR file, missing/invalid WXR version number', "customify-sites-library"));
 		}
 
 		return array(
@@ -119,21 +122,22 @@ class WXR_Parser_XML {
 		);
 	}
 
-	function tag_open( $parse, $tag, $attr ) {
-		if ( in_array( $tag, $this->wp_tags, true ) ) {
-			$this->in_tag = substr( $tag, 3 );
+	function tag_open($parse, $tag, $attr)
+	{
+		if (in_array($tag, $this->wp_tags, true)) {
+			$this->in_tag = substr($tag, 3);
 			return;
 		}
 
-		if ( in_array( $tag, $this->wp_sub_tags, true ) ) {
-			$this->in_sub_tag = substr( $tag, 3 );
+		if (in_array($tag, $this->wp_sub_tags, true)) {
+			$this->in_sub_tag = substr($tag, 3);
 			return;
 		}
 
-		switch ( $tag ) {
+		switch ($tag) {
 			case 'category':
-				if ( isset( $attr['domain'], $attr['nicename'] ) ) {
-					if ( false === $this->sub_data ) {
+				if (isset($attr['domain'], $attr['nicename'])) {
+					if (false === $this->sub_data) {
 						$this->sub_data = array();
 					}
 
@@ -145,7 +149,7 @@ class WXR_Parser_XML {
 				$this->in_post = true;
 				break;
 			case 'title':
-				if ( $this->in_post ) {
+				if ($this->in_post) {
 					$this->in_tag = 'post_title';
 				}
 				break;
@@ -174,23 +178,25 @@ class WXR_Parser_XML {
 		}
 	}
 
-	function cdata( $parser, $cdata ) {
-		if ( ! trim( $cdata ) ) {
+	function cdata($parser, $cdata)
+	{
+		if (!trim($cdata)) {
 			return;
 		}
 
-		if ( false !== $this->in_tag || false !== $this->in_sub_tag ) {
+		if (false !== $this->in_tag || false !== $this->in_sub_tag) {
 			$this->cdata .= $cdata;
 		} else {
-			$this->cdata .= trim( $cdata );
+			$this->cdata .= trim($cdata);
 		}
 	}
 
-	function tag_close( $parser, $tag ) {
-		switch ( $tag ) {
+	function tag_close($parser, $tag)
+	{
+		switch ($tag) {
 			case 'wp:comment':
-				unset( $this->sub_data['key'], $this->sub_data['value'] ); // remove meta sub_data
-				if ( ! empty( $this->sub_data ) ) {
+				unset($this->sub_data['key'], $this->sub_data['value']); // remove meta sub_data
+				if (!empty($this->sub_data)) {
 					$this->data['comments'][] = $this->sub_data;
 				}
 				$this->sub_data = false;
@@ -202,14 +208,14 @@ class WXR_Parser_XML {
 				);
 				break;
 			case 'category':
-				if ( ! empty( $this->sub_data ) ) {
+				if (!empty($this->sub_data)) {
 					$this->sub_data['name'] = $this->cdata;
 					$this->data['terms'][]  = $this->sub_data;
 				}
 				$this->sub_data = false;
 				break;
 			case 'wp:postmeta':
-				if ( ! empty( $this->sub_data ) ) {
+				if (!empty($this->sub_data)) {
 					$this->data['postmeta'][] = $this->sub_data;
 				}
 				$this->sub_data = false;
@@ -221,25 +227,25 @@ class WXR_Parser_XML {
 			case 'wp:category':
 			case 'wp:tag':
 			case 'wp:term':
-				$n = substr( $tag, 3 );
-				array_push( $this->$n, $this->data );
+				$n = substr($tag, 3);
+				array_push($this->$n, $this->data);
 				$this->data = false;
 				break;
 			case 'wp:termmeta':
-				if ( ! empty( $this->sub_data ) ) {
+				if (!empty($this->sub_data)) {
 					$this->data['termmeta'][] = $this->sub_data;
 				}
 				$this->sub_data = false;
 				break;
 			case 'wp:author':
-				if ( ! empty( $this->data['author_login'] ) ) {
-					$this->authors[ $this->data['author_login'] ] = $this->data;
+				if (!empty($this->data['author_login'])) {
+					$this->authors[$this->data['author_login']] = $this->data;
 				}
 				$this->data = false;
 				break;
 			case 'wp:base_site_url':
 				$this->base_url = $this->cdata;
-				if ( ! isset( $this->base_blog_url ) ) {
+				if (!isset($this->base_blog_url)) {
 					$this->base_blog_url = $this->cdata;
 				}
 				break;
@@ -251,19 +257,19 @@ class WXR_Parser_XML {
 				break;
 
 			default:
-				if ( $this->in_sub_tag ) {
-					if ( false === $this->sub_data ) {
+				if ($this->in_sub_tag) {
+					if (false === $this->sub_data) {
 						$this->sub_data = array();
 					}
 
-					$this->sub_data[ $this->in_sub_tag ] = ! empty( $this->cdata ) ? $this->cdata : '';
+					$this->sub_data[$this->in_sub_tag] = !empty($this->cdata) ? $this->cdata : '';
 					$this->in_sub_tag                    = false;
-				} elseif ( $this->in_tag ) {
-					if ( false === $this->data ) {
+				} elseif ($this->in_tag) {
+					if (false === $this->data) {
 						$this->data = array();
 					}
 
-					$this->data[ $this->in_tag ] = ! empty( $this->cdata ) ? $this->cdata : '';
+					$this->data[$this->in_tag] = !empty($this->cdata) ? $this->cdata : '';
 					$this->in_tag                = false;
 				}
 		}

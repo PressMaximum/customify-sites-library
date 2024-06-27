@@ -127,7 +127,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		}
 
 		if ( ! $status ) {
-			return new WP_Error( 'wxr_importer.cannot_parse', __( 'Could not open the file for parsing', 'customify-sites' ) );
+			return new WP_Error( 'wxr_importer.cannot_parse', __( 'Could not open the file for parsing', "customify-sites-library" ) );
 		}
 
 		return $reader;
@@ -163,7 +163,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -279,7 +279,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -352,7 +352,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 					if ( version_compare( $this->version, self::MAX_WXR_VERSION, '>' ) ) {
 						$this->logger->warning( sprintf(
-							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', 'customify-sites' ),
+							__( 'This WXR file (version %s) is newer than the importer (version %s) and may not be supported. Please consider updating.', "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 							$this->version,
 							self::MAX_WXR_VERSION
 						) );
@@ -501,7 +501,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	 */
 	protected function import_start( $file ) {
 		if ( ! is_file( $file ) ) {
-			return new WP_Error( 'wxr_importer.file_missing', __( 'The file does not exist, please try again.',  'customify-sites' ) );
+			return new WP_Error( 'wxr_importer.file_missing', __( 'The file does not exist, please try again.',  "customify-sites-library" ) );
 		}
 
 		// Suspend bunches of stuff in WP core
@@ -564,7 +564,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	public function set_user_mapping( $mapping ) {
 		foreach ( $mapping as $map ) {
 			if ( empty( $map['old_slug'] ) || empty( $map['old_id'] ) || empty( $map['new_id'] ) ) {
-				$this->logger->warning( __( 'Invalid author mapping',  'customify-sites' ) );
+				$this->logger->warning( __( 'Invalid author mapping',  "customify-sites-library" ) );
 				$this->logger->debug( var_export( $map, true ) );
 				continue;
 			}
@@ -665,7 +665,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 						// Bail now
 						return new WP_Error(
 							'wxr_importer.post.cannot_import_draft',
-							__( 'Cannot import auto-draft posts', 'customify-sites' ),
+							__( 'Cannot import auto-draft posts', "customify-sites-library" ),
 							$data
 						);
 					}
@@ -753,7 +753,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		// Is this type even valid?
 		if ( ! $post_type_object ) {
 			$this->logger->warning( sprintf(
-				__( 'Failed to import "%s": Invalid post type %s',  'customify-sites' ),
+				__( 'Failed to import "%s": Invalid post type %s',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 				$data['post_title'],
 				$data['post_type']
 			) );
@@ -763,7 +763,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$post_exists = $this->post_exists( $data );
 		if ( $post_exists ) {
 			$this->logger->info( sprintf(
-				__( '%s "%s" already exists.',  'customify-sites' ),
+				__( '%s "%s" already exists.',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 				$post_type_object->labels->singular_name,
 				$data['post_title']
 			) );
@@ -848,7 +848,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		if ( 'attachment' === $postdata['post_type'] ) {
 			if ( ! $this->options['fetch_attachments'] ) {
 				$this->logger->notice( sprintf(
-					__( 'Skipping attachment "%s", fetching attachments disabled', 'customify-sites' ),
+					__( 'Skipping attachment "%s", fetching attachments disabled', "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 					$data['post_title']
 				) );
 				/**
@@ -873,7 +873,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		if ( is_wp_error( $post_id ) ) {
 			$this->logger->error( sprintf(
-				__( 'Failed to import "%s" (%s)', 'customify-sites' ),
+				__( 'Failed to import "%1s" (%2s)', "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				$data['post_title'],
 				$post_type_object->labels->singular_name
 			) );
@@ -905,12 +905,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mark_post_exists( $data, $post_id );
 
 		$this->logger->info( sprintf(
-			__( 'Imported "%s" (%s)', 'customify-sites' ),
+			__( 'Imported "%s" (%s)', "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 			$data['post_title'],
 			$post_type_object->labels->singular_name
 		) );
 		$this->logger->debug( sprintf(
-			__( 'Post %d remapped to %d', 'customify-sites' ),
+			__( 'Post %d remapped to %d', "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 			$original_id,
 			$post_id
 		) );
@@ -973,7 +973,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$original_object_id = get_post_meta( $post_id, '_menu_item_object_id', true );
 		$object_id = null;
 
-		$this->logger->debug( sprintf( 'Processing menu item %s', $item_type ) );
+		$this->logger->debug( sprintf( 'Processing menu item %s', $item_type ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 
 		$requires_remapping = false;
 		switch ( $item_type ) {
@@ -1002,7 +1002,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 			default:
 				// associated object is missing or not imported yet, we'll retry later
-				$this->missing_menu_items[] = $item;
+				$this->missing_menu_items[] = $data;
 				$this->logger->debug( 'Unknown menu item type' );
 				break;
 		}
@@ -1016,7 +1016,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			return;
 		}
 
-		$this->logger->debug( sprintf( 'Menu item %d mapped to %d', $original_object_id, $object_id ) );
+		$this->logger->debug( sprintf( 'Menu item %d mapped to %d', $original_object_id, $object_id ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText
 		update_post_meta( $post_id, '_menu_item_object_id', wp_slash( $object_id ) );
 	}
 
@@ -1054,7 +1054,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		$info = wp_check_filetype( $upload['file'] );
 		if ( ! $info ) {
-			return new WP_Error( 'attachment_processing_error', __( 'Invalid file type',  'customify-sites' ) );
+			return new WP_Error( 'attachment_processing_error', __( 'Invalid file type',  "customify-sites-library" ) );
 		}
 
 		$post['post_mime_type'] = $info['type'];
@@ -1549,7 +1549,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$user_id = wp_insert_user( wp_slash( $userdata ) );
 		if ( is_wp_error( $user_id ) ) {
 			$this->logger->error( sprintf(
-				__( 'Failed to import user "%s"',  'customify-sites' ),
+				__( 'Failed to import user "%s"',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				$userdata['user_login']
 			) );
 			$this->logger->debug( $user_id->get_error_message() );
@@ -1570,11 +1570,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mapping['user_slug'][ $original_slug ] = $user_id;
 
 		$this->logger->info( sprintf(
-			__( 'Imported user "%s"',  'customify-sites' ),
+			__( 'Imported user "%s"',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 			$userdata['user_login']
 		) );
 		$this->logger->debug( sprintf(
-			__( 'User %d remapped to %d',  'customify-sites' ),
+			__( 'User %1d remapped to %2d',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 			$original_id,
 			$user_id
 		) );
@@ -1719,7 +1719,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$result = wp_insert_term( $data['name'], $data['taxonomy'], $termdata );
 		if ( is_wp_error( $result ) ) {
 			$this->logger->warning( sprintf(
-				__( 'Failed to import %s %s',  'customify-sites' ),
+				__( 'Failed to import %1s %2s',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				$data['taxonomy'],
 				$data['name']
 			) );
@@ -1743,12 +1743,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$this->mapping['term_id'][ $original_id ] = $term_id;
 
 		$this->logger->info( sprintf(
-			__( 'Imported "%s" (%s)',  'customify-sites' ),
+			__( 'Imported "%1s" (%2s)',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 			$data['name'],
 			$data['taxonomy']
 		) );
 		$this->logger->debug( sprintf(
-			__( 'Term %d remapped to %d',  'customify-sites' ),
+			__( 'Term %1d remapped to %2d',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 			$original_id,
 			$term_id
 		) );
@@ -1776,7 +1776,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$file_name = basename( $url );
 
 		// get placeholder file in the upload dir with a unique, sanitized filename
-		$upload = wp_upload_bits( $file_name, 0, '', $post['upload_date'] );
+		$upload = wp_upload_bits( $file_name, null, '', $post['upload_date'] );
 		if ( $upload['error'] ) {
 			return new WP_Error( 'upload_dir_error', $upload['error'] );
 		}
@@ -1789,7 +1789,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		// request failed
 		if ( is_wp_error( $response ) ) {
-			unlink( $upload['file'] );
+			wp_delete_file( $upload['file'] );
 			return $response;
 		}
 
@@ -1797,11 +1797,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 
 		// make sure the fetch was successful
 		if ( $code !== 200 ) {
-			unlink( $upload['file'] );
+			wp_delete_file( $upload['file'] );
 			return new WP_Error(
 				'import_file_error',
 				sprintf(
-					__( 'Remote server returned %1$d %2$s for %3$s',  'customify-sites' ),
+					__( 'Remote server returned %1$d %2$s for %3$s',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 					$code,
 					get_status_header_desc( $code ),
 					$url
@@ -1813,19 +1813,19 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		$headers = wp_remote_retrieve_headers( $response );
 
 		if ( isset( $headers['content-length'] ) && $filesize !== (int) $headers['content-length'] ) {
-			unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __( 'Remote file is incorrect size',  'customify-sites' ) );
+			wp_delete_file( $upload['file'] );
+			return new WP_Error( 'import_file_error', __( 'Remote file is incorrect size',  "customify-sites-library" ) );
 		}
 
 		if ( 0 === $filesize ) {
-			unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __( 'Zero size file downloaded',  'customify-sites' ) );
+			wp_delete_file( $upload['file'] );
+			return new WP_Error( 'import_file_error', __( 'Zero size file downloaded',  "customify-sites-library" ) );
 		}
 
 		$max_size = (int) $this->max_attachment_size();
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
-			unlink( $upload['file'] );
-			$message = sprintf( __( 'Remote file is too large, limit is %s',  'customify-sites' ), size_format( $max_size ) );
+			wp_delete_file( $upload['file'] );
+			$message = sprintf( __( 'Remote file is too large, limit is %s',  "customify-sites-library" ), size_format( $max_size ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 			return new WP_Error( 'import_file_error', $message );
 		}
 
@@ -1847,7 +1847,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$this->logger->debug( sprintf(
 				// Note: title intentionally not used to skip extra processing
 				// for when debug logging is off
-				__( 'Running post-processing for post %d',  'customify-sites' ),
+				__( 'Running post-processing for post %d',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				$post_id
 			) );
 
@@ -1860,12 +1860,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['post_parent'] = $this->mapping['post'][ $parent_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the post parent for "%s" (post #%d)',  'customify-sites' ),
+						__( 'Could not find the post parent for "%s" (post #%d)',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						get_the_title( $post_id ),
 						$post_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Post %d was imported with parent %d, but could not be found',  'customify-sites' ),
+						__( 'Post %d was imported with parent %d, but could not be found',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$post_id,
 						$parent_id
 					) );
@@ -1879,12 +1879,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['post_author'] = $this->mapping['user_slug'][ $author_slug ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the author for "%s" (post #%d)',  'customify-sites' ),
+						__( 'Could not find the author for "%s" (post #%d)',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						get_the_title( $post_id ),
 						$post_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Post %d was imported with author "%s", but could not be found',  'customify-sites' ),
+						__( 'Post %d was imported with author "%s", but could not be found',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$post_id,
 						$author_slug
 					) );
@@ -1910,7 +1910,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			// Do we have updates to make?
 			if ( empty( $data ) ) {
 				$this->logger->debug( sprintf(
-					__( 'Post %d was marked for post-processing, but none was required.',  'customify-sites' ),
+					__( 'Post %d was marked for post-processing, but none was required.',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 					$post_id
 				) );
 				continue;
@@ -1921,7 +1921,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			$result = wp_update_post( $data, true );
 			if ( is_wp_error( $result ) ) {
 				$this->logger->warning( sprintf(
-					__( 'Could not update "%s" (post #%d) with mapped data',  'customify-sites' ),
+					__( 'Could not update "%s" (post #%d) with mapped data',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 					get_the_title( $post_id ),
 					$post_id
 				) );
@@ -1966,12 +1966,12 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			update_post_meta( $post_id, '_menu_item_object_id', wp_slash( $menu_object ) );
 		} else {
 			$this->logger->warning( sprintf(
-				__( 'Could not find the menu object for "%s" (post #%d)',  'customify-sites' ),
+				__( 'Could not find the menu object for "%s" (post #%d)',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				get_the_title( $post_id ),
 				$post_id
 			) );
 			$this->logger->debug( sprintf(
-				__( 'Post %d was imported with object "%d" of type "%s", but could not be found',  'customify-sites' ),
+				__( 'Post %d was imported with object "%d" of type "%s", but could not be found',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 				$post_id,
 				$menu_object_id,
 				$menu_item_type
@@ -1993,11 +1993,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['comment_parent'] = $this->mapping['comment'][ $parent_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the comment parent for comment #%d',  'customify-sites' ),
+						__( 'Could not find the comment parent for comment #%d',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$comment_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Comment %d was imported with parent %d, but could not be found',  'customify-sites' ),
+						__( 'Comment %d was imported with parent %d, but could not be found',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$comment_id,
 						$parent_id
 					) );
@@ -2011,11 +2011,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 					$data['user_id'] = $this->mapping['user'][ $author_id ];
 				} else {
 					$this->logger->warning( sprintf(
-						__( 'Could not find the author for comment #%d',  'customify-sites' ),
+						__( 'Could not find the author for comment #%d',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$comment_id
 					) );
 					$this->logger->debug( sprintf(
-						__( 'Comment %d was imported with author %d, but could not be found',  'customify-sites' ),
+						__( 'Comment %d was imported with author %d, but could not be found',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 						$comment_id,
 						$author_id
 					) );
@@ -2028,11 +2028,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 			}
 
 			// Run the update
-			$data['comment_ID'] = $comment_ID;
+			$data['comment_ID'] = $comment_id;
 			$result = wp_update_comment( wp_slash( $data ) );
 			if ( empty( $result ) ) {
 				$this->logger->warning( sprintf(
-					__( 'Could not update comment #%d with mapped data',  'customify-sites' ),
+					__( 'Could not update comment #%d with mapped data',  "customify-sites-library" ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText	
 					$comment_id
 				) );
 				continue;
@@ -2055,11 +2055,11 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		foreach ( $this->url_remap as $from_url => $to_url ) {
 			// remap urls in post_content
 			$query = $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s)", $from_url, $to_url );
-			$wpdb->query( $query );
+			$wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
 			// remap enclosure urls
 			$query = $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s) WHERE meta_key='enclosure'", $from_url, $to_url );
-			$result = $wpdb->query( $query );
+			$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		}
 	}
 
@@ -2135,7 +2135,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	 */
 	protected function prefill_existing_posts() {
 		global $wpdb;
-		$posts = $wpdb->get_results( "SELECT ID, guid FROM {$wpdb->posts}" );
+		$posts = $wpdb->get_results( "SELECT ID, guid FROM {$wpdb->posts}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		foreach ( $posts as $item ) {
 			$this->exists['post'][ $item->guid ] = $item->ID;
@@ -2186,7 +2186,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 	 */
 	protected function prefill_existing_comments() {
 		global $wpdb;
-		$posts = $wpdb->get_results( "SELECT comment_ID, comment_author, comment_date FROM {$wpdb->comments}" );
+		$posts = $wpdb->get_results( "SELECT comment_ID, comment_author, comment_date FROM {$wpdb->comments}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		foreach ( $posts as $item ) {
 			$exists_key = sha1( $item->comment_author . ':' . $item->comment_date );
@@ -2240,7 +2240,7 @@ class Customify_Sites_WXR_Importer extends WP_Importer {
 		global $wpdb;
 		$query = "SELECT t.term_id, tt.taxonomy, t.slug FROM {$wpdb->terms} AS t";
 		$query .= " JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id";
-		$terms = $wpdb->get_results( $query );
+		$terms = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 
 		foreach ( $terms as $item ) {
 			$exists_key = sha1( $item->taxonomy . ':' . $item->slug );

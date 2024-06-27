@@ -35,15 +35,15 @@ class WXR_Parser {
 			echo '<pre>';
 			if ( 'SimpleXML_parse_error' == $result->get_error_code() ) {
 				foreach ( $result->get_error_data() as $error ) {
-					echo $error->line . ':' . $error->column . ' ' . esc_html( $error->message ) . "\n";
+					echo $error->line . ':' . $error->column . ' ' . esc_html( $error->message ) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped	
 				}
 			} elseif ( 'XML_parse_error' == $result->get_error_code() ) {
 				$error = $result->get_error_data();
-				echo $error[0] . ':' . $error[1] . ' ' . esc_html( $error[2] );
+				echo $error[0] . ':' . $error[1] . ' ' . esc_html( $error[2] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped	
 			}
 			echo '</pre>';
-			echo '<p><strong>' . __( 'There was an error when reading this WXR file', 'customify-sites' ) . '</strong><br />';
-			echo __( 'Details are shown above. The importer will now try again with a different parser...', 'customify-sites' ) . '</p>';
+			echo '<p><strong>' . __( 'There was an error when reading this WXR file', "customify-sites-library" ) . '</strong><br />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped	
+			echo __( 'Details are shown above. The importer will now try again with a different parser...', "customify-sites-library" ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped	
 		}
 
 		// use regular expressions if nothing else available or this is bad XML

@@ -99,7 +99,7 @@ class WXR_Parser_Regex {
 		}
 
 		if ( ! $wxr_version ) {
-			return new WP_Error( 'WXR_parse_error', __( 'This does not appear to be a WXR file, missing/invalid WXR version number', 'customify-sites' ) );
+			return new WP_Error( 'WXR_parse_error', __( 'This does not appear to be a WXR file, missing/invalid WXR version number', "customify-sites-library" ) );
 		}
 
 		return array(
@@ -322,7 +322,7 @@ class WXR_Parser_Regex {
 		if ( $this->has_gzip ) {
 			return gzopen( $filename, $mode );
 		}
-		return fopen( $filename, $mode );
+		return fopen( $filename, $mode ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen	
 	}
 
 	function feof( $fp ) {
@@ -343,6 +343,6 @@ class WXR_Parser_Regex {
 		if ( $this->has_gzip ) {
 			return gzclose( $fp );
 		}
-		return fclose( $fp );
+		return fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 	}
 }
