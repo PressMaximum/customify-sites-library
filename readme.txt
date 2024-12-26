@@ -3,8 +3,8 @@ Contributors: WPCustomify
 Tags: demo, theme demos, one click import
 Requires at least: 4.9.5
 Tested up to: 6.5.4
-Stable tag: trunk
-License: GPLv2 or later
+Stable tag: 0.0.11
+License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
